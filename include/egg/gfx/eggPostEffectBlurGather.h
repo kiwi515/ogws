@@ -20,7 +20,7 @@ namespace EGG
             void reset()
             {
                 mpCapTexture = NULL;
-                mColor = DrawGX::sColorWhite;
+                mColor = DrawGX::scColorWhite;
                 mColorScale = 1.0f;
                 BYTE_0xC = 0;
             }
@@ -33,8 +33,7 @@ namespace EGG
 
     public:
         PostEffectBlurGather();
-        // TO-DO: Resolve weak instance (eggDrawPathBloom, 8008a390)
-        virtual ~PostEffectBlurGather(); // at 0x8
+        virtual ~PostEffectBlurGather() {} // at 0x8
         virtual void reset(); // at 0x14
         virtual void preDraw(); // at 0x18
 

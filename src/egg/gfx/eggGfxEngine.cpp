@@ -17,7 +17,7 @@ namespace EGG
         EGG_ASSERT(spInstance == NULL);
 
         if (heap == NULL)
-            heap = Heap::sCurrentHeap;
+            heap = Heap::getCurrentHeap();
 
         spInstance = new (heap, 4) GfxEngine();
         #line 56
@@ -45,7 +45,7 @@ namespace EGG
         StateGX::doResetStateCache();
 
         Display *disp = BaseSystem::getDisplay();
-        StateGX::setDefaultTexColor(disp->getColor());
+        StateGX::setDefaultTexColor(disp->getClearColor());
 
         G3DUtility::clearTempMem();
     }
