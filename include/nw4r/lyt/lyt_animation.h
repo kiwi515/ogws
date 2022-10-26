@@ -29,14 +29,14 @@ namespace nw4r
 
         struct AnimTransform
         {
-            inline AnimTransform() : mNode(), mResource(NULL), FLOAT_0x10(0.0f) {}
+            inline AnimTransform() : mNode(), mResource(NULL), mFrame(0.0f) {}
 
             u16 GetFrameSize() const;
             bool IsLoopData() const;
 
             ut::LinkListNode mNode; // at 0x0
             AnimResource *mResource; // at 0xC
-            f32 FLOAT_0x10;
+            f32 mFrame;
         };
 
         struct AnimTransformBasic : AnimTransform

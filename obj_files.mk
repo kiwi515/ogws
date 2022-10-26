@@ -37,6 +37,7 @@ NW4R_O_FILES := \
 	build/asm/nw4r/ef/ef_particle.o \
 	build/asm/nw4r/ef/ef_particlemanager.o \
 	build/asm/nw4r/ef/ef_resource.o \
+	build/nw4r/ef/ef_util.o \
 	build/asm/nw4r/ef/ef_util.o \
 	build/nw4r/ef/ef_handle.o \
 	build/asm/nw4r/ef/ef_emitterform.o \

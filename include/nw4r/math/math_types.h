@@ -10,6 +10,9 @@
 #define	NW4R_FIDX_TO_DEG (2.0f * NW4R_PI_F32 / 256.0f)
 #define NW4R_MATH_BLOG_TO_LN 1.442695f
 #define NW4R_LN_2 0.6931472f
+#define NW4R_EPSILON_F32 1.1920929E-7f
+
+#define FLT_MIN 1.17549435E-38f
 
 namespace nw4r
 {
