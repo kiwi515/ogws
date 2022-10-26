@@ -226,6 +226,7 @@ EGG_O_FILES := \
 	build/asm/egg/gfx/eggPostEffectBlurSimple.o \
 	build/egg/gfx/eggPostEffectHDR.o \
 	build/asm/egg/gfx/eggPostEffectMask.o \
+	build/egg/gfx/eggPostEffectSimple.o \
 	build/egg/gfx/eggScnRootEx.o \
 	build/asm/egg/gfx/eggScreen.o \
 	build/asm/egg/gfx/eggShadowTexture.o \

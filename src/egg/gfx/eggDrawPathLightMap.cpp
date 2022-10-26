@@ -36,7 +36,7 @@ namespace EGG
     #ifdef __DECOMP_NON_MATCHING
     void DrawPathLightMap::draw(u16 idx)
     {
-        const Screen::EfbData* efb = GXUtility::getScreen().GetDataEfb();
+        const Screen::DataEfb* efb = GXUtility::getScreen().GetDataEfb();
         
         switch(idx)
         {
@@ -96,7 +96,7 @@ namespace EGG
                     alpha = StateGX::getCache().alphaUpdate;
                     StateGX::GXSetAlphaUpdate_(true);
 
-                    DrawGX::DrawDL(DrawGX::DL_16, forDL, DrawGX::sColorWhite);
+                    DrawGX::DrawDL(DrawGX::DL_16, forDL, DrawGX::scColorWhite);
                     BUF_0x8C->free();
                     BUF_0x8C = NULL;
 

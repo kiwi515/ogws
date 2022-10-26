@@ -154,7 +154,7 @@ namespace EGG
 
     // https://decomp.me/scratch/rqOkd
     #ifdef __DECOMP_NON_MATCHING
-    void LightTextureManager::draw(LightManager *pManager, Screen::EfbData *efb, f32 x1, f32 y1, f32 x2, f32 y2)
+    void LightTextureManager::draw(LightManager *pManager, const Screen::DataEfb &efb, f32 x1, f32 y1, f32 x2, f32 y2)
     {
         u8 view = 1 << pManager->GetCurrentView();
         bool setPixelFmt = mFlags >> 5 & 1;
@@ -258,7 +258,7 @@ namespace EGG
                     DrawGX::SetBlendMode(DrawGX::BLEND_9);
                     GXSetBlendMode(0, 4, 5, 0);
                     texBuf->load(GX_TEX_MAP_ID_0);
-                    DrawGX::DrawDL(DrawGX::DL_16, forDL, DrawGX::sColorWhite);
+                    DrawGX::DrawDL(DrawGX::DL_16, forDL, DrawGX::scColorWhite);
                     texBuf->free();
                 }
                 else
