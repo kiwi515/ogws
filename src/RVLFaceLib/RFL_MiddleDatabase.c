@@ -84,8 +84,18 @@ void RFLInitMiddleDB(RFLMiddleDB* db, RFLMiddleDBType type, void* buffer,
     memset(db_->data, 0, RFLGetMiddleDBBufferSize(db_->size));
 }
 
+static BOOL checkHiddenData_(RFLiCharHRawData* data) {
+    RFLiCharInfo info;
+
+    if (!RFLiIsValidID(data->createID)) {
+        return FALSE;
+    }
+
+    RFLiConvertHRaw2Info(data, &info);
+    return RFLiCheckValidInfo(&info) ? TRUE : FALSE;
+}
+
 static void updateHDBcallback_(u32 arg) {
-#pragma unused(arg)
     HiddenNewOldParam* nparam;
     RFLiMiddleDB* db;
 
@@ -95,13 +105,34 @@ static void updateHDBcallback_(u32 arg) {
     if (RFLGetAsyncStatus() == RFLErrcode_Success ||
         RFLGetAsyncStatus() == RFLErrcode_Broken) {
         s16 src = -1;
-        RFLiHDBManager* mgr = RFLiGetDBManager();
-        BOOL find = FALSE;
 
         if (db->type == RFLMiddleDBType_HiddenOlder) {
             src = RFLiGetHiddenNext(nparam->srcIdx);
         } else {
             src = RFLiGetHiddenPrev(nparam->srcIdx);
+        }
+
+        if (RFLGetAsyncStatus() != RFLErrcode_Broken &&
+            checkHiddenData_(&db->data[db->storedSize])) {
+            db->storedSize++;
+        }
+
+        nparam->dstIdx++;
+
+        if (src >= 0 && nparam->dstIdx < db->size) {
+            nparam->srcIdx = src;
+
+            RFLErrcode err = RFLiLoadHiddenDataAsync(
+                &db->data[db->storedSize], nparam->srcIdx, updateHDBcallback_,
+                (u32)db);
+
+            if (err != RFLErrcode_Busy) {
+                RFLiEndWorking(err);
+            }
+        } else {
+            RFLiGetManager()->lastErrCode = db->storedSize < db->size
+                                                ? RFLErrcode_DBNodata
+                                                : RFLErrcode_Success;
         }
     }
 
@@ -109,7 +140,9 @@ static void updateHDBcallback_(u32 arg) {
         if (RFLGetAsyncStatus() == RFLErrcode_NANDCommandfail &&
             RFLGetLastReason() == NAND_RESULT_BUSY) {
             Param2* param2 = (Param2*)&db->userData2;
-            // TODO
+            nparam->srcIdx = param2->lastSrcIdx;
+            db->storedSize = 0;
+            nparam->dstIdx = 0;
         }
 
         if (db->callback != NULL) {
@@ -118,16 +151,112 @@ static void updateHDBcallback_(u32 arg) {
     }
 }
 
-RFLErrcode RFLUpdateMiddleDBAsync(RFLMiddleDB* db) {
-    if (db == NULL) {
-        return RFLErrcode_WrongParam;
+static s16 stepOne_(s16 srcIdx, BOOL oldIsHead) {
+    RFLiHDBManager* mgr = RFLiGetHDBManager();
+    s16 ret = -1;
+
+    if (oldIsHead) {
+        if (srcIdx < 0) {
+            ret = RFLiGetHiddenHeader()->head;
+        } else {
+            ret = RFLiGetHiddenNext(srcIdx);
+        }
+    } else {
+        if (srcIdx < 0) {
+            ret = RFLiGetHiddenHeader()->tail;
+        } else {
+            ret = RFLiGetHiddenPrev(srcIdx);
+        }
     }
 
-    if (RFLAvailable()) {
-        return RFLiUpdateMiddleDBAsync(db, NULL, FALSE);
+    return ret;
+}
+
+static void loadHiddenDataSync_(RFLiMiddleDB* db) {
+    s16 src = -1;
+    BOOL running = TRUE;
+    HiddenNewOldParam* nparam = (HiddenNewOldParam*)&db->userData1;
+
+    while (running) {
+        RFLiLoadCachedHiddenData(&db->data[db->storedSize], nparam->srcIdx);
+
+        if (db->type == RFLMiddleDBType_HiddenOlder) {
+            src = RFLiGetHiddenNext(nparam->srcIdx);
+        } else {
+            src = RFLiGetHiddenPrev(nparam->srcIdx);
+        }
+
+        if (checkHiddenData_(&db->data[db->storedSize])) {
+            db->storedSize++;
+        }
+
+        nparam->dstIdx++;
+
+        if (src >= 0 && nparam->dstIdx < db->size) {
+            nparam->srcIdx = src;
+        } else {
+            running = FALSE;
+        }
     }
 
-    return RFLErrcode_NotAvailable;
+    RFLiEndWorking(nparam->srcIdx == -1 ? RFLErrcode_DBNodata
+                                        : RFLErrcode_Success);
+}
+
+static void updateHiddenOld_(RFLiMiddleDB* db, BOOL oldIsHead, BOOL cache) {
+    HiddenNewOldParam* nparam;
+    s16 src;
+
+    if (!RFLiDBIsLoaded()) {
+        RFLiEndWorking(RFLErrcode_DBNodata);
+        return;
+    }
+
+    if (db->data == NULL || db->size <= 0 || !RFLiDBIsLoaded()) {
+        RFLiEndWorking(RFLErrcode_NotAvailable);
+        return;
+    }
+
+    nparam = (HiddenNewOldParam*)&db->userData1;
+    src = stepOne_(nparam->srcIdx, oldIsHead);
+
+    if (src >= 0) {
+        nparam->srcIdx = src;
+
+        if (cache) {
+            loadHiddenDataSync_(db);
+        } else {
+            RFLErrcode err = RFLiLoadHiddenDataAsync(
+                &db->data[nparam->dstIdx], nparam->srcIdx, updateHDBcallback_,
+                (u32)db);
+
+            if (err != RFLErrcode_Busy) {
+                RFLiEndWorking(err);
+            }
+        }
+    } else {
+        RFLiEndWorking(RFLErrcode_DBNodata);
+    }
+}
+
+static void loadHiddenRandomSync_(RFLiMiddleDB* db) {
+    ;
+    ;
+}
+
+static void updateHDBRandcallback_(u32 arg) {
+    ;
+    ;
+}
+
+static void updateHiddenRandom_(RFLiMiddleDB* db, BOOL cache) {
+    ;
+    ;
+}
+
+static void updateRandom_(RFLiMiddleDB* db) {
+    ;
+    ;
 }
 
 static void startUpdateDB_(RFLiMiddleDB* db) {
@@ -136,7 +265,7 @@ static void startUpdateDB_(RFLiMiddleDB* db) {
     HiddenRandomParam* hparam;
 
     db->storedSize = 0;
-    memset(db->data, 0, db->size * sizeof(RFLiCharHRawData));
+    memset(db->data, 0, RFLGetMiddleDBBufferSize(db->size));
 
     switch (db->type) {
     case RFLMiddleDBType_HiddenNewer:
@@ -155,6 +284,18 @@ static void startUpdateDB_(RFLiMiddleDB* db) {
         param2->lastSrcIdx = 0;
         break;
     }
+}
+
+RFLErrcode RFLUpdateMiddleDBAsync(RFLMiddleDB* db) {
+    if (db == NULL) {
+        return RFLErrcode_WrongParam;
+    }
+
+    if (RFLAvailable()) {
+        return RFLiUpdateMiddleDBAsync(db, NULL, FALSE);
+    }
+
+    return RFLErrcode_NotAvailable;
 }
 
 RFLErrcode RFLiUpdateMiddleDBAsync(RFLMiddleDB* db, RFLiCallback cb,
