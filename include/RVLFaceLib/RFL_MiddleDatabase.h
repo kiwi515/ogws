@@ -23,10 +23,11 @@ u32 RFLGetMiddleDBBufferSize(u16 size);
 void RFLInitMiddleDB(RFLMiddleDB* db, RFLMiddleDBType type, void* buffer,
                      u16 size);
 RFLErrcode RFLUpdateMiddleDBAsync(RFLMiddleDB* db);
+RFLMiddleDBType RFLGetMiddleDBType(const RFLMiddleDB* db);
 u16 RFLGetMiddleDBStoredSize(const RFLMiddleDB* db);
 void RFLSetMiddleDBRandomMask(RFLMiddleDB* db, RFLSex sex, RFLAge age,
                               RFLRace race);
-void RFLSetMiddleDBHiddenMask(RFLMiddleDB* db, RFLRace race);
+void RFLSetMiddleDBHiddenMask(RFLMiddleDB* db, RFLSex sex);
 RFLErrcode RFLAddMiddleDBStoreData(RFLMiddleDB* db, RFLRace race);
 
 #ifdef __cplusplus
