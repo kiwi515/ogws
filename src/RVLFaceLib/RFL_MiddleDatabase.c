@@ -240,13 +240,86 @@ static void updateHiddenOld_(RFLiMiddleDB* db, BOOL oldIsHead, BOOL cache) {
 }
 
 static void loadHiddenRandomSync_(RFLiMiddleDB* db) {
-    ;
-    ;
+    BOOL running = TRUE;
+    HiddenRandomParam* hparam = (HiddenRandomParam*)&db->userData1;
+
+    while (running) {
+        // Accesses gender/color/favorite bitfield. Is this done to be random?
+        u32 src = *(u32*)&db->data[hparam->dstIdx];
+
+        if (src > 0) {
+            u16 srcIdx = src - 1;
+            RFLiLoadCachedHiddenData(&db->data[db->storedSize], srcIdx);
+
+            if (checkHiddenData_(&db->data[db->storedSize])) {
+                db->storedSize++;
+            }
+
+            hparam->dstIdx++;
+
+            if (src > 0 && hparam->dstIdx < db->size) {
+                if (src >= RFL_HDB_DATA_MAX) {
+                    running = FALSE;
+                }
+            } else {
+                running = FALSE;
+            }
+
+        } else {
+            running = FALSE;
+        }
+    }
+
+    RFLiGetManager()->lastErrCode =
+        db->storedSize < db->size ? RFLErrcode_DBNodata : RFLErrcode_Success;
 }
 
 static void updateHDBRandcallback_(u32 arg) {
-    ;
-    ;
+    RFLiMiddleDB* db = (RFLiMiddleDB*)arg;                          // r30
+    HiddenRandomParam* hparam = (HiddenRandomParam*)&db->userData1; // r28
+    u32* src;                                                       // r29
+    u16 srcIdx;                                                     // sp+0C
+
+    if (RFLGetAsyncStatus() == RFLErrcode_Success ||
+        RFLGetAsyncStatus() == RFLErrcode_Broken) {
+        if (RFLGetAsyncStatus() != RFLErrcode_Broken &&
+            checkHiddenData_(&db->data[db->storedSize])) {
+            db->storedSize++;
+        }
+
+        hparam->dstIdx++;
+        // Accesses gender/color/favorite bitfield. Is this done to be random?
+        src = (u32*)&db->data[hparam->dstIdx];
+
+        if (*src > 0 && hparam->dstIdx < db->size) {
+            if (*src < RFL_HDB_DATA_MAX) {
+                u16 srcIdx = *src - 1;
+                RFLErrcode err =
+                    RFLiLoadHiddenDataAsync(&db->data[db->storedSize], srcIdx,
+                                            updateHDBRandcallback_, (u32)db);
+
+                if (err != RFLErrcode_Busy) {
+                    RFLiEndWorking(err);
+                }
+            } else {
+                RFLiGetManager()->lastErrCode = RFLErrcode_Broken;
+            }
+        } else {
+            RFLiGetManager()->lastErrCode = db->storedSize < db->size
+                                                ? RFLErrcode_DBNodata
+                                                : RFLErrcode_Success;
+        }
+    }
+
+    if (!RFLiIsWorking() && db->callback != NULL) {
+        if (RFLGetAsyncStatus() == RFLErrcode_NANDCommandfail &&
+            RFLGetLastReason() == NAND_RESULT_BUSY) {
+            db->storedSize = 0;
+            hparam->dstIdx = 0;
+        }
+
+        db->callback();
+    }
 }
 
 static void updateHiddenRandom_(RFLiMiddleDB* db, BOOL cache) {
@@ -255,8 +328,22 @@ static void updateHiddenRandom_(RFLiMiddleDB* db, BOOL cache) {
 }
 
 static void updateRandom_(RFLiMiddleDB* db) {
-    ;
-    ;
+    int count = 0;                                      // r26
+    RandomParam* rparam = (RandomParam*)&db->userData1; // r29
+
+    int j;              // r28
+    BOOL isSame;        // r27
+    RFLiCharInfo info;  // sp+58
+    RFLiCharInfo info2; // sp+8
+
+    RFLiStartWorking();
+
+    while (db->storedSize < db->size) {
+        ;
+        ;
+    }
+
+    RFLiEndWorking(RFLErrcode_Success);
 }
 
 static void startUpdateDB_(RFLiMiddleDB* db) {
