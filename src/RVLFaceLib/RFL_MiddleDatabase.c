@@ -275,10 +275,10 @@ static void loadHiddenRandomSync_(RFLiMiddleDB* db) {
 }
 
 static void updateHDBRandcallback_(u32 arg) {
-    RFLiMiddleDB* db = (RFLiMiddleDB*)arg;                          // r30
-    HiddenRandomParam* hparam = (HiddenRandomParam*)&db->userData1; // r28
-    u32* src;                                                       // r29
-    u16 srcIdx;                                                     // sp+0C
+    RFLiMiddleDB* db = (RFLiMiddleDB*)arg;
+    HiddenRandomParam* hparam = (HiddenRandomParam*)&db->userData1;
+    u32* src;
+    u16 srcIdx;
 
     if (RFLGetAsyncStatus() == RFLErrcode_Success ||
         RFLGetAsyncStatus() == RFLErrcode_Broken) {
