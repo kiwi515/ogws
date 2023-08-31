@@ -323,24 +323,125 @@ static void updateHDBRandcallback_(u32 arg) {
 }
 
 static void updateHiddenRandom_(RFLiMiddleDB* db, BOOL cache) {
-    ;
-    ;
+    u16 max;
+    u16* array;
+    HiddenRandomParam* hparam;
+    RFLSex sex;
+    u16 count;
+    u32 rand;
+    u16 aidx;
+    u16 i;
+
+    hparam = (HiddenRandomParam*)&db->userData1;
+    sex = (RFLSex)hparam->sex;
+    max = db->size;
+    rand = OSGetTick();
+
+    RFLiStartWorking();
+
+    if (!RFLiDBIsLoaded()) {
+        RFLiEndWorking(RFLErrcode_DBNodata);
+        return;
+    }
+
+    count = RFLiCountupHiddenDataNum(sex);
+    if (count <= 0) {
+        RFLiEndWorking(RFLErrcode_DBNodata);
+        return;
+    }
+
+    if (count < db->size) {
+        max = count;
+    }
+
+    array = (u16*)RFLiAlloc(count * sizeof(u16));
+    if (array == NULL) {
+        RFLiEndWorking(RFLErrcode_Fatal);
+        return;
+    }
+
+    aidx = 0;
+    for (i = 0; i < RFL_HDB_DATA_MAX; i++) {
+        if (RFLiIsValidHiddenData(i, sex)) {
+            array[aidx++] = i;
+        }
+    }
+
+    for (i = 0; i < count - 1; i++) {
+        u16 tmp;
+
+        u16 target = (((rand >> 16) + rand) & 0xFFFF) % (count - 1);
+        if (target >= i) {
+            target++;
+        }
+
+        tmp = array[target];
+        array[target] = array[i];
+        array[i] = tmp;
+
+        rand = 0x04F8BB63 * (rand + 0x046AC055);
+    }
+
+    for (i = 0; i < max; i++) {
+        u32* src = (u32*)&db->data[i];
+        *src = array[i] + 1;
+    }
+
+    RFLiFree(array);
+
+    {
+        u16 srcIdx = 0;
+        u32* src = (u32*)&db->data[hparam->dstIdx];
+
+        if (*src == 0) {
+            RFLiEndWorking(RFLErrcode_DBNodata);
+        } else {
+            srcIdx = *src - 1;
+
+            if (cache) {
+                loadHiddenRandomSync_(db);
+            } else {
+                RFLErrcode err =
+                    RFLiLoadHiddenDataAsync(&db->data[hparam->dstIdx], srcIdx,
+                                            updateHDBRandcallback_, (u32)db);
+
+                if (err != RFLErrcode_Busy) {
+                    RFLiEndWorking(err);
+                }
+            }
+        }
+    }
 }
 
 static void updateRandom_(RFLiMiddleDB* db) {
-    int count = 0;                                      // r26
-    RandomParam* rparam = (RandomParam*)&db->userData1; // r29
-
-    int j;              // r28
-    BOOL isSame;        // r27
-    RFLiCharInfo info;  // sp+58
-    RFLiCharInfo info2; // sp+8
+    int count = 0;
+    RandomParam* rparam = (RandomParam*)&db->userData1;
+    int j;
+    RFLiCharInfo info;
 
     RFLiStartWorking();
 
     while (db->storedSize < db->size) {
-        ;
-        ;
+        BOOL isSame = FALSE;
+
+        RFLi_MakeRandomFace(&info, (RFLSex)rparam->sex, (RFLAge)rparam->age,
+                            (RFLRace)rparam->race);
+        RFLiSetTemporaryID(&info);
+
+        for (j = 0; j < db->storedSize; j++) {
+            RFLiCharInfo temp;
+            RFLiConvertHRaw2Info(&db->data[j], &temp);
+
+            if (RFLiIsSameFaceCore(&info, &temp)) {
+                isSame = TRUE;
+                break;
+            }
+        }
+
+        if (!isSame) {
+            RFLiConvertInfo2HRaw(&info, &db->data[db->storedSize]);
+            db->storedSize++;
+        }
     }
 
     RFLiEndWorking(RFLErrcode_Success);
@@ -490,7 +591,8 @@ RFLErrcode RFLiAddMiddleDBUserData(RFLMiddleDB* db, RFLiCharRawData* raw) {
     ;
 }
 
-RFLErrcode RFLAddMiddleDBStoreData(RFLMiddleDB* db, /* RFLStoreData* data */) {
+RFLErrcode RFLAddMiddleDBStoreData(RFLMiddleDB* db,
+                                   /* RFLStoreData* data */) {
     ;
     ;
 }

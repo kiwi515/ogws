@@ -49,10 +49,12 @@ void RFLiInitDatabase(MEMiHeapHead*);
 
 RFLErrcode RFLiBootLoadDatabaseAsync(RFLiCallback);
 
+void RFLiSetTemporaryID(RFLiCharInfo*);
 BOOL RFLiIsSameID(const RFLCreateID, const RFLCreateID);
 
 void RFLiConvertRaw2Info(const RFLiCharRawData*, RFLiCharInfo*);
 void RFLiConvertHRaw2Info(const RFLiCharHRawData*, RFLiCharInfo*);
+void RFLiConvertInfo2HRaw(const RFLiCharInfo*, RFLiCharHRawData*);
 
 RFLiHiddenDB* RFLiGetHiddenHeader(void);
 
