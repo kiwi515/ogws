@@ -75,10 +75,76 @@ void RFLiSetTev4Eyebrow(u32 color);
 void RFLiSetTev4Mustache(u32 color);
 
 void RFLiSetFaceParts(const RFLiCharInfo* info, RFLiFaceParts* face,
-                      RFLResolution resolution);
+                      RFLi_MASKRSL resolution);
 
 void RFLiCapture(u8* buffer, const RFLiCharInfo* info, RFLiFaceParts* face,
-                 RFLResolution resolution);
+                 RFLi_MASKRSL resolution) {
+    f32 vp[6];
+
+    GXInvalidateTexAll();
+    GXGetViewportv(vp);
+    RFLiSetup2DCameraAndParam();
+
+    GXSetTevDirect(GX_TEVSTAGE0);
+    GXSetTevDirect(GX_TEVSTAGE1);
+    GXSetTevDirect(GX_TEVSTAGE2);
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_INVDSTALPHA, GX_BL_DSTALPHA, GX_LO_SET);
+    GXSetColorUpdate(TRUE);
+
+    RFLiSetTev4Mustache(info->beard.color);
+    RFLiDrawFaceParts(&face->mustacheR);
+    RFLiDrawFaceParts(&face->mustacheL);
+
+    RFLiSetTev4Mouth(info->mouth.color);
+    RFLiDrawFaceParts(&face->mouth);
+
+    RFLiSetTev4Eyebrow(info->eyebrow.color);
+    RFLiDrawFaceParts(&face->eyebrowR);
+    RFLiDrawFaceParts(&face->eyebrowL);
+
+    RFLiSetTev4Eye(info->eye.color, info->eye.type);
+    RFLiDrawFaceParts(&face->eyeR);
+    RFLiDrawFaceParts(&face->eyeL);
+
+    RFLiSetTev4Mole();
+    RFLiDrawFaceParts(&face->mole);
+
+    GXSetColorUpdate(FALSE);
+    GXCopyTex(buffer, TRUE);
+    GXPixModeSync();
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_INVDSTALPHA, GX_BL_ONE, GX_LO_SET);
+
+    RFLiSetTev4Mustache(info->beard.color);
+    RFLiDrawFaceParts(&face->mustacheR);
+    RFLiDrawFaceParts(&face->mustacheL);
+
+    RFLiSetTev4Mouth(info->mouth.color);
+    RFLiDrawFaceParts(&face->mouth);
+
+    RFLiSetTev4Eyebrow(info->eyebrow.color);
+    RFLiDrawFaceParts(&face->eyebrowR);
+    RFLiDrawFaceParts(&face->eyebrowL);
+
+    RFLiSetTev4Eye(info->eye.color, info->eye.type);
+    RFLiDrawFaceParts(&face->eyeR);
+    RFLiDrawFaceParts(&face->eyeL);
+
+    RFLiSetTev4Mole();
+    RFLiDrawFaceParts(&face->mole);
+
+    GXSetColorUpdate(TRUE);
+
+    if (RFLiGetManager()->modelDrawCb == NULL) {
+        GXDrawDone();
+    } else {
+        RFLiGetManager()->modelDrawCb();
+    }
+
+    DCInvalidateRange(buffer, RFLiGetMaskSize(resolution));
+    GXCopyTex(buffer, 1);
+    GXPixModeSync();
+    GXSetViewportv(vp);
+}
 
 void RFLiDrawFaceParts(RFLiPart* part) {
     GXLoadTexObj(&part->ngtobj.tobj, GX_TEXMAP0);

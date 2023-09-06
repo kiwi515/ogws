@@ -62,9 +62,9 @@ void RFLiSetTev4Eye(u32 color, u32 type);
 void RFLiSetTev4Eyebrow(u32 color);
 void RFLiSetTev4Mustache(u32 color);
 void RFLiSetFaceParts(const RFLiCharInfo* info, RFLiFaceParts* face,
-                      RFLResolution resolution);
+                      RFLi_MASKRSL resolution);
 void RFLiCapture(u8* buffer, const RFLiCharInfo* info, RFLiFaceParts* face,
-                 RFLResolution resolution);
+                 RFLi_MASKRSL resolution);
 void RFLiDrawFaceParts(RFLiPart* part);
 void RFLiDrawQuad(f32 x, f32 y, f32 width, f32 height, f32 rotZ,
                   RFL_ORIGIN origin);
