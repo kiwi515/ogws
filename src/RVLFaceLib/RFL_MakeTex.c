@@ -1,6 +1,8 @@
 #include <RVLFaceLib/RVLFaceLibInternal.h>
 #include <math.h>
 
+const GXColor RFLi_MOLE_COLOR0 = {18, 15, 15, 255};
+
 void RFLiSetupCopyTex(GXTexFmt fmt, u16 width, u16 height, void* buffer,
                       GXColor clearColor) {
     GXSetFog(GX_FOG_NONE, (GXColor){0, 0, 0, 0}, 1.0f, 1.0f, 0.0f, 0.0f);
@@ -64,7 +66,19 @@ void RFLiSetup2DCameraAndParam(void) {
                           GX_CH_ALPHA);
 }
 
-void RFLiSetTev4Mole(void);
+void RFLiSetTev4Mole(void) {
+    GXSetNumTevStages(1);
+    GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
+    GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_C0);
+    GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO,
+                    GX_CA_TEXA);
+    GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1,
+                    GX_TEVPREV);
+    GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1,
+                    GX_TEVPREV);
+    GXSetTevColor(GX_TEVREG0, RFLi_MOLE_COLOR0);
+}
 
 void RFLiSetTev4Mouth(u32 color);
 
