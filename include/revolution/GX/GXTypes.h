@@ -795,9 +795,7 @@ typedef enum _GXTexMtx {
     GX_TEXMTX7 = 51,
     GX_TEXMTX8 = 54,
     GX_TEXMTX9 = 57,
-    // TODO: What is this value? This is right after the end of the matrices.
-    // Could this be the GX_IDENTITY mentioned in patents?
-    GX_TEXMTX_MAX = 60,
+    GX_TM_IDENTITY = 60,
 
     // 3x4 matrices (in dual-tex XF matrix memory)
     // Enum represents base row of matrix
@@ -821,9 +819,7 @@ typedef enum _GXTexMtx {
     GX_DUALMTX17 = 115,
     GX_DUALMTX18 = 118,
     GX_DUALMTX19 = 121,
-    // TODO: What is this value? This is right after the end of the matrices. Is
-    // this related to GX_TEXMTX_MAX?
-    GX_DUALMTX_MAX = 125,
+    GX_DTM_IDENTITY = 125,
 } GXTexMtx;
 
 typedef enum _GXTexWrapMode {
