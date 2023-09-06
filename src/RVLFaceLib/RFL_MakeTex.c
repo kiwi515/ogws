@@ -2,22 +2,89 @@
 #include <math.h>
 
 void RFLiSetupCopyTex(GXTexFmt fmt, u16 width, u16 height, void* buffer,
-                      GXColor clearColor);
+                      GXColor clearColor) {
+    GXSetFog(GX_FOG_NONE, (GXColor){0, 0, 0, 0}, 1.0f, 1.0f, 0.0f, 0.0f);
+    GXSetColorUpdate(TRUE);
+    GXSetAlphaUpdate(TRUE);
+    GXSetDstAlpha(FALSE, 0);
+    GXSetZMode(TRUE, GX_LEQUAL, TRUE);
+    GXSetPixelFmt(GX_PF_RGBA6_Z24, GX_ZC_LINEAR);
+    GXSetCopyFilter(FALSE, NULL, FALSE, NULL);
+    GXSetCopyClamp(GX_CLAMP_ALL);
+    GXSetTexCopySrc(0, 0, width, height);
+    GXSetTexCopyDst(width, height, fmt, FALSE);
+    GXSetCopyClear(clearColor, GX_CLEAR_Z_MAX);
+    DCInvalidateRange(buffer, 2 * width * height);
+    GXCopyTex(buffer, TRUE);
+    GXPixModeSync();
+}
 
 void RFLiMakeTexture(const RFLiCharInfo* info, u8** buffer,
                      RFLResolution resolution);
 
-void RFLiSetup2DCameraAndParam(void);
+void RFLiInitRFLTexture(RFLiTexObj* tobj) {
+    RFLiTexture* tex = tobj->texture;
+    GXInitTexObj(&tobj->tobj, RFLiGetTexImage(tex), tex->width, tex->height,
+                 tex->format, GX_CLAMP, GX_CLAMP, FALSE);
+}
+
+void RFLiSetup2DCameraAndParam(void) {
+    Mtx44 proj;
+
+    C_MTXOrtho(proj, 0.0f, 448.0f, 0.0f, 608.0f, 0.0f, 1.0f);
+    GXSetProjection(proj, GX_ORTHOGRAPHIC);
+    GXSetViewport(0.0f, 0.0f, 608.0f, 448.0f, 0.0f, 1.0f);
+    GXSetZScaleOffset(1.0f, 0.0f);
+    GXSetCullMode(GX_CULL_BACK);
+    GXSetZMode(FALSE, GX_LEQUAL, FALSE);
+    GXSetZCompLoc(FALSE);
+    GXSetAlphaCompare(GX_GREATER, 0, GX_AOP_OR, GX_NEVER, 0);
+    GXSetAlphaUpdate(TRUE);
+    GXSetDither(FALSE);
+    GXClearVtxDesc();
+    GXInvalidateVtxCache();
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XY, GX_F32, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_S16, 8);
+    GXSetNumChans(1);
+    GXSetChanCtrl(GX_COLOR0A0, FALSE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL,
+                  GX_DF_NONE, GX_DA_MEDIUM);
+    GXSetNumTexGens(1);
+    GXSetTexCoordGen(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_TEXMTX_MAX);
+    GXSetTevSwapModeTable(GX_TEV_SWAP0, GX_CH_RED, GX_CH_GREEN, GX_CH_BLUE,
+                          GX_CH_ALPHA);
+    GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_RED, GX_CH_RED, GX_CH_RED,
+                          GX_CH_ALPHA);
+    GXSetTevSwapModeTable(GX_TEV_SWAP2, GX_CH_GREEN, GX_CH_GREEN, GX_CH_GREEN,
+                          GX_CH_ALPHA);
+    GXSetTevSwapModeTable(GX_TEV_SWAP3, GX_CH_BLUE, GX_CH_BLUE, GX_CH_BLUE,
+                          GX_CH_ALPHA);
+}
+
+void RFLiSetTev4Mole(void);
 
 void RFLiSetTev4Mouth(u32 color);
 
 void RFLiSetTev4Eye(u32 color, u32 type);
+
+void RFLiSetTev4Eyebrow(u32 color);
+
+void RFLiSetTev4Mustache(u32 color);
 
 void RFLiSetFaceParts(const RFLiCharInfo* info, RFLiFaceParts* face,
                       RFLResolution resolution);
 
 void RFLiCapture(u8* buffer, const RFLiCharInfo* info, RFLiFaceParts* face,
                  RFLResolution resolution);
+
+void RFLiDrawFaceParts(RFLiPart* part) {
+    GXLoadTexObj(&part->ngtobj.tobj, GX_TEXMAP0);
+    RFLiDrawQuad(part->x, part->y, part->width, part->height, part->angle,
+                 part->origin);
+}
 
 void RFLiDrawQuad(f32 x, f32 y, f32 width, f32 height, f32 rotZ,
                   RFL_ORIGIN origin) {

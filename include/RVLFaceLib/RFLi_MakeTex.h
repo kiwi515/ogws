@@ -54,13 +54,18 @@ void RFLiSetupCopyTex(GXTexFmt fmt, u16 width, u16 height, void* buffer,
                       GXColor clearColor);
 void RFLiMakeTexture(const RFLiCharInfo* info, u8** buffer,
                      RFLResolution resolution);
+void RFLiInitRFLTexture(RFLiTexObj* tobj);
 void RFLiSetup2DCameraAndParam(void);
+void RFLiSetTev4Mole(void);
 void RFLiSetTev4Mouth(u32 color);
 void RFLiSetTev4Eye(u32 color, u32 type);
+void RFLiSetTev4Eyebrow(u32 color);
+void RFLiSetTev4Mustache(u32 color);
 void RFLiSetFaceParts(const RFLiCharInfo* info, RFLiFaceParts* face,
                       RFLResolution resolution);
 void RFLiCapture(u8* buffer, const RFLiCharInfo* info, RFLiFaceParts* face,
                  RFLResolution resolution);
+void RFLiDrawFaceParts(RFLiPart* part);
 void RFLiDrawQuad(f32 x, f32 y, f32 width, f32 height, f32 rotZ,
                   RFL_ORIGIN origin);
 RFLi_MASKRSL RFLiGetMaxMaskRsl(RFLResolution resolution);
