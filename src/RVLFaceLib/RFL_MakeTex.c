@@ -20,7 +20,55 @@ void RFLiSetupCopyTex(GXTexFmt fmt, u16 width, u16 height, void* buffer,
 }
 
 void RFLiMakeTexture(const RFLiCharInfo* info, u8** buffer,
-                     RFLResolution resolution);
+                     RFLResolution resolution) {
+    typedef enum { INFO0, INFO1, INFO2, INFO3, INFO4, INFO5, INFO6, I_MAX };
+
+    int i;                     // r30
+    RFLiCharInfo infos[I_MAX]; // spF78
+    RFLiFaceParts parts;       // sp178
+
+    u32 eyeSize;      // sp100
+    u32 eyebrowSize;  // spFC
+    u32 mouthSize;    // spF8
+    u32 mustacheSize; // spF4
+    u32 moleSize;     // spF0
+
+    u8* eyeNrm;      // spEC
+    u8* eyebrowNrm;  // spE8
+    u8* mouthNrm;    // spE4
+    u8* mustacheNrm; // spE0
+    u8* moleNrm;     // spDC
+
+    u8* eyeSmile;    // spD8
+    u8* mouthAnger;  // spD4
+    u8* eyeSorrow;   // spD0
+    u8* mouthSorrow; // spCC
+    u8* eyeSurprise; // spC8
+    u8* eyeBlink;    // spC4
+    u8* mouthOpen;   // spC0
+
+    u8* eyeBuf;   // sp158
+    u8* mouthBuf; // sp13C
+
+    RFLiTexture* eyeNrmTex;      // spBC
+    RFLiTexture* eyeBiNrmTex;    // spB8
+    RFLiTexture* mouthNrmTex;    // spB4
+    RFLiTexture* mustacheNrmTex; // spB0
+    RFLiTexture* moleNrmTex;     // spAC
+    RFLiTexture* eyeSmileTex;    // spA8
+    RFLiTexture* mouthAngerTex;  // spA4
+    RFLiTexture* mouthSadTex;    // sp9C
+    RFLiTexture* eyeSurpriseTex; // sp98
+    RFLiTexture* eyeBlinkTex;    // sp94
+    RFLiTexture* mouthOpenTex;   // sp90
+    RFLiTexture* eyeTex;         // sp120
+    RFLiTexture* mouthTex;       // sp104
+
+    u32 sx; // sp8C
+    u32 sy; // sp88
+    u32 sw; // sp84
+    u32 sh; // sp80
+}
 
 void RFLiInitRFLTexture(RFLiTexObj* tobj) {
     RFLiTexture* tex = tobj->texture;
