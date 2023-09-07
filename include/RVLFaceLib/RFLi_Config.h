@@ -68,6 +68,42 @@ extern "C" {
 #define RFLi_CREATE_ID_MASK_NOT_SPECIAL 0x80000000
 
 /**
+ * Face texture
+ */
+
+// TODO: A few values need to be converted to fractions/expressions
+
+#define RFLi_TEX_SCALE_X (0.88961464f)
+#define RFLi_TEX_SCALE_Y (0.92766759f)
+
+#define RFLi_TEX_SCALE2DIM(scale) (1.0 + 0.4f * (scale))
+#define RFLi_TEX_ROTATE2ANG(rotate) ((360.0f / 32.0f) * ((rotate) % 32))
+#define RFLi_TEX_UNIT(x) ((x) / 64.0f)
+
+#define RFLi_TEX_EYE_BASE_X RFLi_TEX_UNIT(0)
+#define RFLi_TEX_EYE_BASE_Y (18.451525f)
+#define RFLi_TEX_EYE_BASE_W RFLi_TEX_UNIT(342)
+#define RFLi_TEX_EYE_BASE_H RFLi_TEX_UNIT(288)
+
+#define RFLi_TEX_EYEBROW_BASE_X RFLi_TEX_UNIT(0)
+#define RFLi_TEX_EYEBROW_BASE_Y (16.549807f)
+#define RFLi_TEX_EYEBROW_BASE_W RFLi_TEX_UNIT(324)
+#define RFLi_TEX_EYEBROW_BASE_H RFLi_TEX_UNIT(288)
+
+#define RFLi_TEX_MOUTH_BASE_Y (29.25885f)
+#define RFLi_TEX_MOUTH_BASE_W RFLi_TEX_UNIT(396)
+#define RFLi_TEX_MOUTH_BASE_H RFLi_TEX_UNIT(288)
+
+#define RFLi_TEX_MUSTACHE_BASE_Y (31.763554f)
+#define RFLi_TEX_MUSTACHE_BASE_W RFLi_TEX_UNIT(288)
+#define RFLi_TEX_MUSTACHE_BASE_H RFLi_TEX_UNIT(576)
+
+#define RFLi_TEX_MOLE_BASE_X (17.766165f)
+#define RFLi_TEX_MOLE_BASE_Y (17.95986f)
+#define RFLi_TEX_MOLE_BASE_W RFLi_TEX_UNIT(0)
+#define RFLi_TEX_MOLE_BASE_H RFLi_TEX_UNIT(0)
+
+/**
  * Tables
  */
 

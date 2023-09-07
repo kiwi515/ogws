@@ -200,7 +200,99 @@ void RFLiSetTev4Mustache(u32 color) {
 }
 
 void RFLiSetFaceParts(const RFLiCharInfo* info, RFLiFaceParts* face,
-                      RFLi_MASKRSL resolution);
+                      RFLi_MASKRSL resolution) {
+    f32 eyeX = RFLi_TEX_EYE_BASE_X + RFLi_TEX_SCALE_X * info->eye.x;
+    f32 eyeY = RFLi_TEX_EYE_BASE_Y + 1.16f * RFLi_TEX_SCALE_Y * info->eye.y;
+    f32 eyeW = RFLi_TEX_EYE_BASE_W * RFLi_TEX_SCALE2DIM(info->eye.scale);
+    f32 eyeH = RFLi_TEX_EYE_BASE_H * RFLi_TEX_SCALE2DIM(info->eye.scale);
+    f32 eyeA = RFLi_TEX_ROTATE2ANG(info->eye.rotate +
+                                   RFLi_EYE_ROT_OFFSET[info->eye.type]);
+
+    f32 eyebrowX = RFLi_TEX_EYEBROW_BASE_X + RFLi_TEX_SCALE_X * info->eyebrow.x;
+    f32 eyebrowY =
+        RFLi_TEX_EYEBROW_BASE_Y + 1.16f * RFLi_TEX_SCALE_Y * info->eyebrow.y;
+    f32 eyebrowW =
+        RFLi_TEX_EYEBROW_BASE_W * RFLi_TEX_SCALE2DIM(info->eyebrow.scale);
+    f32 eyebrowH =
+        RFLi_TEX_EYEBROW_BASE_H * RFLi_TEX_SCALE2DIM(info->eyebrow.scale);
+    f32 eyebrowA = RFLi_TEX_ROTATE2ANG(
+        info->eyebrow.rotate + RFLi_EYEBROW_ROT_OFFSET[info->eyebrow.type]);
+
+    f32 mouthY =
+        RFLi_TEX_MOUTH_BASE_Y + 1.16f * RFLi_TEX_SCALE_Y * info->mouth.y;
+    f32 mouthW = RFLi_TEX_MOUTH_BASE_W * RFLi_TEX_SCALE2DIM(info->mouth.scale);
+    f32 mouthH = RFLi_TEX_MOUTH_BASE_H * RFLi_TEX_SCALE2DIM(info->mouth.scale);
+
+    f32 mustacheY =
+        RFLi_TEX_MUSTACHE_BASE_Y + 1.16f * RFLi_TEX_SCALE_Y * info->beard.y;
+    f32 mustacheW =
+        RFLi_TEX_MUSTACHE_BASE_W * RFLi_TEX_SCALE2DIM(info->beard.scale);
+    f32 mustacheH =
+        RFLi_TEX_MUSTACHE_BASE_H * RFLi_TEX_SCALE2DIM(info->beard.scale);
+
+    f32 moleX = RFLi_TEX_MOLE_BASE_X + 2.0f * RFLi_TEX_SCALE_X * info->mole.x;
+    f32 moleY = RFLi_TEX_MOLE_BASE_Y + 1.16f * RFLi_TEX_SCALE_Y * info->mole.y;
+    f32 moleW = RFLi_TEX_MOLE_BASE_W + RFLi_TEX_SCALE2DIM(info->mole.scale);
+    f32 moleH = RFLi_TEX_MOLE_BASE_H + RFLi_TEX_SCALE2DIM(info->mole.scale);
+
+    f32 resolution_ = RFLi_TEX_UNIT(resolution);
+
+    face->eyeR.x = resolution_ * (32.0f - eyeX);
+    face->eyeR.y = eyeY * resolution_;
+    face->eyeR.width = eyeW * resolution_;
+    face->eyeR.height = eyeH * resolution_;
+    face->eyeR.angle = eyeA;
+    face->eyeR.origin = RFL_ORIGIN_RIGHT;
+
+    face->eyeL.x = resolution_ * (32.0f + eyeX);
+    face->eyeL.y = eyeY * resolution_;
+    face->eyeL.width = eyeW * resolution_;
+    face->eyeL.height = eyeH * resolution_;
+    face->eyeL.angle = 360.0f - eyeA;
+    face->eyeL.origin = RFL_ORIGIN_LEFT;
+
+    face->eyebrowR.x = resolution_ * (32.0f - eyebrowX);
+    face->eyebrowR.y = eyebrowY * resolution_;
+    face->eyebrowR.width = eyebrowW * resolution_;
+    face->eyebrowR.height = eyebrowH * resolution_;
+    face->eyebrowR.angle = eyebrowA;
+    face->eyebrowR.origin = RFL_ORIGIN_RIGHT;
+
+    face->eyebrowL.x = resolution_ * (32.0f + eyebrowX);
+    face->eyebrowL.y = eyebrowY * resolution_;
+    face->eyebrowL.width = eyebrowW * resolution_;
+    face->eyebrowL.height = eyebrowH * resolution_;
+    face->eyebrowL.angle = 360.0f - eyebrowA;
+    face->eyebrowL.origin = RFL_ORIGIN_LEFT;
+
+    face->mouth.x = 32.0f * resolution_;
+    face->mouth.y = mouthY * resolution_;
+    face->mouth.width = mouthW * resolution_;
+    face->mouth.height = mouthH * resolution_;
+    face->mouth.angle = 0.0f;
+    face->mouth.origin = RFL_ORIGIN_CENTER;
+
+    face->mustacheR.x = 32.0f * resolution_;
+    face->mustacheR.y = mustacheY * resolution_;
+    face->mustacheR.width = mustacheW * resolution_;
+    face->mustacheR.height = mustacheH * resolution_;
+    face->mustacheR.angle = 0.0f;
+    face->mustacheR.origin = RFL_ORIGIN_RIGHT;
+
+    face->mustacheL.x = 32.0f * resolution_;
+    face->mustacheL.y = mustacheY * resolution_;
+    face->mustacheL.width = mustacheW * resolution_;
+    face->mustacheL.height = mustacheH * resolution_;
+    face->mustacheL.angle = 0.0f;
+    face->mustacheL.origin = RFL_ORIGIN_LEFT;
+
+    face->mole.x = moleX * resolution_;
+    face->mole.y = moleY * resolution_;
+    face->mole.width = moleW * resolution_;
+    face->mole.height = moleH * resolution_;
+    face->mole.angle = 0.0f;
+    face->mole.origin = RFL_ORIGIN_CENTER;
+}
 
 void RFLiCapture(u8* buffer, const RFLiCharInfo* info, RFLiFaceParts* face,
                  RFLi_MASKRSL resolution) {
@@ -282,7 +374,7 @@ void RFLiDrawQuad(f32 x, f32 y, f32 width, f32 height, f32 rotZ,
     PSMTXScaleApply(pos, pos, width, height, 1.0f);
     PSMTXRotRad(rot, (M_PI / 180.0f) * rotZ, 'z');
     PSMTXConcat(rot, pos, pos);
-    PSMTXScaleApply(pos, pos, 0.88961464f, 0.9276675f, 1.0f);
+    PSMTXScaleApply(pos, pos, RFLi_TEX_SCALE_X, RFLi_TEX_SCALE_Y, 1.0f);
     PSMTXTransApply(pos, pos, x, y, 1.0f);
 
     GXLoadPosMtxImm(pos, GX_PNMTX0);

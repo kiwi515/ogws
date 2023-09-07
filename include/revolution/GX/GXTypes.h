@@ -785,6 +785,7 @@ typedef enum _GXTexMapID {
 
 typedef enum _GXTexMtx {
     // Any dimension (in standard XF matrix memory)
+    // Enum represents base row of matrix
     GX_TEXMTX0 = 30,
     GX_TEXMTX1 = 33,
     GX_TEXMTX2 = 36,
