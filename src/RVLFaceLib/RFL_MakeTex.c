@@ -1,8 +1,6 @@
 #include <RVLFaceLib/RVLFaceLibInternal.h>
 #include <math.h>
 
-const GXColor RFLi_MOLE_COLOR0 = {18, 15, 15, 255};
-
 void RFLiSetupCopyTex(GXTexFmt fmt, u16 width, u16 height, void* buffer,
                       GXColor clearColor) {
     GXSetFog(GX_FOG_NONE, (GXColor){0, 0, 0, 0}, 1.0f, 1.0f, 0.0f, 0.0f);
@@ -55,7 +53,7 @@ void RFLiSetup2DCameraAndParam(void) {
     GXSetChanCtrl(GX_COLOR0A0, FALSE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL,
                   GX_DF_NONE, GX_DA_MEDIUM);
     GXSetNumTexGens(1);
-    GXSetTexCoordGen(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_TM_IDENTITY);
+    GXSetTexCoordGen(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_TEXMTX_IDENT);
     GXSetTevSwapModeTable(GX_TEV_SWAP0, GX_CH_RED, GX_CH_GREEN, GX_CH_BLUE,
                           GX_CH_ALPHA);
     GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_RED, GX_CH_RED, GX_CH_RED,
@@ -68,6 +66,7 @@ void RFLiSetup2DCameraAndParam(void) {
 
 void RFLiSetTev4Mole(void) {
     GXSetNumTevStages(1);
+
     GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
     GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_C0);
@@ -80,13 +79,125 @@ void RFLiSetTev4Mole(void) {
     GXSetTevColor(GX_TEVREG0, RFLi_MOLE_COLOR0);
 }
 
-void RFLiSetTev4Mouth(u32 color);
+void RFLiSetTev4Mouth(u32 color) {
+    GXSetNumTevStages(3);
 
-void RFLiSetTev4Eye(u32 color, u32 type);
+    GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP1, GX_TEV_SWAP1);
+    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
+    GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_C0, GX_CC_TEXC, GX_CC_ZERO);
+    GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO,
+                    GX_CA_TEXA);
+    GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1,
+                    GX_TEVPREV);
+    GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1,
+                    GX_TEVPREV);
 
-void RFLiSetTev4Eyebrow(u32 color);
+    GXSetTevSwapMode(GX_TEVSTAGE1, GX_TEV_SWAP3, GX_TEV_SWAP2);
+    GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
+    GXSetTevColorIn(GX_TEVSTAGE1, GX_CC_ZERO, GX_CC_C1, GX_CC_TEXC,
+                    GX_CC_CPREV);
+    GXSetTevAlphaIn(GX_TEVSTAGE1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO,
+                    GX_CA_APREV);
+    GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1,
+                    GX_TEVPREV);
+    GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1,
+                    GX_TEVPREV);
 
-void RFLiSetTev4Mustache(u32 color);
+    GXSetTevSwapMode(GX_TEVSTAGE2, GX_TEV_SWAP2, GX_TEV_SWAP3);
+    GXSetTevOrder(GX_TEVSTAGE2, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
+    GXSetTevColorIn(GX_TEVSTAGE2, GX_CC_ZERO, GX_CC_ONE, GX_CC_TEXC,
+                    GX_CC_CPREV);
+    GXSetTevAlphaIn(GX_TEVSTAGE2, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO,
+                    GX_CA_APREV);
+    GXSetTevColorOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1,
+                    GX_TEVPREV);
+    GXSetTevAlphaOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1,
+                    GX_TEVPREV);
+
+    GXSetTevColor(GX_TEVREG0, RFLi_MOUTH_COLOR0[color]);
+    GXSetTevColor(GX_TEVREG1, RFLi_MOUTH_COLOR1[color]);
+}
+
+void RFLiSetTev4Eye(u32 color, u32 type) {
+    GXColor color0;
+    GXColor color1;
+
+    GXSetNumTevStages(3);
+    GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP1, GX_TEV_SWAP1);
+    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
+    GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_C0, GX_CC_TEXC, GX_CC_ZERO);
+    GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO,
+                    GX_CA_TEXA);
+    GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1,
+                    GX_TEVPREV);
+    GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1,
+                    GX_TEVPREV);
+    GXSetTevSwapMode(GX_TEVSTAGE1, GX_TEV_SWAP3, GX_TEV_SWAP3);
+    GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
+    GXSetTevColorIn(GX_TEVSTAGE1, GX_CC_ZERO, GX_CC_C1, GX_CC_TEXC,
+                    GX_CC_CPREV);
+    GXSetTevAlphaIn(GX_TEVSTAGE1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO,
+                    GX_CA_APREV);
+    GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1,
+                    GX_TEVPREV);
+    GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1,
+                    GX_TEVPREV);
+    GXSetTevSwapMode(GX_TEVSTAGE2, GX_TEV_SWAP2, GX_TEV_SWAP2);
+    GXSetTevOrder(GX_TEVSTAGE2, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
+    GXSetTevColorIn(GX_TEVSTAGE2, GX_CC_ZERO, GX_CC_ONE, GX_CC_TEXC,
+                    GX_CC_CPREV);
+    GXSetTevAlphaIn(GX_TEVSTAGE2, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO,
+                    GX_CA_APREV);
+    GXSetTevColorOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1,
+                    GX_TEVPREV);
+    GXSetTevAlphaOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1,
+                    GX_TEVPREV);
+
+    switch (type) {
+    case 9:
+        color0 = (GXColor){255, 130, 0, 255};
+        break;
+    case 20:
+        color0 = (GXColor){0, 255, 255, 255};
+        break;
+    default:
+        color0 = (GXColor){0, 0, 0, 255};
+        break;
+    }
+
+    color1 = RFLi_EYE_COLOR1[color];
+
+    GXSetTevColor(GX_TEVREG0, color0);
+    GXSetTevColor(GX_TEVREG1, color1);
+}
+
+void RFLiSetTev4Eyebrow(u32 color) {
+    GXSetNumTevStages(1);
+    GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
+    GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_C0);
+    GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO,
+                    GX_CA_TEXA);
+    GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1,
+                    GX_TEVPREV);
+    GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1,
+                    GX_TEVPREV);
+    GXSetTevColor(GX_TEVREG0, RFLi_EYEBROW_COLOR0[color]);
+}
+
+void RFLiSetTev4Mustache(u32 color) {
+    GXSetNumTevStages(1);
+    GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
+    GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_C0);
+    GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO,
+                    GX_CA_TEXA);
+    GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1,
+                    GX_TEVPREV);
+    GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, 1,
+                    GX_TEVPREV);
+    GXSetTevColor(GX_TEVREG0, RFLi_BEARD_COLOR0[color]);
+}
 
 void RFLiSetFaceParts(const RFLiCharInfo* info, RFLiFaceParts* face,
                       RFLi_MASKRSL resolution);
@@ -147,13 +258,6 @@ void RFLiCapture(u8* buffer, const RFLiCharInfo* info, RFLiFaceParts* face,
     RFLiDrawFaceParts(&face->mole);
 
     GXSetColorUpdate(TRUE);
-
-    if (RFLiGetManager()->modelDrawCb == NULL) {
-        GXDrawDone();
-    } else {
-        RFLiGetManager()->modelDrawCb();
-    }
-
     DCInvalidateRange(buffer, RFLiGetMaskSize(resolution));
     GXCopyTex(buffer, 1);
     GXPixModeSync();
