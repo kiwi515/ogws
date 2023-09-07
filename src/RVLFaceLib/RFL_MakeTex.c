@@ -19,61 +19,435 @@ void RFLiSetupCopyTex(GXTexFmt fmt, u16 width, u16 height, void* buffer,
     GXPixModeSync();
 }
 
-void RFLiMakeTexture(const RFLiCharInfo* info, u8** buffer,
+void RFLiMakeTexture(const RFLiCharInfo* info, u8** buffers,
                      RFLResolution resolution) {
-    typedef enum { INFO0, INFO1, INFO2, INFO3, INFO4, INFO5, INFO6, I_MAX };
+    int i;                              // r30
+    RFLiCharInfo infos[RFLExp_Max];     // spF78
+    RFLiFaceParts parts[RFLExp_Max];    // sp178
+    u8** eyeBuf[RFLExp_Max];            // sp158
+    u8** mouthBuf[RFLExp_Max];          // sp13C
+    RFLiTexture** eyeTex[RFLExp_Max];   // sp120
+    RFLiTexture** mouthTex[RFLExp_Max]; // sp104
 
-    int i;                     // r30
-    RFLiCharInfo infos[I_MAX]; // spF78
-    RFLiFaceParts parts;       // sp178
+    u32 eyeSize = RFLiGetTexSize(RFLiPartsTex_Eye, 0);           // sp100
+    u32 eyebrowSize = RFLiGetTexSize(RFLiPartsTex_Eyebrow, 0);   // spFC
+    u32 mouthSize = RFLiGetTexSize(RFLiPartsTex_Mouth, 0);       // spF8
+    u32 mustacheSize = RFLiGetTexSize(RFLiPartsTex_Mustache, 0); // spF4
+    u32 moleSize = RFLiGetTexSize(RFLiPartsTex_Mole, 0);         // spF0
 
-    u32 eyeSize;      // sp100
-    u32 eyebrowSize;  // spFC
-    u32 mouthSize;    // spF8
-    u32 mustacheSize; // spF4
-    u32 moleSize;     // spF0
+    u8* eyeNormal = NULL;      // spEC
+    u8* eyebrowNormal = NULL;  // spE8
+    u8* mouthNormal = NULL;    // spE4
+    u8* mustacheNormal = NULL; // spE0
+    u8* moleNormal = NULL;     // spDC
 
-    u8* eyeNrm;      // spEC
-    u8* eyebrowNrm;  // spE8
-    u8* mouthNrm;    // spE4
-    u8* mustacheNrm; // spE0
-    u8* moleNrm;     // spDC
+    u8* eyeSmile = NULL;    // spD8
+    u8* mouthAnger = NULL;  // spD4
+    u8* eyeSorrow = NULL;   // spD0
+    u8* mouthSorrow = NULL; // spCC
+    u8* eyeSurprise = NULL; // spC8
+    u8* eyeBlink = NULL;    // spC4
+    u8* mouthOpen = NULL;   // spC0
 
-    u8* eyeSmile;    // spD8
-    u8* mouthAnger;  // spD4
-    u8* eyeSorrow;   // spD0
-    u8* mouthSorrow; // spCC
-    u8* eyeSurprise; // spC8
-    u8* eyeBlink;    // spC4
-    u8* mouthOpen;   // spC0
-
-    u8* eyeBuf;   // sp158
-    u8* mouthBuf; // sp13C
-
-    RFLiTexture* eyeNrmTex;      // spBC
-    RFLiTexture* eyeBiNrmTex;    // spB8
-    RFLiTexture* mouthNrmTex;    // spB4
-    RFLiTexture* mustacheNrmTex; // spB0
-    RFLiTexture* moleNrmTex;     // spAC
-    RFLiTexture* eyeSmileTex;    // spA8
-    RFLiTexture* mouthAngerTex;  // spA4
-    RFLiTexture* mouthSadTex;    // sp9C
-    RFLiTexture* eyeSurpriseTex; // sp98
-    RFLiTexture* eyeBlinkTex;    // sp94
-    RFLiTexture* mouthOpenTex;   // sp90
-    RFLiTexture* eyeTex;         // sp120
-    RFLiTexture* mouthTex;       // sp104
+    RFLiTexture* eyeNormalTex;      // spBC
+    RFLiTexture* eyebrowNormalTex;  // spB8
+    RFLiTexture* mouthNormalTex;    // spB4
+    RFLiTexture* mustacheNormalTex; // spB0
+    RFLiTexture* moleNormalTex;     // spAC
+    RFLiTexture* eyeSmileTex;       // spA8
+    RFLiTexture* mouthAngerTex;     // spA4
+    RFLiTexture* eyeSadTex;         // spA0
+    RFLiTexture* mouthSadTex;       // sp9C
+    RFLiTexture* eyeSurpriseTex;    // sp98
+    RFLiTexture* eyeBlinkTex;       // sp94
+    RFLiTexture* mouthOpenTex;      // sp90
 
     u32 sx; // sp8C
     u32 sy; // sp88
     u32 sw; // sp84
     u32 sh; // sp80
+
+    eyeBuf[RFLExp_Normal] = &eyeNormal;
+    eyeBuf[RFLExp_Smile] = &eyeSmile;
+    eyeBuf[RFLExp_Anger] = &eyeNormal;
+    eyeBuf[RFLExp_Sorrow] = &eyeSorrow;
+    eyeBuf[RFLExp_Surprise] = &eyeSurprise;
+    eyeBuf[RFLExp_Blink] = &eyeBlink;
+    eyeBuf[RFLExp_OpenMouth] = &eyeNormal;
+
+    mouthBuf[RFLExp_Normal] = &mouthNormal;
+    mouthBuf[RFLExp_Smile] = &mouthNormal;
+    mouthBuf[RFLExp_Anger] = &mouthAnger;
+    mouthBuf[RFLExp_Sorrow] = &mouthSorrow;
+    mouthBuf[RFLExp_Surprise] = &mouthNormal;
+    mouthBuf[RFLExp_Blink] = &mouthNormal;
+    mouthBuf[RFLExp_OpenMouth] = &mouthOpen;
+
+    eyeNormalTex = NULL;
+    eyebrowNormalTex = NULL;
+    mouthNormalTex = NULL;
+    mustacheNormalTex = NULL;
+    moleNormalTex = NULL;
+    eyeSmileTex = NULL;
+    mouthAngerTex = NULL;
+    eyeSadTex = NULL;
+    mouthSadTex = NULL;
+    eyeSurpriseTex = NULL;
+    eyeBlinkTex = NULL;
+    mouthOpenTex = NULL;
+
+    eyeTex[RFLExp_Normal] = &eyeNormalTex;
+    eyeTex[RFLExp_Smile] = &eyeSmileTex;
+    eyeTex[RFLExp_Anger] = &eyeNormalTex;
+    eyeTex[RFLExp_Sorrow] = &eyeSadTex;
+    eyeTex[RFLExp_Surprise] = &eyeSurpriseTex;
+    eyeTex[RFLExp_Surprise] = &eyeBlinkTex;
+    eyeTex[RFLExp_OpenMouth] = &eyeNormalTex;
+
+    mouthTex[RFLExp_Normal] = &mouthNormalTex;
+    mouthTex[RFLExp_Smile] = &mouthNormalTex;
+    mouthTex[RFLExp_Anger] = &mouthAngerTex;
+    mouthTex[RFLExp_Sorrow] = &mouthSadTex;
+    mouthTex[RFLExp_Surprise] = &mouthNormalTex;
+    mouthTex[RFLExp_Blink] = &mouthNormalTex;
+    mouthTex[RFLExp_OpenMouth] = &mouthOpenTex;
+
+    if (buffers[RFLExp_Normal] != NULL) {
+        infos[RFLExp_Normal] = *info;
+    }
+
+    if (buffers[RFLExp_Smile] != NULL) {
+        int changeEyeRot = 0;              // sp7C
+        RFLExpression expr = RFLExp_Smile; // sp78
+
+        infos[expr] = *info;
+        infos[expr].eye.type = 48;
+
+        changeEyeRot = RFLi_EYE_ROT_OFFSET[info->eye.type] -
+                       RFLi_EYE_ROT_OFFSET[infos[expr].eye.type];
+        if (changeEyeRot + (int)infos[expr].eye.rotate < 0) {
+            infos[expr].eye.rotate = 0;
+        } else if (changeEyeRot + (int)infos[expr].eye.rotate >
+                   RFLi_MAX_EYE_ROTATE) {
+            infos[expr].eye.rotate = RFLi_MAX_EYE_ROTATE;
+        } else {
+            infos[expr].eye.rotate += changeEyeRot;
+        }
+    }
+
+    if (buffers[RFLExp_Anger] != NULL) {
+        int changeEyebrowRot = 0;          // sp74
+        int changeEyeRot = 0;              // sp70
+        RFLExpression expr = RFLExp_Anger; // sp6C
+
+        infos[expr] = *info;
+
+        changeEyebrowRot = 2;
+        if (changeEyebrowRot + (int)infos[expr].eyebrow.rotate < 0) {
+            infos[expr].eyebrow.rotate = 0;
+        } else if (changeEyebrowRot + (int)infos[expr].eyebrow.rotate >
+                   RFLi_MAX_EYEBROW_ROTATE) {
+            infos[expr].eyebrow.rotate = RFLi_MAX_EYEBROW_ROTATE;
+        } else {
+            infos[expr].eyebrow.rotate += changeEyebrowRot;
+        }
+
+        changeEyeRot = 2;
+        if (changeEyeRot + (int)infos[expr].eye.rotate < 0) {
+            infos[expr].eye.rotate = 0;
+        } else if (changeEyeRot + (int)infos[expr].eye.rotate >
+                   RFLi_MAX_EYE_ROTATE) {
+            infos[expr].eye.rotate = RFLi_MAX_EYE_ROTATE;
+        } else {
+            infos[expr].eye.rotate += changeEyeRot;
+        }
+
+        infos[expr].mouth.type = 10;
+    }
+
+    if (buffers[RFLExp_Sorrow] != NULL) {
+        int changeEyebrowRot = 0;           // sp68
+        int changeEyeRot = 0;               // sp64
+        RFLExpression expr = RFLExp_Sorrow; // sp60
+
+        infos[expr] = *info;
+
+        changeEyebrowRot = -2;
+        if (changeEyebrowRot + (int)infos[expr].eyebrow.rotate < 0) {
+            infos[expr].eyebrow.rotate = 0;
+        } else if (changeEyebrowRot + (int)infos[expr].eyebrow.rotate >
+                   RFLi_MAX_EYEBROW_ROTATE) {
+            infos[expr].eyebrow.rotate = RFLi_MAX_EYEBROW_ROTATE;
+        } else {
+            infos[expr].eyebrow.rotate += changeEyebrowRot;
+        }
+
+        changeEyeRot = -2;
+        if (changeEyeRot + (int)infos[expr].eye.rotate < 0) {
+            infos[expr].eye.rotate = 0;
+        } else if (changeEyeRot + (int)infos[expr].eye.rotate >
+                   RFLi_MAX_EYE_ROTATE) {
+            infos[expr].eye.rotate = RFLi_MAX_EYE_ROTATE;
+        } else {
+            infos[expr].eye.rotate += changeEyeRot;
+        }
+
+        infos[expr].mouth.type = 12;
+    }
+
+    if (buffers[RFLExp_Surprise] != NULL) {
+        int changeEyeRot = 0;                 // sp5C
+        RFLExpression expr = RFLExp_Surprise; // sp58
+
+        infos[expr] = *info;
+        infos[expr].eyebrow.y -= 2;
+        infos[expr].eye.type = 49;
+
+        changeEyeRot = RFLi_EYE_ROT_OFFSET[info->eye.type] -
+                       RFLi_EYE_ROT_OFFSET[infos[expr].eye.type];
+        if (changeEyeRot + (int)infos[expr].eye.rotate < 0) {
+            infos[expr].eye.rotate = 0;
+        } else if (changeEyeRot + (int)infos[expr].eye.rotate >
+                   RFLi_MAX_EYE_ROTATE) {
+            infos[expr].eye.rotate = RFLi_MAX_EYE_ROTATE;
+        } else {
+            infos[expr].eye.rotate += changeEyeRot;
+        }
+    }
+
+    if (buffers[RFLExp_Blink] != NULL) {
+        int changeEyeRot = 0;              // sp54
+        RFLExpression expr = RFLExp_Blink; // sp50
+
+        infos[expr] = *info;
+        infos[expr].eye.type = 26;
+
+        changeEyeRot = RFLi_EYE_ROT_OFFSET[info->eye.type] -
+                       RFLi_EYE_ROT_OFFSET[infos[expr].eye.type];
+        if (changeEyeRot + (int)infos[expr].eye.rotate < 0) {
+            infos[expr].eye.rotate = 0;
+        } else if (changeEyeRot + (int)infos[expr].eye.rotate >
+                   RFLi_MAX_EYE_ROTATE) {
+            infos[expr].eye.rotate = RFLi_MAX_EYE_ROTATE;
+        } else {
+            infos[expr].eye.rotate += changeEyeRot;
+        }
+    }
+
+    if (buffers[RFLExp_OpenMouth] != NULL) {
+        RFLExpression expr = RFLExp_OpenMouth; // sp4C
+
+        infos[expr] = *info;
+        infos[expr].mouth.type = 24;
+    }
+
+    for (i = 0; i < RFLExp_Max; i++) {
+        if (buffers[i] != NULL) {
+            if (*eyeBuf[i] == NULL) {
+                *eyeBuf[i] = RFLiAlloc32(eyeSize);
+            }
+
+            if (*mouthBuf[i] == NULL) {
+                *mouthBuf[i] = RFLiAlloc32(mouthSize);
+            }
+
+            if (eyebrowNormal == NULL) {
+                eyebrowNormal = RFLiAlloc32(eyebrowSize);
+            }
+
+            if (mustacheNormal == NULL) {
+                mustacheNormal = RFLiAlloc32(mustacheSize);
+            }
+
+            if (moleNormal == NULL) {
+                moleNormal = RFLiAlloc32(moleSize);
+            }
+
+            if (*eyeTex[i] == NULL) {
+                *eyeTex[i] = RFLiLoadTexture(RFLiPartsTex_Eye,
+                                             infos[i].eye.type, *eyeBuf[i]);
+                DCStoreRange(*eyeBuf[i], eyeSize);
+            }
+
+            if (*mouthTex[i] == NULL) {
+                *mouthTex[i] = RFLiLoadTexture(
+                    RFLiPartsTex_Mouth, infos[i].mouth.type, *mouthBuf[i]);
+                DCStoreRange(*mouthBuf[i], mouthSize);
+            }
+
+            if (eyebrowNormalTex == NULL) {
+                eyebrowNormalTex = RFLiLoadTexture(
+                    RFLiPartsTex_Eyebrow, infos[i].eyebrow.type, eyebrowNormal);
+                DCStoreRange(eyebrowNormal, eyebrowSize);
+            }
+
+            if (mustacheNormalTex == NULL) {
+                mustacheNormalTex =
+                    RFLiLoadTexture(RFLiPartsTex_Mustache,
+                                    infos[i].beard.mustache, mustacheNormal);
+                DCStoreRange(mustacheNormal, mustacheSize);
+            }
+
+            if (moleNormalTex == NULL) {
+                moleNormalTex = RFLiLoadTexture(RFLiPartsTex_Mole,
+                                                infos[i].mole.type, moleNormal);
+                DCStoreRange(moleNormal, moleSize);
+            }
+
+            parts[i].eyeR.ngtobj.texture = *eyeTex[i];
+            parts[i].eyeL.ngtobj.texture = *eyeTex[i];
+
+            parts[i].eyebrowR.ngtobj.texture = eyebrowNormalTex;
+            parts[i].eyebrowL.ngtobj.texture = eyebrowNormalTex;
+
+            parts[i].mouth.ngtobj.texture = *mouthTex[i];
+
+            parts[i].mustacheR.ngtobj.texture = mustacheNormalTex;
+            parts[i].mustacheL.ngtobj.texture = mustacheNormalTex;
+
+            parts[i].mole.ngtobj.texture = moleNormalTex;
+
+            RFLiInitRFLTexture(&parts[i].eyeR.ngtobj);
+            RFLiInitRFLTexture(&parts[i].eyeL.ngtobj);
+
+            RFLiInitRFLTexture(&parts[i].eyebrowR.ngtobj);
+            RFLiInitRFLTexture(&parts[i].eyebrowL.ngtobj);
+
+            RFLiInitRFLTexture(&parts[i].mouth.ngtobj);
+
+            RFLiInitRFLTexture(&parts[i].mustacheR.ngtobj);
+            RFLiInitRFLTexture(&parts[i].mustacheL.ngtobj);
+
+            RFLiInitRFLTexture(&parts[i].mole.ngtobj);
+        }
+    }
+
+    // 8039baa8
+    {
+        // TODO: Isolated scope down here because of stack position. Can we
+        // remove this scope and put this var at the top?
+        RFLi_MASKRSL max = RFLiGetMaxMaskRsl(resolution); // sp48
+        u32 size;                                         // sp44
+
+        for (i = 0; i < RFLExp_Max; i++) {
+            if (buffers[i] != NULL) {
+                break;
+            }
+        }
+
+        RFLiSetupCopyTex(GX_TF_RGB5A3, max, max, buffers[i],
+                         (GXColor){0, 0, 0, 0});
+
+        size = RFLiGetMaskBufSize(resolution);
+        for (i = 0; i < RFLExp_Max; i++) {
+            if (buffers[i] != NULL) {
+                DCInvalidateRange(buffers[i], size);
+            }
+        }
+
+        GXGetScissor(&sx, &sy, &sw, &sh);
+        for (i = 0; i < RFLExp_Max; i++) {
+            if (buffers[i] != NULL) {
+                u8* ptr = buffers[i]; // sp40
+
+                if (resolution & 256) {
+                    GXSetTexCopySrc(0, 0, 256, 256);
+                    GXSetTexCopyDst(256, 256, GX_TF_RGB5A3, FALSE);
+                    GXSetScissor(0, 0, 256, 256);
+                    RFLiSetFaceParts(&infos[i], &parts[i], RFLi_MASKRSL_256);
+                    RFLiCapture(ptr, &infos[i], &parts[i], RFLi_MASKRSL_256);
+                    ptr += RFLiGetMaskSize(RFLi_MASKRSL_256);
+                }
+
+                if (resolution & 128) {
+                    GXSetTexCopySrc(0, 0, 128, 128);
+                    GXSetTexCopyDst(128, 128, GX_TF_RGB5A3, FALSE);
+                    GXSetScissor(0, 0, 128, 128);
+                    RFLiSetFaceParts(&infos[i], &parts[i], RFLi_MASKRSL_128);
+                    RFLiCapture(ptr, &infos[i], &parts[i], RFLi_MASKRSL_128);
+                    ptr += RFLiGetMaskSize(RFLi_MASKRSL_128);
+                }
+
+                if (resolution & 64) {
+                    GXSetTexCopySrc(0, 0, 64, 64);
+                    GXSetTexCopyDst(64, 64, GX_TF_RGB5A3, FALSE);
+                    GXSetScissor(0, 0, 64, 64);
+                    RFLiSetFaceParts(&infos[i], &parts[i], RFLi_MASKRSL_64);
+                    RFLiCapture(ptr, &infos[i], &parts[i], RFLi_MASKRSL_64);
+                    ptr += RFLiGetMaskSize(RFLi_MASKRSL_64);
+                }
+
+                if (resolution & 32) {
+                    GXSetTexCopySrc(0, 0, 32, 32);
+                    GXSetTexCopyDst(32, 32, GX_TF_RGB5A3, FALSE);
+                    GXSetScissor(0, 0, 32, 32);
+                    RFLiSetFaceParts(&infos[i], &parts[i], RFLi_MASKRSL_32);
+                    RFLiCapture(ptr, &infos[i], &parts[i], RFLi_MASKRSL_32);
+                    ptr += RFLiGetMaskSize(RFLi_MASKRSL_32);
+                }
+            }
+        }
+    }
+
+    if (eyeNormal != NULL) {
+        RFLiFree(eyeNormal);
+    }
+
+    if (eyebrowNormal != NULL) {
+        RFLiFree(eyebrowNormal);
+    }
+
+    if (mouthNormal != NULL) {
+        RFLiFree(mouthNormal);
+    }
+
+    if (mustacheNormal != NULL) {
+        RFLiFree(mustacheNormal);
+    }
+
+    if (moleNormal != NULL) {
+        RFLiFree(moleNormal);
+    }
+
+    if (eyeSmile != NULL) {
+        RFLiFree(eyeSmile);
+    }
+
+    if (mouthAnger != NULL) {
+        RFLiFree(mouthAnger);
+    }
+
+    if (eyeSorrow != NULL) {
+        RFLiFree(eyeSorrow);
+    }
+
+    if (mouthSorrow != NULL) {
+        RFLiFree(mouthSorrow);
+    }
+
+    if (eyeSurprise != NULL) {
+        RFLiFree(eyeSurprise);
+    }
+
+    if (eyeBlink != NULL) {
+        RFLiFree(eyeBlink);
+    }
+
+    if (mouthOpen != NULL) {
+        RFLiFree(mouthOpen);
+    }
+
+    GXSetScissor(sx, sy, sw, sh);
 }
 
 void RFLiInitRFLTexture(RFLiTexObj* tobj) {
     RFLiTexture* tex = tobj->texture;
+
     GXInitTexObj(&tobj->tobj, RFLiGetTexImage(tex), tex->width, tex->height,
                  tex->format, GX_CLAMP, GX_CLAMP, FALSE);
+    GXInitTexObjLOD(&tobj->tobj, tex->minFilt, tex->magFilt, tex->minLOD,
+                    tex->maxLOD, tex->lodBias, tex->enableBiasClamp,
+                    tex->enableEdgeLOD, tex->enableMaxAniso);
 }
 
 void RFLiSetup2DCameraAndParam(void) {
