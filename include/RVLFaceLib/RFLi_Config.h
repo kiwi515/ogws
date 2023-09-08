@@ -72,9 +72,10 @@ extern "C" {
  */
 
 // TODO: A few values need to be converted to fractions/expressions
+// Once RFLi_TEX_SCALE_Y becomes a fraction, replace the 1.1600001 with 1.16
 
 #define RFLi_TEX_SCALE_X (0.88961464f)
-#define RFLi_TEX_SCALE_Y (0.92766759f)
+#define RFLi_TEX_SCALE_Y (0.9276675f)
 
 #define RFLi_TEX_SCALE2DIM(scale) (1.0 + 0.4f * (scale))
 #define RFLi_TEX_ROTATE2ANG(rotate) ((360.0f / 32.0f) * ((rotate) % 32))
