@@ -48,7 +48,7 @@ void PSQUATMultiply(register const Quaternion* a, register const Quaternion* b,
     // clang-format on
 }
 
-void PSQUATNormalize(register const Quaternion* in, register Quaternion* out) {
+void PSQUATNormalize(register const Quaternion* src, register Quaternion* dst) {
     register f32 xy, zw;
     register f32 xy2, dot;
     register f32 work0, work1, work2, work3;
@@ -61,8 +61,8 @@ void PSQUATNormalize(register const Quaternion* in, register Quaternion* out) {
     // clang-format off
     asm {
         // Load quaternion components
-        psq_l xy, Quaternion.x(in), 0, 0
-        psq_l zw, Quaternion.z(in), 0, 0
+        psq_l xy, Quaternion.x(src), 0, 0
+        psq_l zw, Quaternion.z(src), 0, 0
 
         // Compute dot product with self
         ps_mul  xy2, xy,  xy       // X^2,             Y^2
@@ -90,8 +90,8 @@ void PSQUATNormalize(register const Quaternion* in, register Quaternion* out) {
         ps_muls0 zw, zw, work0
 
         // Store result
-        psq_st xy, Quaternion.x(out), 0, 0
-        psq_st zw, Quaternion.z(out), 0, 0
+        psq_st xy, Quaternion.x(dst), 0, 0
+        psq_st zw, Quaternion.z(dst), 0, 0
     }
     // clang-format on
 }

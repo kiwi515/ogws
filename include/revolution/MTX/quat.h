@@ -7,7 +7,7 @@ extern "C" {
 #endif
 
 void PSQUATMultiply(const Quaternion* a, const Quaternion* b, Quaternion* prod);
-void PSQUATNormalize(const Quaternion* in, Quaternion* out);
+void PSQUATNormalize(const Quaternion* src, Quaternion* dst);
 void C_QUATMtx(Quaternion* quat, const Mtx mtx);
 void C_QUATSlerp(const Quaternion* a, const Quaternion* b, Quaternion* out,
                  f32 t);

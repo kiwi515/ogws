@@ -25,28 +25,29 @@ asm void PSVECAdd(register const Vec* a, register const Vec* b,
     // clang-format on
 }
 
-void PSVECScale(register const Vec* in, register Vec* out, register f32 scale) {
+void PSVECScale(register const Vec* src, register Vec* dst,
+                register f32 scale) {
     register f32 xy, z;
     register f32 sxy, sz;
 
     // clang-format off
     asm {
         // Load components
-        psq_l xy, Vec.x(in), 0, 0
-        psq_l z,  Vec.z(in), 1, 0
+        psq_l xy, Vec.x(src), 0, 0
+        psq_l z,  Vec.z(src), 1, 0
 
         // Scale components
         ps_muls0 sxy, xy, scale
         ps_muls0 sz,  z,  scale
 
         // Store result
-        psq_st sxy, Vec.x(out), 0, 0
-        psq_st sz,  Vec.z(out), 1, 0
+        psq_st sxy, Vec.x(dst), 0, 0
+        psq_st sz,  Vec.z(dst), 1, 0
     }
     // clang-format on
 }
 
-void PSVECNormalize(register const Vec* in, register Vec* out) {
+void PSVECNormalize(register const Vec* src, register Vec* dst) {
     register f32 c_half, c_three;
     register f32 xy, z;
     register f32 z2;
@@ -59,8 +60,8 @@ void PSVECNormalize(register const Vec* in, register Vec* out) {
     // clang-format off
     asm {
         // Load vector components
-        psq_l xy, Vec.x(in), 0, 0
-        psq_l z,  Vec.z(in), 1, 0
+        psq_l xy, Vec.x(src), 0, 0
+        psq_l z,  Vec.z(src), 1, 0
 
         // Compute dot product with self
         ps_mul  work0, xy, xy       // X^2,         Y^2
@@ -82,8 +83,8 @@ void PSVECNormalize(register const Vec* in, register Vec* out) {
         ps_muls0 z,  z,  work0
 
         // Store result
-        psq_st xy, Vec.x(out), 0, 0
-        psq_st z,  Vec.z(out), 1, 0
+        psq_st xy, Vec.x(dst), 0, 0
+        psq_st z,  Vec.z(dst), 1, 0
     }
     // clang-format on
 }
