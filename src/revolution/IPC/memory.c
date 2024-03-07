@@ -32,7 +32,7 @@ static void __iosCoalesceChunk(IPCHeapChunk* chunk) {
         return;
     }
 
-    if ((u8*)chunk->next != (u8*)chunk + chunk->size) {
+    if ((u8*)chunk->next != (u8*)chunk + chunk->size + sizeof(IPCHeapChunk)) {
         return;
     }
 
@@ -43,7 +43,7 @@ static void __iosCoalesceChunk(IPCHeapChunk* chunk) {
         chunk->next->prev = chunk;
     }
 
-    chunk->size = next->size + chunk->size + sizeof(IPCHeapChunk);
+    chunk->size += next->size + sizeof(IPCHeapChunk);
 }
 
 s32 iosCreateHeap(void* base, u32 size) {
@@ -164,6 +164,7 @@ void* __iosAlloc(s32 handle, u32 size, u32 align) {
 
     best->magic = IPC_HEAP_CHUNK_USED;
 
+    // Remove chunk from list
     if (best->prev != NULL) {
         best->prev->next = best->next;
     } else {
@@ -177,7 +178,8 @@ void* __iosAlloc(s32 handle, u32 size, u32 align) {
     best->next = NULL;
     best->prev = NULL;
 
-    // Looks like we create an aligned header for unaligned chunks?
+    // For unaligned chunks, create a header where one would normally be.
+    // To find the real chunk, you take the FORALIGN one and jump back one.
     block = (u8*)best + bestUnalign + sizeof(IPCHeapChunk);
     if (bestUnalign != 0) {
         IPCHeapChunk* aligned = (IPCHeapChunk*)(block - sizeof(IPCHeapChunk));
@@ -195,5 +197,78 @@ void* iosAllocAligned(s32 handle, u32 size, u32 align) {
 }
 
 s32 iosFree(s32 handle, void* block) {
-    ;
+    IPCHeapChunk* chunk;
+    IPCHeapChunk* it;
+    IPCHeapDesc* desc;
+    BOOL enabled;
+    s32 ret;
+
+    ret = IPC_RESULT_INVALID_INTERNAL;
+    enabled = OSDisableInterrupts();
+
+    if (block == NULL) {
+        goto _exit;
+    }
+
+    if (handle < 0 || handle >= IPC_HEAP_MAX || __heaps[handle].start == NULL) {
+        ret = IPC_RESULT_INVALID_INTERNAL;
+        goto _exit;
+    }
+
+    desc = &__heaps[handle];
+
+    if ((u8*)block < (u8*)desc->start + sizeof(IPCHeapChunk)) {
+        goto _exit;
+    }
+
+    if ((u8*)block > (u8*)desc->start + desc->size) {
+        goto _exit;
+    }
+
+    chunk = (IPCHeapChunk*)((u8*)block - sizeof(IPCHeapChunk));
+
+    // Find *real* chunk from alignment helper
+    if (chunk->magic == IPC_HEAP_CHUNK_FORALIGN) {
+        chunk = chunk->prev;
+    }
+
+    if (chunk->magic != IPC_HEAP_CHUNK_USED) {
+        goto _exit;
+    }
+
+    chunk->magic = IPC_HEAP_CHUNK_FREE;
+
+    // Next chunk after freed
+    for (it = desc->head; it != NULL; it = it->next) {
+        if (it->next == NULL || it->next > chunk) {
+            break;
+        }
+    }
+
+    // Place chunk back in list
+    if (it != NULL && chunk > it) {
+        chunk->prev = it;
+        chunk->next = it->next;
+        it->next = chunk;
+
+        if (chunk->next != NULL) {
+            chunk->next->prev = chunk;
+        }
+    } else {
+        chunk->next = desc->head;
+        desc->head = chunk;
+        chunk->prev = NULL;
+
+        if (chunk->next != NULL) {
+            chunk->next->prev = chunk;
+        }
+    }
+
+    __iosCoalesceChunk(chunk);
+    __iosCoalesceChunk(chunk->prev);
+    ret = IPC_RESULT_OK;
+
+_exit:
+    OSRestoreInterrupts(enabled);
+    return ret;
 }
