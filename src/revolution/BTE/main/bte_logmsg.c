@@ -1,5 +1,20 @@
 /******************************************************************************
  *
+ *  NOTICE OF CHANGES
+ *  2024/03/25:
+ *      - Remove linux functionality for RVL target
+ *      - Include necessary files for trace functions
+ *      - Modify LogMsg_* family of functions to match RVL target
+ *      - Supply LogMsg definition for RVL
+ * 
+ *  Compile with BTE_RVL_TARGET defined to include these changes.
+ * 
+ ******************************************************************************/
+
+
+
+/******************************************************************************
+ *
  *  Copyright (C) 2001-2012 Broadcom Corporation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +37,10 @@
  *  appropriate application's LogMsg equivalent.
  *
  ******************************************************************************/
+
+#ifdef BTE_RVL_TARGET
+#include <revolution/OS.h>
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -517,6 +536,31 @@ BT_API void BTE_InitTraceLevels( void )
 #endif
 }
 
+#ifdef BTE_RVL_TARGET
+/********************************************************************************
+ **
+ **    Function Name:   LogMsg
+ **
+ **    Purpose:  Encodes a trace message that has multiple parameter arguments
+ **
+ **    Input Parameters:  trace_set_mask: tester trace type.
+ **                       fmt_str: displayable string.
+ **    Returns:
+ **                      Nothing.
+ **
+ *********************************************************************************/
+void LogMsg(UINT32 trace_set_mask, const char *fmt_str, ...) {
+    static char tmp[2000];
+    
+    va_list list;
+    va_start(list, fmt_str);
+    vsprintf(tmp, fmt_str, list);
+    va_end(list);
+
+    sprintf(tmp, "%s\n", tmp);
+    OSReport(tmp);
+}
+#endif
 
 /********************************************************************************
  **
@@ -531,7 +575,13 @@ BT_API void BTE_InitTraceLevels( void )
  **
  *********************************************************************************/
 void LogMsg_0(UINT32 trace_set_mask, const char *fmt_str) {
-    LogMsg(trace_set_mask, fmt_str);
+#ifdef BTE_RVL_TARGET
+    if (bte_target_mode == BTE_MODE_SERIAL_APP) {
+#endif
+        LogMsg(trace_set_mask, fmt_str);
+#ifdef BTE_RVL_TARGET
+    }
+#endif
 }
 
 /********************************************************************************
@@ -547,8 +597,13 @@ void LogMsg_0(UINT32 trace_set_mask, const char *fmt_str) {
  **
  *********************************************************************************/
 void LogMsg_1(UINT32 trace_set_mask, const char *fmt_str, UINT32 p1) {
-
-    LogMsg(trace_set_mask, fmt_str, p1);
+#ifdef BTE_RVL_TARGET
+    if (bte_target_mode == BTE_MODE_SERIAL_APP) {
+#endif
+        LogMsg(trace_set_mask, fmt_str, p1);
+#ifdef BTE_RVL_TARGET
+    }
+#endif
 }
 
 /********************************************************************************
@@ -564,7 +619,13 @@ void LogMsg_1(UINT32 trace_set_mask, const char *fmt_str, UINT32 p1) {
  **
  *********************************************************************************/
 void LogMsg_2(UINT32 trace_set_mask, const char *fmt_str, UINT32 p1, UINT32 p2) {
-    LogMsg(trace_set_mask, fmt_str, p1, p2);
+#ifdef BTE_RVL_TARGET
+    if (bte_target_mode == BTE_MODE_SERIAL_APP) {
+#endif
+        LogMsg(trace_set_mask, fmt_str, p1, p2);
+#ifdef BTE_RVL_TARGET
+    }
+#endif
 }
 
 /********************************************************************************
@@ -581,7 +642,13 @@ void LogMsg_2(UINT32 trace_set_mask, const char *fmt_str, UINT32 p1, UINT32 p2) 
  *********************************************************************************/
 void LogMsg_3(UINT32 trace_set_mask, const char *fmt_str, UINT32 p1, UINT32 p2,
         UINT32 p3) {
-    LogMsg(trace_set_mask, fmt_str, p1, p2, p3);
+#ifdef BTE_RVL_TARGET
+    if (bte_target_mode == BTE_MODE_SERIAL_APP) {
+#endif
+        LogMsg(trace_set_mask, fmt_str, p1, p2, p3);
+#ifdef BTE_RVL_TARGET
+    }
+#endif
 }
 
 /********************************************************************************
@@ -598,7 +665,13 @@ void LogMsg_3(UINT32 trace_set_mask, const char *fmt_str, UINT32 p1, UINT32 p2,
  *********************************************************************************/
 void LogMsg_4(UINT32 trace_set_mask, const char *fmt_str, UINT32 p1, UINT32 p2,
         UINT32 p3, UINT32 p4) {
-    LogMsg(trace_set_mask, fmt_str, p1, p2, p3, p4);
+#ifdef BTE_RVL_TARGET
+    if (bte_target_mode == BTE_MODE_SERIAL_APP) {
+#endif
+        LogMsg(trace_set_mask, fmt_str, p1, p2, p3, p4);
+#ifdef BTE_RVL_TARGET
+    }
+#endif
 }
 
 /********************************************************************************
@@ -615,7 +688,13 @@ void LogMsg_4(UINT32 trace_set_mask, const char *fmt_str, UINT32 p1, UINT32 p2,
  *********************************************************************************/
 void LogMsg_5(UINT32 trace_set_mask, const char *fmt_str, UINT32 p1, UINT32 p2,
         UINT32 p3, UINT32 p4, UINT32 p5) {
-    LogMsg(trace_set_mask, fmt_str, p1, p2, p3, p4, p5);
+#ifdef BTE_RVL_TARGET
+    if (bte_target_mode == BTE_MODE_SERIAL_APP) {
+#endif
+        LogMsg(trace_set_mask, fmt_str, p1, p2, p3, p4, p5);
+#ifdef BTE_RVL_TARGET
+    }
+#endif
 }
 
 /********************************************************************************
@@ -632,5 +711,11 @@ void LogMsg_5(UINT32 trace_set_mask, const char *fmt_str, UINT32 p1, UINT32 p2,
  *********************************************************************************/
 void LogMsg_6(UINT32 trace_set_mask, const char *fmt_str, UINT32 p1, UINT32 p2,
         UINT32 p3, UINT32 p4, UINT32 p5, UINT32 p6) {
-    LogMsg(trace_set_mask, fmt_str, p1, p2, p3, p4, p5, p6);
+#ifdef BTE_RVL_TARGET
+    if (bte_target_mode == BTE_MODE_SERIAL_APP) {
+#endif
+        LogMsg(trace_set_mask, fmt_str, p1, p2, p3, p4, p5, p6);
+#ifdef BTE_RVL_TARGET
+    }
+#endif
 }

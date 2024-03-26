@@ -1,5 +1,17 @@
 /******************************************************************************
  *
+ *  NOTICE OF CHANGES
+ *  2024/03/25:
+ *      - Remove linux functionality for RVL target
+ * 
+ *  Compile with BTE_RVL_TARGET defined to include these changes.
+ * 
+ ******************************************************************************/
+
+
+
+/******************************************************************************
+ *
  *  Copyright (C) 2002-2012 Broadcom Corporation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -94,6 +106,7 @@ typedef struct {
 
 extern tBTE_APPL_CFG bte_appl_cfg;
 
+#ifndef BTE_RVL_TARGET
 typedef struct {
     pthread_mutex_t     mutex;  /* mutex to protect below signal condition */
     pthread_cond_t      cond;   /* signal event */
@@ -115,6 +128,7 @@ typedef struct tBTE_APPL_CB_tag {
 } tBTE_APPL_CB;
 
 extern tBTE_APPL_CB bte_appl_cb;
+#endif
 
 /* Exports the application task */
 extern void BTE_appl_task(UINT32 params);

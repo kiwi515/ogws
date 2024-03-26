@@ -1,5 +1,17 @@
 /******************************************************************************
  *
+ *  NOTICE OF CHANGES
+ *  2024/03/25:
+ *      - Remove Linux #includes for RVL target
+ * 
+ *  Compile with BTE_RVL_TARGET defined to include these changes.
+ * 
+ ******************************************************************************/
+
+
+
+/******************************************************************************
+ *
  *  Copyright (C) 2001-2012 Broadcom Corporation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,9 +36,11 @@
 #ifndef BTE_H
 #define BTE_H
 
+#ifndef BTE_RVL_TARGET
 #include <semaphore.h>
 #include <signal.h>
 #include <pthread.h>
+#endif
 #include "bt_target.h"
 
 /* by default on shutdown, baudrate is reset 115kbits. this should NOT be need for platforms

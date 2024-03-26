@@ -5,6 +5,12 @@
 .global usb
 usb:
 	.skip 0x60
+.global __uusb_ppc_stack1
+__uusb_ppc_stack1:
+	.skip 0x1000
+.global __uusb_ppc_stack2
+__uusb_ppc_stack2:
+	.skip 0x1000
 
 .section .data, "wa"
 .balign 0x8
@@ -50,6 +56,18 @@ wait4hci:
 .global __ntd_ios_file_descriptor
 __ntd_ios_file_descriptor:
 	.incbin "baserom.dol", 0x3C7534, 0x4
+.global lbl_804BD8B8
+lbl_804BD8B8:
+	.incbin "baserom.dol", 0x3C7538, 0x8
+.global lbl_804BD8C0
+lbl_804BD8C0:
+	.incbin "baserom.dol", 0x3C7540, 0x4
+.global lbl_804BD8C4
+lbl_804BD8C4:
+	.incbin "baserom.dol", 0x3C7544, 0x4
+.global lbl_804BD8C8
+lbl_804BD8C8:
+	.incbin "baserom.dol", 0x3C7548, 0x8
 
 .section .text, "ax"
 .global __ntd_get_allocated_mem_size
@@ -229,9 +247,9 @@ lbl_8010D098:
 /* 8010D0B8 00107FB8  4C C6 31 82 */	crclr 6
 /* 8010D0BC 00107FBC  48 07 6E 5D */	bl OSReport
 lbl_8010D0C0:
-/* 8010D0C0 00107FC0  3C A0 80 47 */	lis r5, lbl_80469480@ha
+/* 8010D0C0 00107FC0  3C A0 80 47 */	lis r5, __uusb_ppc_stack1@ha
 /* 8010D0C4 00107FC4  3C E0 80 11 */	lis r7, bta_ci_hci_msg_handler@ha
-/* 8010D0C8 00107FC8  38 A5 94 80 */	addi r5, r5, lbl_80469480@l
+/* 8010D0C8 00107FC8  38 A5 94 80 */	addi r5, r5, __uusb_ppc_stack1@l
 /* 8010D0CC 00107FCC  7F C3 F3 78 */	mr r3, r30
 /* 8010D0D0 00107FD0  39 05 10 00 */	addi r8, r5, 0x1000
 /* 8010D0D4 00107FD4  38 E7 E3 E0 */	addi r7, r7, bta_ci_hci_msg_handler@l
@@ -375,9 +393,9 @@ lbl_8010D2A4:
 /* 8010D2BC 001081BC  48 01 CA F9 */	bl l2cap_link_chk_pkt_end
 /* 8010D2C0 001081C0  54 60 06 3F */	clrlwi. r0, r3, 0x18
 /* 8010D2C4 001081C4  41 82 00 2C */	beq lbl_8010D2F0
-/* 8010D2C8 001081C8  3C A0 80 47 */	lis r5, lbl_8046A480@ha
+/* 8010D2C8 001081C8  3C A0 80 47 */	lis r5, __uusb_ppc_stack2@ha
 /* 8010D2CC 001081CC  3C E0 80 11 */	lis r7, bta_ci_hci_msg_handler@ha
-/* 8010D2D0 001081D0  38 A5 A4 80 */	addi r5, r5, lbl_8046A480@l
+/* 8010D2D0 001081D0  38 A5 A4 80 */	addi r5, r5, __uusb_ppc_stack2@l
 /* 8010D2D4 001081D4  7F E3 FB 78 */	mr r3, r31
 /* 8010D2D8 001081D8  39 05 10 00 */	addi r8, r5, 0x1000
 /* 8010D2DC 001081DC  38 E7 E3 E0 */	addi r7, r7, bta_ci_hci_msg_handler@l

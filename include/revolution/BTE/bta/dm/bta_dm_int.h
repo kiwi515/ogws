@@ -1,5 +1,17 @@
 /******************************************************************************
  *
+ *  NOTICE OF CHANGES
+ *  2024/03/25:
+ *      - Add tBTA_DM_COMPRESS_CFG structure for RVL target
+ * 
+ *  Compile with BTE_RVL_TARGET defined to include these changes.
+ * 
+ ******************************************************************************/
+
+
+
+/******************************************************************************
+ *
  *  Copyright (C) 2003-2012 Broadcom Corporation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -824,6 +836,17 @@ typedef struct
 
 } tBTA_DM_PM_CFG;
 
+
+#ifdef BTE_RVL_TARGET
+typedef struct
+{
+    UINT8   id;
+    UINT8   app_id;
+    UINT8   cfg;
+} tBTA_DM_COMPRESS_CFG;
+
+extern tBTA_DM_COMPRESS_CFG* p_bta_dm_compress_cfg;
+#endif
 
 typedef struct
 {

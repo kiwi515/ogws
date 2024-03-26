@@ -1,5 +1,17 @@
 /******************************************************************************
  *
+ *  NOTICE OF CHANGES
+ *  2024/03/26:
+ *      - Add power mode #defines for RVL target
+ * 
+ *  Compile with BTE_RVL_TARGET defined to include these changes.
+ * 
+ ******************************************************************************/
+
+
+
+/******************************************************************************
+ *
  *  Copyright (C) 2003-2012 Broadcom Corporation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -840,6 +852,12 @@ typedef UINT16 tBTA_DM_LP_MASK;
 #define BTA_DM_PM_ACTIVE       0x40       /* prefers active mode */
 #define BTA_DM_PM_RETRY        0x80       /* retry power mode based on current settings */
 #define BTA_DM_PM_NO_PREF      0x01       /* service has no prefernce on power mode setting. eg. connection to service got closed */
+
+#ifdef BTE_RVL_TARGET
+// Were these values previously reversed?
+#define BTA_DM_PM_SNIFF_RVL 0x02
+#define BTA_DM_PM_RETRY_RVL 0x08
+#endif
 
 typedef UINT8 tBTA_DM_PM_ACTTION;
 

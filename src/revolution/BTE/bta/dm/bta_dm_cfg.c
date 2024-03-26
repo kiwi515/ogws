@@ -1,5 +1,17 @@
 /******************************************************************************
  *
+ *  NOTICE OF CHANGES
+ *  2024/03/26:
+ *      - Add #defines to change configurations for RVL target
+ * 
+ *  Compile with BTE_RVL_TARGET defined to include these changes.
+ * 
+ ******************************************************************************/
+
+
+
+/******************************************************************************
+ *
  *  Copyright (C) 2003-2012 Broadcom Corporation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,6 +39,12 @@
 #include "bta_sys.h"
 #include "bta_api.h"
 #include "bta_dm_int.h"
+
+#ifdef BTE_RVL_TARGET
+
+#define BTA_DM_LINK_TIMEOUT    5000
+
+#endif
 
 #ifndef BTA_DM_LINK_POLICY_SETTINGS
 #define BTA_DM_LINK_POLICY_SETTINGS    (HCI_ENABLE_MASTER_SLAVE_SWITCH | HCI_ENABLE_HOLD_MODE | HCI_ENABLE_SNIFF_MODE | HCI_ENABLE_PARK_MODE)
@@ -60,8 +78,13 @@ const tBTA_DM_CFG bta_dm_cfg =
     BTA_DM_PAGE_TIMEOUT,
     /* link supervision timeout in 625uS*/
     BTA_DM_LINK_TIMEOUT,
+#ifdef BTE_RVL_TARGET
+    /* FALSE to not avoid scatternet when av is streaming */
+    FALSE
+#else
     /* TRUE to avoid scatternet when av is streaming (be the master) */
     TRUE
+#endif
 };
 
 #ifndef BTA_DM_SCATTERNET
@@ -79,7 +102,11 @@ const tBTA_DM_CFG bta_dm_cfg =
 #define BTA_AV_ROLE BTA_MASTER_ROLE_PREF
 #endif
 
+#ifdef BTE_RVL_TARGET
+#define BTA_DM_NUM_RM_ENTRY    2
+#else
 #define BTA_DM_NUM_RM_ENTRY    4
+#endif
 
 /* appids for PAN used by insight sample application
    these have to be same as defined in btui_int.h */
@@ -90,6 +117,15 @@ const tBTA_DM_CFG bta_dm_cfg =
 /* First element is always for SYS:
    app_id = # of entries table, cfg is
    device scatternet support */
+#ifdef BTE_RVL_TARGET
+const tBTA_DM_RM bta_dm_rm_cfg[] =
+{
+    {BTA_ID_SYS, BTA_DM_NUM_RM_ENTRY, BTA_DM_SCATTERNET},
+    {BTA_ID_PAN, BTUI_PAN_ID_NAP, BTA_MASTER_ROLE_ONLY},
+    {BTA_ID_PAN, BTUI_PAN_ID_GN, BTA_MASTER_ROLE_ONLY},
+    {BTA_ID_AV,  BTA_ALL_APP_ID, BTA_AV_ROLE}
+};
+#else
 const tBTA_DM_RM bta_dm_rm_cfg[] =
 {
     {BTA_ID_SYS, BTA_DM_NUM_RM_ENTRY, BTA_DM_SCATTERNET},
@@ -98,15 +134,17 @@ const tBTA_DM_RM bta_dm_rm_cfg[] =
     {BTA_ID_HH,  BTA_ALL_APP_ID, BTA_HH_ROLE},
     {BTA_ID_AV,  BTA_ALL_APP_ID, BTA_AV_ROLE}
 };
-
+#endif
 
 tBTA_DM_CFG *p_bta_dm_cfg = (tBTA_DM_CFG *)&bta_dm_cfg;
 
 tBTA_DM_RM *p_bta_dm_rm_cfg = (tBTA_DM_RM *)&bta_dm_rm_cfg;
 
-
 #define BTA_DM_NUM_PM_ENTRY         (15+BTA_DM_NUM_JV_ID)  /* number of entries in bta_dm_pm_cfg except the first */
 
+#ifdef BTE_RVL_TARGET
+tBTA_DM_PM_TYPE_QUALIFIER tBTA_DM_PM_CFG bta_dm_pm_cfg;
+#else
 tBTA_DM_PM_TYPE_QUALIFIER tBTA_DM_PM_CFG bta_dm_pm_cfg[] =
 {
   {BTA_ID_SYS, BTA_DM_NUM_PM_ENTRY, 0},
@@ -128,16 +166,56 @@ tBTA_DM_PM_TYPE_QUALIFIER tBTA_DM_PM_CFG bta_dm_pm_cfg[] =
   {BTA_ID_JV2, BTA_ALL_APP_ID,      7},  /* reuse fts spec table */
   {BTA_ID_HL,  BTA_ALL_APP_ID,      8}   /* reuse fts spec table */
 };
+#endif
 
+
+#ifdef BTE_RVL_TARGET
+#define BTA_DM_NUM_COMPRESS_ENTRY 5
+
+tBTA_DM_PM_TYPE_QUALIFIER tBTA_DM_COMPRESS_CFG bta_dm_compress_cfg[] =
+{
+    {BTA_ID_SYS, BTA_DM_NUM_COMPRESS_ENTRY, 0},
+    {BTA_ID_FTC, BTA_ALL_APP_ID,            1},
+    {BTA_ID_FTS, BTA_ALL_APP_ID,            1},
+    {BTA_ID_OPC, BTA_ALL_APP_ID,            1},
+    {BTA_ID_OPS, BTA_ALL_APP_ID,            1},
+    {BTA_ID_AV,  BTA_ALL_APP_ID,            2}
+};
+
+tBTA_DM_COMPRESS_CFG *p_bta_dm_compress_cfg = (tBTA_DM_COMPRESS_CFG *)&bta_dm_compress_cfg;
+#endif
 
 #ifdef BTE_SIM_APP      /* For Insight builds only, see the detail below */
 #define BTA_DM_NUM_PM_SPEC      (9 + 2)  /* additional two */
+#elif BTE_RVL_TARGET
+#define BTA_DM_NUM_PM_SPEC      1
 #else
 #define BTA_DM_NUM_PM_SPEC      9  /* additional JV*/
 #endif
 
 tBTA_DM_PM_TYPE_QUALIFIER tBTA_DM_PM_SPEC bta_dm_pm_spec[BTA_DM_NUM_PM_SPEC] =
 {
+#ifdef BTE_RVL_TARGET
+
+ {
+  (BTA_DM_PM_SNIFF_RVL | BTA_DM_PM_NO_PREF),                       /* allow park & sniff */
+#if (BTM_SSR_INCLUDED == TRUE)
+  (BTA_DM_PM_SSR0),                                                /* the SSR entry */
+#endif
+  {
+      {{BTA_DM_PM_SNIFF_RVL, 5000},   {BTA_DM_PM_NO_ACTION, 0}},   /* conn open sniff  */
+      {{BTA_DM_PM_PARK,         0},   {BTA_DM_PM_NO_ACTION, 0}},   /* conn close  */
+      {{BTA_DM_PM_NO_ACTION,    0},   {BTA_DM_PM_NO_ACTION, 0}},   /* app open */
+      {{BTA_DM_PM_NO_ACTION,    0},   {BTA_DM_PM_NO_ACTION, 0}},   /* app close */
+      {{BTA_DM_PM_NO_ACTION,    0},   {BTA_DM_PM_NO_ACTION, 0}},   /* sco open, active */
+      {{BTA_DM_PM_SNIFF_RVL, 5000},   {BTA_DM_PM_NO_ACTION, 0}},   /* sco close sniff  */
+      {{BTA_DM_PM_NO_ACTION, 0},      {BTA_DM_PM_NO_ACTION, 0}},   /* idle */
+      {{BTA_DM_PM_NO_ACTION, 0},      {BTA_DM_PM_NO_ACTION, 0}},   /* busy */
+      {{BTA_DM_PM_RETRY_RVL, 5000},   {BTA_DM_PM_NO_ACTION, 0}}    /* mode change retry */
+  }
+ },
+
+#else
   /* AG */
  {
   (BTA_DM_PM_SNIFF | BTA_DM_PM_PARK),                           /* allow park & sniff */
@@ -308,6 +386,7 @@ tBTA_DM_PM_TYPE_QUALIFIER tBTA_DM_PM_SPEC bta_dm_pm_spec[BTA_DM_NUM_PM_SPEC] =
       {{BTA_DM_PM_NO_ACTION, 0},   {BTA_DM_PM_NO_ACTION, 0}}    /* mode change retry */
   }
  }
+#endif
 
 #ifdef BTE_SIM_APP      /* For Insight builds only */
  /* Entries at the end of the pm_spec table are user-defined (runtime configurable),
@@ -329,12 +408,17 @@ The SNIFF table entries must be in the order from highest latency (biggest inter
 If there's a conflict among the connected services, the setting with lowest latency wins.
 */
 /* sniff modes: max interval, min interval, attempt, timeout */
+#ifdef BTE_RVL_TARGET
+  {400, 200,    4, 4, BTM_PM_MD_SNIFF},
+  {800, 400,    0, 0, BTM_PM_MD_PARK}
+#else
   {800, 400, 4, 1, BTM_PM_MD_SNIFF}, /*for BTA_DM_PM_SNIFF - A2DP */
   {400, 200, 4, 1, BTM_PM_MD_SNIFF}, /*for BTA_DM_PM_SNIFF1 */
   {180, 150, 4, 1, BTM_PM_MD_SNIFF}, /*for BTA_DM_PM_SNIFF2- HD idle */
   {150,  50, 4, 1, BTM_PM_MD_SNIFF}, /*for BTA_DM_PM_SNIFF3- SCO open */
   { 54,  30, 4, 1, BTM_PM_MD_SNIFF}, /*for BTA_DM_PM_SNIFF4- HD active*/
   {800, 400, 0, 0, BTM_PM_MD_PARK}
+#endif
 
 #ifdef BTE_SIM_APP      /* For Insight builds only */
   /* Entries at the end of the bta_dm_pm_md table are user-defined (runtime configurable),
