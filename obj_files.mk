@@ -535,6 +535,7 @@ RVL_SDK_O_FILES := \
 	build/revolution/BTE/bta/sys/bta_sys_conn.o \
 	build/revolution/BTE/bta/sys/bta_sys_main.o \
 	build/revolution/BTE/bta/sys/ptim.o \
+	build/revolution/BTE/bta/sys/utl.o \
 	build/asm/revolution/BTE/bte_unsplit.o \
 	\
 	build/revolution/DB/db.o \
