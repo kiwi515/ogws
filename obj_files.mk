@@ -524,6 +524,7 @@ RVL_SDK_O_FILES := \
 	build/asm/revolution/BTE/hci/hcisu_h2.o \
 	build/asm/revolution/BTE/udrv/uusb_ppc.o \
 	build/asm/revolution/BTE/main/bte_hcisu.o \
+	build/revolution/BTE/main/bte_init.o \
 	build/asm/revolution/BTE/bte_unsplit.o \
 	\
 	build/revolution/DB/db.o \

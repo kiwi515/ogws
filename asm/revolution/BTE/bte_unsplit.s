@@ -992,20 +992,6 @@ lbl_80470E80:
 
 .section .text, "ax"
 
-.global BTE_InitStack
-BTE_InitStack:
-/* 8010E3F0 001092F0  94 21 FF F0 */	stwu r1, -0x10(r1)
-/* 8010E3F4 001092F4  7C 08 02 A6 */	mflr r0
-/* 8010E3F8 001092F8  90 01 00 14 */	stw r0, 0x14(r1)
-/* 8010E3FC 001092FC  48 01 EB 25 */	bl RFCOMM_Init
-/* 8010E400 00109300  48 01 1D F9 */	bl GAP_Init
-/* 8010E404 00109304  48 01 56 C9 */	bl HID_DevInit
-/* 8010E408 00109308  48 01 61 49 */	bl HID_HostInit
-/* 8010E40C 0010930C  80 01 00 14 */	lwz r0, 0x14(r1)
-/* 8010E410 00109310  7C 08 03 A6 */	mtlr r0
-/* 8010E414 00109314  38 21 00 10 */	addi r1, r1, 0x10
-/* 8010E418 00109318  4E 80 00 20 */	blr 
-
 .global LogMsg
 LogMsg:
 /* 8010E41C 0010931C  94 21 FF 80 */	stwu r1, -0x80(r1)

@@ -1,5 +1,17 @@
 /******************************************************************************
  *
+ *  NOTICE OF CHANGES
+ *  2024/03/25:
+ *      - Add #defines for RVL target
+ * 
+ *  Compile with BTE_RVL_TARGET defined to include these changes.
+ * 
+ ******************************************************************************/
+
+
+
+/******************************************************************************
+ *
  *  Copyright (C) 1999-2012 Broadcom Corporation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +30,22 @@
 
 #ifndef BT_TARGET_H
 #define BT_TARGET_H
+
+/**
+ * Modifications for decomp
+ */
+#ifdef BTE_RVL_TARGET
+
+#define RFCOMM_INCLUDED   TRUE
+#define GAP_INCLUDED      TRUE
+#define HID_DEV_INCLUDED  TRUE
+#define HID_HOST_INCLUDED TRUE
+
+#define BNEP_INCLUDED     FALSE
+#define A2D_INCLUDED      FALSE
+#define AVRC_INCLUDED     FALSE
+
+#endif
 
 #ifndef BUILDCFG
 #define BUILDCFG
