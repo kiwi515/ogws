@@ -1,5 +1,19 @@
 /******************************************************************************
  *
+ *  NOTICE OF CHANGES
+ *  2024/03/26:
+ *      - Add #defines for RVL target
+ *      - Modify ptim_timer_update to match RVL version
+ *      - Modify ptim_start_timer to match RVL version
+ * 
+ *  Compile with REVOLUTION defined to include these changes.
+ * 
+ ******************************************************************************/
+
+
+
+/******************************************************************************
+ *
  *  Copyright (C) 2003-2012 Broadcom Corporation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -63,6 +77,7 @@ void ptim_timer_update(tPTIM_CB *p_cb)
     UINT32 new_ticks_count;
     INT32  period_in_ticks;
 
+#ifndef REVOLUTION
     /* To handle the case when the function is called less frequently than the period
        we must convert determine the number of ticks since the last update, then
        convert back to milliseconds before updating timer list */
@@ -78,11 +93,18 @@ void ptim_timer_update(tPTIM_CB *p_cb)
         period_in_ticks = (INT32)(((UINT32)0xffffffff - p_cb->last_gki_ticks)
                             + new_ticks_count + 1);
     }
+#endif
 
     /* update timer list */
+#ifdef REVOLUTION
+    GKI_update_timer_list(&p_cb->timer_queue, p_cb->period);
+#else
     GKI_update_timer_list(&p_cb->timer_queue, GKI_TICKS_TO_MS(period_in_ticks));
+#endif
 
+#ifndef REVOLUTION
     p_cb->last_gki_ticks = new_ticks_count;
+#endif
 
     /* while there are expired timers */
     while((p_cb->timer_queue.p_first) && (p_cb->timer_queue.p_first->ticks <= 0))
@@ -101,7 +123,9 @@ void ptim_timer_update(tPTIM_CB *p_cb)
             if ((p_msg = (BT_HDR *) GKI_getbuf(sizeof(BT_HDR))) != NULL)
             {
                 p_msg->event = p_tle->event;
+#ifndef REVOLUTION
                 p_msg->layer_specific = 0;
+#endif
                 bta_sys_sendmsg(p_msg);
             }
         }
@@ -129,7 +153,9 @@ void ptim_start_timer(tPTIM_CB *p_cb, TIMER_LIST_ENT *p_tle, UINT16 type, INT32 
     /* if timer list is currently empty, start periodic GKI timer */
     if (p_cb->timer_queue.p_first == NULL)
     {
+#ifndef REVOLUTION
         p_cb->last_gki_ticks = GKI_get_tick_count();
+#endif
         GKI_start_timer(p_cb->timer_id, GKI_MS_TO_TICKS(p_cb->period), TRUE);
     }
 
