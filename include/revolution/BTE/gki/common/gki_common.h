@@ -1,5 +1,18 @@
 /******************************************************************************
  *
+ *  NOTICE OF CHANGES
+ *  2024/03/25:
+ *      - Disable GKI_USE_DEFERED_ALLOC_BUF_POOLS
+ *      - Modify tGKI_COM_CB structure to match RVL target
+ * 
+ *  Compile with BTE_RVL_TARGET define to include these changes.
+ * 
+ ******************************************************************************/
+
+
+
+/******************************************************************************
+ *
  *  Copyright (C) 1999-2012 Broadcom Corporation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -89,7 +102,9 @@ typedef struct _free_queue
 #define BUF_STATUS_QUEUED   2
 
 // btla-specific ++
+#ifndef BTE_RVL_TARGET
 #define GKI_USE_DEFERED_ALLOC_BUF_POOLS
+#endif
 // btla-specific --
 
 /* Exception related structures (Used in debug mode only)
@@ -306,9 +321,11 @@ typedef struct
     */
     FREE_QUEUE_T    freeq[GKI_NUM_TOTAL_BUF_POOLS];
 
+#ifndef BTE_RVL_TARGET
     UINT16   pool_buf_size[GKI_NUM_TOTAL_BUF_POOLS];
     UINT16   pool_max_count[GKI_NUM_TOTAL_BUF_POOLS];
     UINT16   pool_additions[GKI_NUM_TOTAL_BUF_POOLS];
+#endif
 
     /* Define the buffer pool start addresses
     */

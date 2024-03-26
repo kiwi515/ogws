@@ -1,5 +1,17 @@
 /******************************************************************************
  *
+ *  NOTICE OF CHANGES
+ *  2024/03/25:
+ *      - Add #defines for RVL target
+ * 
+ *  Compile with BTE_RVL_TARGET define to include these changes.
+ * 
+ ******************************************************************************/
+
+
+
+/******************************************************************************
+ *
  *  Copyright (C) 1999-2012 Broadcom Corporation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +29,26 @@
  ******************************************************************************/
 #ifndef GKI_TARGET_H
 #define GKI_TARGET_H
+
+/**
+ * Modifications for decomp
+ */
+#ifdef BTE_RVL_TARGET
+
+#define GKI_MAX_TASKS               8
+#define GKI_NUM_TIMERS              2
+#define GKI_DELAY_STOP_SYS_TICK     0
+#define GKI_BUF1_SIZE               128
+#define GKI_BUF3_SIZE               1800
+#define GKI_BUF3_MAX                30
+#define GKI_BUF4_SIZE               8192
+#define GKI_BUF4_MAX                9
+#define GKI_NUM_FIXED_BUF_POOLS     5
+#define GKI_DEF_BUFPOOL_PERM_MASK   0xfff0
+#define GKI_NUM_TOTAL_BUF_POOLS     9
+
+#endif
+
 
 /* Operating System Selection */
 #ifndef BTE_SIM_APP

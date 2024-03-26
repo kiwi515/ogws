@@ -62,7 +62,7 @@ CFLAGS_RVL := -lang c -enum int -O4,p -inline auto -ipa file -Cpp_exceptions off
 # Compiler flags for the BTE library
 CFLAGS_BTE := -lang c -enum int -O4,p -inline auto -ipa file -Cpp_exceptions off -RTTI off -proc gekko -fp hard -I- -Iinclude -ir include/MSL -ir include/revolution -ir include/revolution/BTE -ir include/revolution/BTE/include \
 	-ir include/revolution/BTE/embdrv/sbc/encoder/include -ir include/revolution/BTE/btif/include -ir include/revolution/BTE/bta/include -ir include/revolution/BTE/utils/include  -ir include/revolution/BTE/udrv/include \
-	-ir include/revolution/BTE/stack/include -ir include/revolution/BTE/hci/include -nodefaults -DBIG_ENDIAN -DHAS_NO_BDROID_BUILDCFG -DGKI_MAX_TASKS=8
+	-ir include/revolution/BTE/stack/include -ir include/revolution/BTE/hci/include -nodefaults -DBIG_ENDIAN -DHAS_NO_BDROID_BUILDCFG -DBTE_RVL_TARGET
 # Compiler flags for the RVL Face Library
 CFLAGS_RFL := -lang c -enum int -O4,p -inline auto -ipa file -volatileasm -Cpp_exceptions off -RTTI off -proc gekko -fp hard -I- -Iinclude -ir include/MSL -ir include/revolution -nodefaults
 
@@ -81,7 +81,8 @@ ASM_DIRS := asm \
 	asm/revolution/NdevExi2AD asm/revolution/KPAD asm/revolution/PAD asm/revolution/WPAD asm/revolution/EUART asm/revolution/EXI asm/revolution/FS \
 	asm/revolution/GX asm/revolution/IPC asm/revolution/MEM asm/revolution/MTX asm/revolution/NAND asm/revolution/OS asm/revolution/SC \
 	asm/revolution/USB asm/revolution/VI asm/revolution/WUD asm/revolution/AI asm/revolution/ARC asm/revolution/AX asm/revolution/AXFX \
-	asm/revolution/BASE asm/revolution/BTE asm/revolution/DB asm/revolution/DSP asm/revolution/DVD asm/revolution/SI asm/revolution/TPL \
+	asm/revolution/BASE asm/revolution/BTE asm/revolution/BTE/gki asm/revolution/BTE/gki/common asm/revolution/DB asm/revolution/DSP \
+	asm/revolution/DVD asm/revolution/SI asm/revolution/TPL \
 	asm/revolution/WENC asm/revolution/CNT asm/revolution/ESP asm/revolution/NET asm/revolution/NWC24 asm/revolution/VF \
 	asm/nw4r/ut asm/nw4r/ef asm/nw4r/math asm/nw4r/snd asm/nw4r/g3d asm/nw4r/lyt \
 	asm/egg/gfx asm/egg/math asm/egg/core asm/egg/audio asm/egg/util \

@@ -1,5 +1,19 @@
 /******************************************************************************
  *
+ *  NOTICE OF CHANGES
+ *  2024/03/25:
+ *      - Move from ulinux/ to platform/
+ *      - Modify tGKI_OS structure to match RVL target
+ *      - Add #define for MAX_INT_STATE
+ * 
+ *  Compile with BTE_RVL_TARGET define to include these changes.
+ * 
+ ******************************************************************************/
+
+
+
+/******************************************************************************
+ *
  *  Copyright (C) 1999-2012 Broadcom Corporation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,14 +31,16 @@
  ******************************************************************************/
 #ifndef GKI_INT_H
 #define GKI_INT_H
-
 #include "gki_common.h"
-#include <pthread.h>
-#include <sys/prctl.h>
 
 /**********************************************************************
 ** OS specific definitions
 */
+
+#ifdef BTE_RVL_TARGET
+#define MAX_INT_STATE 16
+#endif
+
 /* The base priority used for pthread based GKI task. below value is to keep it retro compatible.
  * It is recommended to use (GKI_MAX_TASKS+3), this will assign real time priorities GKI_MAX_TASKS-
  * task_id -2 to the thread */
@@ -70,6 +86,11 @@
 
 typedef struct
 {
+#ifdef BTE_RVL_TARGET
+    UINT8               int_index;
+    BOOL                int_state[MAX_INT_STATE];
+    char _pad[0x10];
+#else
     pthread_mutex_t     GKI_mutex;
     pthread_t           thread_id[GKI_MAX_TASKS];
     pthread_mutex_t     thread_evt_mutex[GKI_MAX_TASKS];
@@ -81,6 +102,7 @@ typedef struct
     pthread_cond_t      gki_timer_cond;
 #if (GKI_DEBUG == TRUE)
     pthread_mutex_t     GKI_trace_mutex;
+#endif
 #endif
 } tGKI_OS;
 

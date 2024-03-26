@@ -1,5 +1,18 @@
 /******************************************************************************
  *
+ *  NOTICE OF CHANGES
+ *  2024/03/25:
+ *      - Move from ulinux/ to platform/
+ *      - Add #include for RVL types (include/types.h)
+ * 
+ *  Compile with BTE_RVL_TARGET define to include these changes.
+ * 
+ ******************************************************************************/
+
+
+
+/******************************************************************************
+ *
  *  Copyright (C) 1999-2012 Broadcom Corporation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +31,10 @@
 
 #ifndef DATA_TYPES_H
 #define DATA_TYPES_H
+
+#ifdef BTE_RVL_TARGET
+#include <types.h>
+#endif
 
 #ifndef NULL
 #define NULL     0

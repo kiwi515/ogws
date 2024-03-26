@@ -245,24 +245,9 @@ lbl_804BD958:
 
 .section .data, "wa"
 .balign 0x8
-.global lbl_803AF5D8
-lbl_803AF5D8:
-	.incbin "baserom.dol", 0x3AB6D8, 0x18
-.global lbl_803AF5F0
-lbl_803AF5F0:
-	.incbin "baserom.dol", 0x3AB6F0, 0x98
-.global lbl_803AF688
-lbl_803AF688:
-	.incbin "baserom.dol", 0x3AB788, 0x1C
-.global lbl_803AF6A4
-lbl_803AF6A4:
-	.incbin "baserom.dol", 0x3AB7A4, 0x20
-.global lbl_803AF6C4
-lbl_803AF6C4:
-	.incbin "baserom.dol", 0x3AB7C4, 0x44
-.global lbl_803AF708
-lbl_803AF708:
-	.incbin "baserom.dol", 0x3AB808, 0x54
+.global lbl_803AF720
+lbl_803AF720:
+	.incbin "baserom.dol", 0x3AB820, 0x3C
 .global lbl_803AF75C
 lbl_803AF75C:
 	.incbin "baserom.dol", 0x3AB85C, 0x34
@@ -1004,8 +989,8 @@ lbl_803B5AC8:
 
 .section .bss, "wa"
 .balign 0x8
-.global lbl_80440900
-lbl_80440900:
+.global gki_cb
+gki_cb:
 	.skip 0x28AE0
 .global lbl_804693E0
 lbl_804693E0:
@@ -1075,9 +1060,9 @@ lbl_80470E80:
 
 .global gki_timers_init
 gki_timers_init:
-/* 8010BFCC 00106ECC  3C 60 80 44 */	lis r3, lbl_80440900@ha
+/* 8010BFCC 00106ECC  3C 60 80 44 */	lis r3, gki_cb@ha
 /* 8010BFD0 00106ED0  38 00 00 00 */	li r0, 0
-/* 8010BFD4 00106ED4  38 63 09 00 */	addi r3, r3, lbl_80440900@l
+/* 8010BFD4 00106ED4  38 63 09 00 */	addi r3, r3, gki_cb@l
 /* 8010BFD8 00106ED8  3C 63 00 03 */	addis r3, r3, 3
 /* 8010BFDC 00106EDC  90 03 88 38 */	stw r0, -0x77c8(r3)
 /* 8010BFE0 00106EE0  90 03 88 3C */	stw r0, -0x77c4(r3)
@@ -1125,8 +1110,8 @@ gki_timers_init:
 
 .global GKI_get_tick_count
 GKI_get_tick_count:
-/* 8010C088 00106F88  3C 60 80 44 */	lis r3, lbl_80440900@ha
-/* 8010C08C 00106F8C  38 63 09 00 */	addi r3, r3, lbl_80440900@l
+/* 8010C088 00106F88  3C 60 80 44 */	lis r3, gki_cb@ha
+/* 8010C08C 00106F8C  38 63 09 00 */	addi r3, r3, gki_cb@l
 /* 8010C090 00106F90  3C 63 00 03 */	addis r3, r3, 3
 /* 8010C094 00106F94  80 63 88 28 */	lwz r3, -0x77d8(r3)
 /* 8010C098 00106F98  4E 80 00 20 */	blr 
@@ -1153,9 +1138,9 @@ lbl_8010C0D4:
 /* 8010C0DC 00106FDC  7C 00 FE 70 */	srawi r0, r0, 0x1f
 /* 8010C0E0 00106FE0  7F BF 00 38 */	and r31, r29, r0
 /* 8010C0E4 00106FE4  48 00 06 59 */	bl GKI_disable
-/* 8010C0E8 00106FE8  3C 80 80 44 */	lis r4, lbl_80440900@ha
+/* 8010C0E8 00106FE8  3C 80 80 44 */	lis r4, gki_cb@ha
 /* 8010C0EC 00106FEC  3C 60 80 00 */	lis r3, 0x7FFFFFFF@ha
-/* 8010C0F0 00106FF0  38 84 09 00 */	addi r4, r4, lbl_80440900@l
+/* 8010C0F0 00106FF0  38 84 09 00 */	addi r4, r4, gki_cb@l
 /* 8010C0F4 00106FF4  3C A4 00 03 */	addis r5, r4, 3
 /* 8010C0F8 00106FF8  38 83 FF FF */	addi r4, r3, 0x7FFFFFFF@l
 /* 8010C0FC 00106FFC  80 65 88 38 */	lwz r3, -0x77c8(r5)
@@ -1173,18 +1158,18 @@ lbl_8010C118:
 /* 8010C128 00107028  40 80 00 08 */	bge lbl_8010C130
 /* 8010C12C 0010702C  48 00 00 44 */	b lbl_8010C170
 lbl_8010C130:
-/* 8010C130 00107030  3C 60 80 44 */	lis r3, lbl_80440900@ha
+/* 8010C130 00107030  3C 60 80 44 */	lis r3, gki_cb@ha
 /* 8010C134 00107034  57 85 15 BA */	rlwinm r5, r28, 2, 0x16, 0x1d
-/* 8010C138 00107038  38 63 09 00 */	addi r3, r3, lbl_80440900@l
+/* 8010C138 00107038  38 63 09 00 */	addi r3, r3, gki_cb@l
 /* 8010C13C 0010703C  3C 03 00 03 */	addis r0, r3, 3
 /* 8010C140 00107040  7C 60 2A 14 */	add r3, r0, r5
 /* 8010C144 00107044  93 E3 88 80 */	stw r31, -0x7780(r3)
 /* 8010C148 00107048  90 83 88 60 */	stw r4, -0x77a0(r3)
 /* 8010C14C 0010704C  48 00 00 28 */	b lbl_8010C174
 lbl_8010C150:
-/* 8010C150 00107050  3C 60 80 44 */	lis r3, lbl_80440900@ha
+/* 8010C150 00107050  3C 60 80 44 */	lis r3, gki_cb@ha
 /* 8010C154 00107054  57 85 15 BA */	rlwinm r5, r28, 2, 0x16, 0x1d
-/* 8010C158 00107058  38 63 09 00 */	addi r3, r3, lbl_80440900@l
+/* 8010C158 00107058  38 63 09 00 */	addi r3, r3, gki_cb@l
 /* 8010C15C 0010705C  3C 03 00 03 */	addis r0, r3, 3
 /* 8010C160 00107060  7C 60 2A 14 */	add r3, r0, r5
 /* 8010C164 00107064  93 E3 88 C0 */	stw r31, -0x7740(r3)
@@ -1197,8 +1182,8 @@ lbl_8010C174:
 /* 8010C178 00107078  40 82 00 58 */	bne lbl_8010C1D0
 /* 8010C17C 0010707C  2C 1D 00 00 */	cmpwi r29, 0
 /* 8010C180 00107080  40 81 00 50 */	ble lbl_8010C1D0
-/* 8010C184 00107084  3C 60 80 44 */	lis r3, lbl_80440900@ha
-/* 8010C188 00107088  38 63 09 00 */	addi r3, r3, lbl_80440900@l
+/* 8010C184 00107084  3C 60 80 44 */	lis r3, gki_cb@ha
+/* 8010C188 00107088  38 63 09 00 */	addi r3, r3, gki_cb@l
 /* 8010C18C 0010708C  3C 63 00 03 */	addis r3, r3, 3
 /* 8010C190 00107090  80 83 88 3C */	lwz r4, -0x77c4(r3)
 /* 8010C194 00107094  2C 04 00 00 */	cmpwi r4, 0
@@ -1209,8 +1194,8 @@ lbl_8010C174:
 /* 8010C1A8 001070A8  2C 00 00 00 */	cmpwi r0, 0
 /* 8010C1AC 001070AC  40 81 00 24 */	ble lbl_8010C1D0
 lbl_8010C1B0:
-/* 8010C1B0 001070B0  3C 60 80 44 */	lis r3, lbl_80440900@ha
-/* 8010C1B4 001070B4  38 63 09 00 */	addi r3, r3, lbl_80440900@l
+/* 8010C1B0 001070B0  3C 60 80 44 */	lis r3, gki_cb@ha
+/* 8010C1B4 001070B4  38 63 09 00 */	addi r3, r3, gki_cb@l
 /* 8010C1B8 001070B8  3C 63 00 03 */	addis r3, r3, 3
 /* 8010C1BC 001070BC  80 03 88 38 */	lwz r0, -0x77c8(r3)
 /* 8010C1C0 001070C0  7C 00 20 50 */	subf r0, r0, r4
@@ -1241,9 +1226,9 @@ GKI_stop_timer:
 /* 8010C214 00107114  40 80 00 08 */	bge lbl_8010C21C
 /* 8010C218 00107118  48 00 00 48 */	b lbl_8010C260
 lbl_8010C21C:
-/* 8010C21C 0010711C  3C 80 80 44 */	lis r4, lbl_80440900@ha
+/* 8010C21C 0010711C  3C 80 80 44 */	lis r4, gki_cb@ha
 /* 8010C220 00107120  54 63 15 BA */	rlwinm r3, r3, 2, 0x16, 0x1d
-/* 8010C224 00107124  38 84 09 00 */	addi r4, r4, lbl_80440900@l
+/* 8010C224 00107124  38 84 09 00 */	addi r4, r4, gki_cb@l
 /* 8010C228 00107128  38 A0 00 00 */	li r5, 0
 /* 8010C22C 0010712C  3C 04 00 03 */	addis r0, r4, 3
 /* 8010C230 00107130  7C 60 1A 14 */	add r3, r0, r3
@@ -1251,9 +1236,9 @@ lbl_8010C21C:
 /* 8010C238 00107138  90 A3 88 60 */	stw r5, -0x77a0(r3)
 /* 8010C23C 0010713C  48 00 00 24 */	b lbl_8010C260
 lbl_8010C240:
-/* 8010C240 00107140  3C 80 80 44 */	lis r4, lbl_80440900@ha
+/* 8010C240 00107140  3C 80 80 44 */	lis r4, gki_cb@ha
 /* 8010C244 00107144  54 63 15 BA */	rlwinm r3, r3, 2, 0x16, 0x1d
-/* 8010C248 00107148  38 84 09 00 */	addi r4, r4, lbl_80440900@l
+/* 8010C248 00107148  38 84 09 00 */	addi r4, r4, gki_cb@l
 /* 8010C24C 0010714C  38 A0 00 00 */	li r5, 0
 /* 8010C250 00107150  3C 04 00 03 */	addis r0, r4, 3
 /* 8010C254 00107154  7C 60 1A 14 */	add r3, r0, r3
@@ -1486,8 +1471,8 @@ GKI_init:
 /* 8010C538 00107438  38 A5 8A E0 */	addi r5, r5, 0x00028AE0@l
 /* 8010C53C 0010743C  93 E1 00 0C */	stw r31, 0xc(r1)
 /* 8010C540 00107440  93 C1 00 08 */	stw r30, 8(r1)
-/* 8010C544 00107444  3F C0 80 44 */	lis r30, lbl_80440900@ha
-/* 8010C548 00107448  38 7E 09 00 */	addi r3, r30, lbl_80440900@l
+/* 8010C544 00107444  3F C0 80 44 */	lis r30, gki_cb@ha
+/* 8010C548 00107448  38 7E 09 00 */	addi r3, r30, gki_cb@l
 /* 8010C54C 0010744C  4B EF 7B B9 */	bl memset
 /* 8010C550 00107450  4B FF E8 59 */	bl gki_buffer_init
 /* 8010C554 00107454  4B FF FA 79 */	bl gki_timers_init
@@ -1523,9 +1508,9 @@ GKI_shutdown:
 /* 8010C5C0 001074C0  93 E1 00 0C */	stw r31, 0xc(r1)
 /* 8010C5C4 001074C4  93 C1 00 08 */	stw r30, 8(r1)
 /* 8010C5C8 001074C8  4B FE 52 F9 */	bl OSDisableInterrupts
-/* 8010C5CC 001074CC  3F C0 80 44 */	lis r30, lbl_80440900@ha
+/* 8010C5CC 001074CC  3F C0 80 44 */	lis r30, gki_cb@ha
 /* 8010C5D0 001074D0  38 00 00 00 */	li r0, 0
-/* 8010C5D4 001074D4  88 BE 09 00 */	lbz r5, lbl_80440900@l(r30)
+/* 8010C5D4 001074D4  88 BE 09 00 */	lbz r5, gki_cb@l(r30)
 /* 8010C5D8 001074D8  3B FE 09 00 */	addi r31, r30, 0x900
 /* 8010C5DC 001074DC  3C 9F 00 03 */	addis r4, r31, 3
 /* 8010C5E0 001074E0  54 A5 10 3A */	slwi r5, r5, 2
@@ -1593,9 +1578,9 @@ GKI_send_event:
 /* 8010C694 00107594  48 00 00 64 */	b lbl_8010C6F8
 lbl_8010C698:
 /* 8010C698 00107598  4B FE 52 29 */	bl OSDisableInterrupts
-/* 8010C69C 0010759C  3C E0 80 44 */	lis r7, lbl_80440900@ha
+/* 8010C69C 0010759C  3C E0 80 44 */	lis r7, gki_cb@ha
 /* 8010C6A0 001075A0  57 C0 0D FC */	rlwinm r0, r30, 1, 0x17, 0x1e
-/* 8010C6A4 001075A4  88 A7 09 00 */	lbz r5, lbl_80440900@l(r7)
+/* 8010C6A4 001075A4  88 A7 09 00 */	lbz r5, gki_cb@l(r7)
 /* 8010C6A8 001075A8  38 C7 09 00 */	addi r6, r7, 0x900
 /* 8010C6AC 001075AC  3C 86 00 03 */	addis r4, r6, 3
 /* 8010C6B0 001075B0  54 A5 10 3A */	slwi r5, r5, 2
@@ -1631,8 +1616,8 @@ GKI_get_taskid:
 
 .global GKI_enable
 GKI_enable:
-/* 8010C718 00107618  3C A0 80 44 */	lis r5, lbl_80440900@ha
-/* 8010C71C 0010761C  88 85 09 00 */	lbz r4, lbl_80440900@l(r5)
+/* 8010C718 00107618  3C A0 80 44 */	lis r5, gki_cb@ha
+/* 8010C71C 0010761C  88 85 09 00 */	lbz r4, gki_cb@l(r5)
 /* 8010C720 00107620  38 65 09 00 */	addi r3, r5, 0x900
 /* 8010C724 00107624  38 84 FF FF */	addi r4, r4, -1
 /* 8010C728 00107628  54 80 15 BA */	rlwinm r0, r4, 2, 0x16, 0x1d
@@ -1647,8 +1632,8 @@ GKI_disable:
 /* 8010C740 00107640  7C 08 02 A6 */	mflr r0
 /* 8010C744 00107644  90 01 00 14 */	stw r0, 0x14(r1)
 /* 8010C748 00107648  4B FE 51 79 */	bl OSDisableInterrupts
-/* 8010C74C 0010764C  3C A0 80 44 */	lis r5, lbl_80440900@ha
-/* 8010C750 00107650  88 05 09 00 */	lbz r0, lbl_80440900@l(r5)
+/* 8010C74C 0010764C  3C A0 80 44 */	lis r5, gki_cb@ha
+/* 8010C750 00107650  88 05 09 00 */	lbz r0, gki_cb@l(r5)
 /* 8010C754 00107654  38 85 09 00 */	addi r4, r5, 0x900
 /* 8010C758 00107658  54 00 10 3A */	slwi r0, r0, 2
 /* 8010C75C 0010765C  7C 84 02 14 */	add r4, r4, r0
