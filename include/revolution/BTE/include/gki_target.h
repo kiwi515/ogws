@@ -4,7 +4,7 @@
  *  2024/03/25:
  *      - Add #defines for RVL target
  * 
- *  Compile with BTE_RVL_TARGET define to include these changes.
+ *  Compile with BTE_RVL_TARGET defined to include these changes.
  * 
  ******************************************************************************/
 
@@ -46,6 +46,9 @@
 #define GKI_NUM_FIXED_BUF_POOLS     5
 #define GKI_DEF_BUFPOOL_PERM_MASK   0xfff0
 #define GKI_NUM_TOTAL_BUF_POOLS     9
+
+// RVL version didn't have A2DP?
+#define GKI_PPC_TASK 2
 
 #endif
 

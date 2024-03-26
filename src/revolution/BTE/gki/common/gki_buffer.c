@@ -6,7 +6,7 @@
  *      - Modified gki_init_free_queue to match RVL version
  *      - Modified GKI_enqueue to match RVL version
  * 
- *  Compile with BTE_RVL_TARGET define to include these changes.
+ *  Compile with BTE_RVL_TARGET defined to include these changes.
  * 
  ******************************************************************************/
 

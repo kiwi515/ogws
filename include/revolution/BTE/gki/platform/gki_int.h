@@ -6,7 +6,7 @@
  *      - Modify tGKI_OS structure to match RVL target
  *      - Add #define for MAX_INT_STATE
  * 
- *  Compile with BTE_RVL_TARGET define to include these changes.
+ *  Compile with BTE_RVL_TARGET defined to include these changes.
  * 
  ******************************************************************************/
 

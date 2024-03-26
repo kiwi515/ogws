@@ -8,7 +8,7 @@
  *      - Modified GKI_add_to_timer_list to match RVL version
  *      - Modified GKI_remove_from_timer_list to match RVL version
  * 
- *  Compile with BTE_RVL_TARGET define to include these changes.
+ *  Compile with BTE_RVL_TARGET defined to include these changes.
  * 
  ******************************************************************************/
 
@@ -606,6 +606,8 @@ void GKI_timer_update (INT32 ticks_since_last_update)
 }
 
 
+#ifndef BTE_RVL_TARGET
+
 /*******************************************************************************
 **
 ** Function         GKI_timer_queue_empty
@@ -650,6 +652,8 @@ void GKI_timer_queue_register_callback (SYSTEM_TICK_CBACK *p_callback)
 
     return;
 }
+
+#endif
 
 /*******************************************************************************
 **

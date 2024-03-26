@@ -5,7 +5,7 @@
  *      - Disable GKI_USE_DEFERED_ALLOC_BUF_POOLS
  *      - Modify tGKI_COM_CB structure to match RVL target
  * 
- *  Compile with BTE_RVL_TARGET define to include these changes.
+ *  Compile with BTE_RVL_TARGET defined to include these changes.
  * 
  ******************************************************************************/
 
@@ -341,11 +341,16 @@ typedef struct
 
     BOOLEAN     timer_nesting;                      /* flag to prevent timer interrupt nesting */
 
+#ifndef BTE_RVL_TARGET
     /* Time queue arrays */
     TIMER_LIST_Q *timer_queues[GKI_MAX_TIMER_QUEUES];
+#endif
+
+#ifndef BTE_RVL_TARGET
     /* System tick callback */
     SYSTEM_TICK_CBACK *p_tick_cb;
     BOOLEAN     system_tick_running;                /* TRUE if system tick is running. Valid only if p_tick_cb is not NULL */
+#endif
 
 #if (GKI_DEBUG == TRUE)
     UINT16      ExceptionCnt;                       /* number of GKI exceptions that have happened */

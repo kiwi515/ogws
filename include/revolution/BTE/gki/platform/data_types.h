@@ -5,7 +5,7 @@
  *      - Move from ulinux/ to platform/
  *      - Add #include for RVL types (include/types.h)
  * 
- *  Compile with BTE_RVL_TARGET define to include these changes.
+ *  Compile with BTE_RVL_TARGET defined to include these changes.
  * 
  ******************************************************************************/
 
