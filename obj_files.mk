@@ -522,6 +522,7 @@ RVL_SDK_O_FILES := \
 	build/revolution/BTE/gki/common/gki_time.o \
 	build/revolution/BTE/gki/platform/gki_ppc.o \
 	build/asm/revolution/BTE/hci/hcisu_h2.o \
+	build/asm/revolution/BTE/udrv/uusb_ppc.o \
 	build/asm/revolution/BTE/bte_unsplit.o \
 	\
 	build/revolution/DB/db.o \
