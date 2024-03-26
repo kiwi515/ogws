@@ -1,11 +1,5 @@
 .include "macros.inc"
 
-.section .sbss2, "a"
-.balign 0x8
-.global bd_addr_null
-bd_addr_null:
-	.skip 0x8
-
 .section .sdata2, "a"
 .balign 0x8
 .global lbl_804C1398
@@ -904,71 +898,6 @@ lbl_80470E80:
 	.skip 0x4634
 
 .section .text, "ax"
-
-.global bdcpy
-bdcpy:
-/* 8010EB28 00109A28  89 24 00 00 */	lbz r9, 0(r4)
-/* 8010EB2C 00109A2C  89 04 00 01 */	lbz r8, 1(r4)
-/* 8010EB30 00109A30  88 E4 00 02 */	lbz r7, 2(r4)
-/* 8010EB34 00109A34  88 C4 00 03 */	lbz r6, 3(r4)
-/* 8010EB38 00109A38  88 A4 00 04 */	lbz r5, 4(r4)
-/* 8010EB3C 00109A3C  88 04 00 05 */	lbz r0, 5(r4)
-/* 8010EB40 00109A40  99 23 00 00 */	stb r9, 0(r3)
-/* 8010EB44 00109A44  99 03 00 01 */	stb r8, 1(r3)
-/* 8010EB48 00109A48  98 E3 00 02 */	stb r7, 2(r3)
-/* 8010EB4C 00109A4C  98 C3 00 03 */	stb r6, 3(r3)
-/* 8010EB50 00109A50  98 A3 00 04 */	stb r5, 4(r3)
-/* 8010EB54 00109A54  98 03 00 05 */	stb r0, 5(r3)
-/* 8010EB58 00109A58  4E 80 00 20 */	blr 
-
-.global bdcmp
-bdcmp:
-/* 8010EB5C 00109A5C  88 A3 00 00 */	lbz r5, 0(r3)
-/* 8010EB60 00109A60  88 04 00 00 */	lbz r0, 0(r4)
-/* 8010EB64 00109A64  7C 05 00 40 */	cmplw r5, r0
-/* 8010EB68 00109A68  41 82 00 0C */	beq lbl_8010EB74
-/* 8010EB6C 00109A6C  38 60 FF FF */	li r3, -1
-/* 8010EB70 00109A70  4E 80 00 20 */	blr 
-lbl_8010EB74:
-/* 8010EB74 00109A74  88 A3 00 01 */	lbz r5, 1(r3)
-/* 8010EB78 00109A78  38 C3 00 02 */	addi r6, r3, 2
-/* 8010EB7C 00109A7C  88 04 00 01 */	lbz r0, 1(r4)
-/* 8010EB80 00109A80  38 64 00 02 */	addi r3, r4, 2
-/* 8010EB84 00109A84  7C 05 00 40 */	cmplw r5, r0
-/* 8010EB88 00109A88  41 82 00 0C */	beq lbl_8010EB94
-/* 8010EB8C 00109A8C  38 60 FF FF */	li r3, -1
-/* 8010EB90 00109A90  4E 80 00 20 */	blr 
-lbl_8010EB94:
-/* 8010EB94 00109A94  88 A6 00 00 */	lbz r5, 0(r6)
-/* 8010EB98 00109A98  88 03 00 00 */	lbz r0, 0(r3)
-/* 8010EB9C 00109A9C  7C 05 00 40 */	cmplw r5, r0
-/* 8010EBA0 00109AA0  41 82 00 0C */	beq lbl_8010EBAC
-/* 8010EBA4 00109AA4  38 60 FF FF */	li r3, -1
-/* 8010EBA8 00109AA8  4E 80 00 20 */	blr 
-lbl_8010EBAC:
-/* 8010EBAC 00109AAC  88 A6 00 01 */	lbz r5, 1(r6)
-/* 8010EBB0 00109AB0  88 03 00 01 */	lbz r0, 1(r3)
-/* 8010EBB4 00109AB4  7C 05 00 40 */	cmplw r5, r0
-/* 8010EBB8 00109AB8  41 82 00 0C */	beq lbl_8010EBC4
-/* 8010EBBC 00109ABC  38 60 FF FF */	li r3, -1
-/* 8010EBC0 00109AC0  4E 80 00 20 */	blr 
-lbl_8010EBC4:
-/* 8010EBC4 00109AC4  88 A6 00 02 */	lbz r5, 2(r6)
-/* 8010EBC8 00109AC8  88 03 00 02 */	lbz r0, 2(r3)
-/* 8010EBCC 00109ACC  7C 05 00 40 */	cmplw r5, r0
-/* 8010EBD0 00109AD0  41 82 00 0C */	beq lbl_8010EBDC
-/* 8010EBD4 00109AD4  38 60 FF FF */	li r3, -1
-/* 8010EBD8 00109AD8  4E 80 00 20 */	blr 
-lbl_8010EBDC:
-/* 8010EBDC 00109ADC  88 A6 00 03 */	lbz r5, 3(r6)
-/* 8010EBE0 00109AE0  88 03 00 03 */	lbz r0, 3(r3)
-/* 8010EBE4 00109AE4  7C 05 00 40 */	cmplw r5, r0
-/* 8010EBE8 00109AE8  41 82 00 0C */	beq lbl_8010EBF4
-/* 8010EBEC 00109AEC  38 60 FF FF */	li r3, -1
-/* 8010EBF0 00109AF0  4E 80 00 20 */	blr 
-lbl_8010EBF4:
-/* 8010EBF4 00109AF4  38 60 00 00 */	li r3, 0
-/* 8010EBF8 00109AF8  4E 80 00 20 */	blr 
 
 .global bta_sys_rm_register
 bta_sys_rm_register:
