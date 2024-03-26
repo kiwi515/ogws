@@ -6,7 +6,7 @@
  *      - Modify tGKI_OS structure to match RVL target
  *      - Add #define for MAX_INT_STATE
  * 
- *  Compile with BTE_RVL_TARGET defined to include these changes.
+ *  Compile with REVOLUTION defined to include these changes.
  * 
  ******************************************************************************/
 
@@ -37,7 +37,7 @@
 ** OS specific definitions
 */
 
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
 #define MAX_INT_STATE 16
 #endif
 
@@ -86,7 +86,7 @@
 
 typedef struct
 {
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
     UINT8               int_index;
     BOOL                int_state[MAX_INT_STATE];
     char _pad[0x10];

@@ -1,10 +1,11 @@
 /******************************************************************************
  *
  *  NOTICE OF CHANGES
- *  2024/03/25:
+ *  2024/03/26:
  *      - Add tBTA_DM_COMPRESS_CFG structure for RVL target
+ *      - Added prototypes missing from bta_dm_act
  * 
- *  Compile with BTE_RVL_TARGET defined to include these changes.
+ *  Compile with REVOLUTION defined to include these changes.
  * 
  ******************************************************************************/
 
@@ -837,7 +838,7 @@ typedef struct
 } tBTA_DM_PM_CFG;
 
 
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
 typedef struct
 {
     UINT8   id;
@@ -987,6 +988,7 @@ extern void bta_dm_search_cancel_notify (tBTA_DM_MSG *p_data);
 extern void bta_dm_search_cancel_transac_cmpl(tBTA_DM_MSG *p_data);
 extern void bta_dm_disc_rmt_name (tBTA_DM_MSG *p_data);
 extern tBTA_DM_PEER_DEVICE * bta_dm_find_peer_device(BD_ADDR peer_addr);
+extern void bta_dm_immediate_disable(void);
 
 extern void bta_dm_pm_active(BD_ADDR peer_addr);
 

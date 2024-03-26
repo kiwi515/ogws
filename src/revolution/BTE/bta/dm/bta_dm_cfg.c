@@ -4,7 +4,7 @@
  *  2024/03/26:
  *      - Add #defines to change configurations for RVL target
  * 
- *  Compile with BTE_RVL_TARGET defined to include these changes.
+ *  Compile with REVOLUTION defined to include these changes.
  * 
  ******************************************************************************/
 
@@ -40,7 +40,7 @@
 #include "bta_api.h"
 #include "bta_dm_int.h"
 
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
 
 #define BTA_DM_LINK_TIMEOUT    5000
 
@@ -78,7 +78,7 @@ const tBTA_DM_CFG bta_dm_cfg =
     BTA_DM_PAGE_TIMEOUT,
     /* link supervision timeout in 625uS*/
     BTA_DM_LINK_TIMEOUT,
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
     /* FALSE to not avoid scatternet when av is streaming */
     FALSE
 #else
@@ -102,7 +102,7 @@ const tBTA_DM_CFG bta_dm_cfg =
 #define BTA_AV_ROLE BTA_MASTER_ROLE_PREF
 #endif
 
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
 #define BTA_DM_NUM_RM_ENTRY    2
 #else
 #define BTA_DM_NUM_RM_ENTRY    4
@@ -117,7 +117,7 @@ const tBTA_DM_CFG bta_dm_cfg =
 /* First element is always for SYS:
    app_id = # of entries table, cfg is
    device scatternet support */
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
 const tBTA_DM_RM bta_dm_rm_cfg[] =
 {
     {BTA_ID_SYS, BTA_DM_NUM_RM_ENTRY, BTA_DM_SCATTERNET},
@@ -142,7 +142,7 @@ tBTA_DM_RM *p_bta_dm_rm_cfg = (tBTA_DM_RM *)&bta_dm_rm_cfg;
 
 #define BTA_DM_NUM_PM_ENTRY         (15+BTA_DM_NUM_JV_ID)  /* number of entries in bta_dm_pm_cfg except the first */
 
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
 tBTA_DM_PM_TYPE_QUALIFIER tBTA_DM_PM_CFG bta_dm_pm_cfg;
 #else
 tBTA_DM_PM_TYPE_QUALIFIER tBTA_DM_PM_CFG bta_dm_pm_cfg[] =
@@ -169,7 +169,7 @@ tBTA_DM_PM_TYPE_QUALIFIER tBTA_DM_PM_CFG bta_dm_pm_cfg[] =
 #endif
 
 
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
 #define BTA_DM_NUM_COMPRESS_ENTRY 5
 
 tBTA_DM_PM_TYPE_QUALIFIER tBTA_DM_COMPRESS_CFG bta_dm_compress_cfg[] =
@@ -187,7 +187,7 @@ tBTA_DM_COMPRESS_CFG *p_bta_dm_compress_cfg = (tBTA_DM_COMPRESS_CFG *)&bta_dm_co
 
 #ifdef BTE_SIM_APP      /* For Insight builds only, see the detail below */
 #define BTA_DM_NUM_PM_SPEC      (9 + 2)  /* additional two */
-#elif BTE_RVL_TARGET
+#elif REVOLUTION
 #define BTA_DM_NUM_PM_SPEC      1
 #else
 #define BTA_DM_NUM_PM_SPEC      9  /* additional JV*/
@@ -195,7 +195,7 @@ tBTA_DM_COMPRESS_CFG *p_bta_dm_compress_cfg = (tBTA_DM_COMPRESS_CFG *)&bta_dm_co
 
 tBTA_DM_PM_TYPE_QUALIFIER tBTA_DM_PM_SPEC bta_dm_pm_spec[BTA_DM_NUM_PM_SPEC] =
 {
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
 
  {
   (BTA_DM_PM_SNIFF_RVL | BTA_DM_PM_NO_PREF),                       /* allow park & sniff */
@@ -408,7 +408,7 @@ The SNIFF table entries must be in the order from highest latency (biggest inter
 If there's a conflict among the connected services, the setting with lowest latency wins.
 */
 /* sniff modes: max interval, min interval, attempt, timeout */
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
   {400, 200,    4, 4, BTM_PM_MD_SNIFF},
   {800, 400,    0, 0, BTM_PM_MD_PARK}
 #else

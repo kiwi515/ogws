@@ -1,5 +1,21 @@
 /******************************************************************************
  *
+ *  NOTICE OF CHANGES
+ *  2024/03/26:
+ *      - Added #defines for RVL target
+ *      - Modify bta_sys_init to match RVL version
+ *      - Modify bta_sys_event to match RVL version
+ *      - Modify bta_sys_register to match RVL version
+ *      - Modify bta_sys_disable to match RVL version
+ * 
+ *  Compile with REVOLUTION defined to include these changes.
+ * 
+ ******************************************************************************/
+
+
+
+/******************************************************************************
+ *
  *  Copyright (C) 2003-2012 Broadcom Corporation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,6 +61,10 @@
 #include "bta_ar_api.h"
 #endif
 
+#ifdef REVOLUTION
+#include "bta_dm_int.h"
+#endif
+
 /* protocol timer update period, in milliseconds */
 #ifndef BTA_SYS_TIMER_PERIOD
 #define BTA_SYS_TIMER_PERIOD            1000
@@ -56,8 +76,15 @@ tBTA_SYS_CB bta_sys_cb;
 #endif
 
 /* trace level */
+
+#ifdef REVOLUTION
+UINT8 appl_trace_level = BT_TRACE_LEVEL_NONE;
+#else
 /* TODO Bluedroid - Hard-coded trace levels -  Needs to be configurable */
 UINT8 appl_trace_level = BT_TRACE_LEVEL_DEBUG; //APPL_INITIAL_TRACE_LEVEL;
+#endif
+
+#ifndef REVOLUTION
 UINT8 btif_trace_level = BT_TRACE_LEVEL_DEBUG;
 
 static const tBTA_SYS_REG bta_sys_hw_reg =
@@ -157,6 +184,7 @@ const tBTA_SYS_ST_TBL bta_sys_st_tbl[] = {
     bta_sys_hw_on,
     bta_sys_hw_stopping
 };
+#endif
 
 /*******************************************************************************
 **
@@ -175,6 +203,7 @@ BTA_API void bta_sys_init(void)
     bta_sys_cb.task_id = GKI_get_taskid();
     appl_trace_level = p_bta_sys_cfg->trace_level;
 
+#ifndef REVOLUTION
     /* register BTA SYS message handler */
     bta_sys_register( BTA_ID_SYS,  &bta_sys_hw_reg);
 
@@ -184,9 +213,10 @@ BTA_API void bta_sys_init(void)
 #if( defined BTA_AR_INCLUDED ) && (BTA_AR_INCLUDED == TRUE)
     bta_ar_init();
 #endif
-
+#endif
 }
 
+#ifndef REVOLUTION
 /*******************************************************************************
 **
 ** Function         bta_dm_sm_execute
@@ -473,7 +503,7 @@ void bta_sys_hw_evt_stack_enabled(tBTA_SYS_HW_MSG *p_sys_hw_msg)
             bta_sys_cb.sys_hw_cback[hw_module_index] (BTA_SYS_HW_ON_EVT);
     }
 }
-
+#endif
 
 
 
@@ -496,6 +526,19 @@ BTA_API void bta_sys_event(BT_HDR *p_msg)
 
     /* get subsystem id from event */
     id = (UINT8) (p_msg->event >> 8);
+
+#ifdef REVOLUTION
+    if (bta_sys_cb.events_disabled)
+    {
+        if (p_msg->event == 0x0101)
+        {
+            bta_dm_immediate_disable();
+        }
+
+        GKI_freebuf(p_msg);
+        return;
+    }
+#endif
 
     /* verify id and call subsystem event handler */
     if ((id < BTA_ID_MAX) && (bta_sys_cb.reg[id] != NULL))
@@ -545,9 +588,12 @@ BTA_API void bta_sys_timer_update(void)
 void bta_sys_register(UINT8 id, const tBTA_SYS_REG *p_reg)
 {
     bta_sys_cb.reg[id] = (tBTA_SYS_REG *) p_reg;
+#ifndef REVOLUTION
     bta_sys_cb.is_reg[id] = TRUE;
+#endif
 }
 
+#ifndef REVOLUTION
 /*******************************************************************************
 **
 ** Function         bta_sys_deregister
@@ -579,6 +625,7 @@ BOOLEAN bta_sys_is_register(UINT8 id)
 {
     return bta_sys_cb.is_reg[id];
 }
+#endif
 
 /*******************************************************************************
 **
@@ -640,6 +687,7 @@ void bta_sys_disable(tBTA_SYS_HW_MODULE module)
     int bta_id = 0;
     int bta_id_max = 0;
 
+#ifndef REVOLUTION
     APPL_TRACE_DEBUG1("bta_sys_disable: module %i", module);
 
     switch( module )
@@ -664,12 +712,21 @@ void bta_sys_disable(tBTA_SYS_HW_MODULE module)
             APPL_TRACE_WARNING0("bta_sys_disable: unkown module");
             return;
     }
+#endif
 
+#ifdef REVOLUTION
+    for ( ; bta_id < BTA_ID_BLUETOOTH_MAX; bta_id++)
+#else
     for ( ; bta_id <= bta_id_max; bta_id++)
+#endif
     {
         if (bta_sys_cb.reg[bta_id] != NULL)
         {
+#ifdef REVOLUTION
+            if (bta_sys_cb.reg[bta_id]->disable != NULL)
+#else
             if (bta_sys_cb.is_reg[bta_id] == TRUE  &&  bta_sys_cb.reg[bta_id]->disable != NULL)
+#endif
             {
                 (*bta_sys_cb.reg[bta_id]->disable)();
             }
@@ -705,6 +762,7 @@ void bta_sys_set_trace_level(UINT8 level)
     appl_trace_level = level;
 }
 
+#ifndef REVOLUTION
 /*******************************************************************************
 **
 ** Function         bta_sys_get_sys_features
@@ -718,5 +776,6 @@ UINT16 bta_sys_get_sys_features (void)
 {
     return bta_sys_cb.sys_features;
 }
+#endif
 
 

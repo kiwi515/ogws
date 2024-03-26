@@ -4,7 +4,7 @@
  *  2024/03/26:
  *      - Modify tPTIM_CB structure to match RVL target
  * 
- *  Compile with BTE_RVL_TARGET defined to include these changes.
+ *  Compile with REVOLUTION defined to include these changes.
  * 
  ******************************************************************************/
 
@@ -46,7 +46,7 @@ typedef struct
 {
     TIMER_LIST_Q        timer_queue;        /* GKI timer queue */
     INT32               period;             /* Timer period in milliseconds */
-#ifndef BTE_RVL_TARGET
+#ifndef REVOLUTION
     UINT32              last_gki_ticks;     /* GKI ticks since last time update called */
 #endif
     UINT8               timer_id;           /* GKI timer id */

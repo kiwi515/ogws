@@ -7,7 +7,7 @@
  *      - Modify LogMsg_* family of functions to match RVL target
  *      - Supply LogMsg definition for RVL
  * 
- *  Compile with BTE_RVL_TARGET defined to include these changes.
+ *  Compile with REVOLUTION defined to include these changes.
  * 
  ******************************************************************************/
 
@@ -38,7 +38,7 @@
  *
  ******************************************************************************/
 
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
 #include <revolution/OS.h>
 #endif
 
@@ -496,6 +496,7 @@ tBTTRC_FUNC_MAP bttrc_set_level_map[] = {
 const UINT16 bttrc_map_size = sizeof(bttrc_set_level_map)/sizeof(tBTTRC_FUNC_MAP);
 #endif
 
+#ifndef REVOLUTION
 /********************************************************************************
  **
  **    Function Name:     BTE_InitTraceLevels
@@ -535,8 +536,9 @@ BT_API void BTE_InitTraceLevels( void )
     }
 #endif
 }
+#endif
 
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
 /********************************************************************************
  **
  **    Function Name:   LogMsg
@@ -575,11 +577,11 @@ void LogMsg(UINT32 trace_set_mask, const char *fmt_str, ...) {
  **
  *********************************************************************************/
 void LogMsg_0(UINT32 trace_set_mask, const char *fmt_str) {
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
     if (bte_target_mode == BTE_MODE_SERIAL_APP) {
 #endif
         LogMsg(trace_set_mask, fmt_str);
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
     }
 #endif
 }
@@ -597,11 +599,11 @@ void LogMsg_0(UINT32 trace_set_mask, const char *fmt_str) {
  **
  *********************************************************************************/
 void LogMsg_1(UINT32 trace_set_mask, const char *fmt_str, UINT32 p1) {
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
     if (bte_target_mode == BTE_MODE_SERIAL_APP) {
 #endif
         LogMsg(trace_set_mask, fmt_str, p1);
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
     }
 #endif
 }
@@ -619,11 +621,11 @@ void LogMsg_1(UINT32 trace_set_mask, const char *fmt_str, UINT32 p1) {
  **
  *********************************************************************************/
 void LogMsg_2(UINT32 trace_set_mask, const char *fmt_str, UINT32 p1, UINT32 p2) {
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
     if (bte_target_mode == BTE_MODE_SERIAL_APP) {
 #endif
         LogMsg(trace_set_mask, fmt_str, p1, p2);
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
     }
 #endif
 }
@@ -642,11 +644,11 @@ void LogMsg_2(UINT32 trace_set_mask, const char *fmt_str, UINT32 p1, UINT32 p2) 
  *********************************************************************************/
 void LogMsg_3(UINT32 trace_set_mask, const char *fmt_str, UINT32 p1, UINT32 p2,
         UINT32 p3) {
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
     if (bte_target_mode == BTE_MODE_SERIAL_APP) {
 #endif
         LogMsg(trace_set_mask, fmt_str, p1, p2, p3);
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
     }
 #endif
 }
@@ -665,11 +667,11 @@ void LogMsg_3(UINT32 trace_set_mask, const char *fmt_str, UINT32 p1, UINT32 p2,
  *********************************************************************************/
 void LogMsg_4(UINT32 trace_set_mask, const char *fmt_str, UINT32 p1, UINT32 p2,
         UINT32 p3, UINT32 p4) {
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
     if (bte_target_mode == BTE_MODE_SERIAL_APP) {
 #endif
         LogMsg(trace_set_mask, fmt_str, p1, p2, p3, p4);
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
     }
 #endif
 }
@@ -688,11 +690,11 @@ void LogMsg_4(UINT32 trace_set_mask, const char *fmt_str, UINT32 p1, UINT32 p2,
  *********************************************************************************/
 void LogMsg_5(UINT32 trace_set_mask, const char *fmt_str, UINT32 p1, UINT32 p2,
         UINT32 p3, UINT32 p4, UINT32 p5) {
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
     if (bte_target_mode == BTE_MODE_SERIAL_APP) {
 #endif
         LogMsg(trace_set_mask, fmt_str, p1, p2, p3, p4, p5);
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
     }
 #endif
 }
@@ -711,11 +713,11 @@ void LogMsg_5(UINT32 trace_set_mask, const char *fmt_str, UINT32 p1, UINT32 p2,
  *********************************************************************************/
 void LogMsg_6(UINT32 trace_set_mask, const char *fmt_str, UINT32 p1, UINT32 p2,
         UINT32 p3, UINT32 p4, UINT32 p5, UINT32 p6) {
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
     if (bte_target_mode == BTE_MODE_SERIAL_APP) {
 #endif
         LogMsg(trace_set_mask, fmt_str, p1, p2, p3, p4, p5, p6);
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
     }
 #endif
 }

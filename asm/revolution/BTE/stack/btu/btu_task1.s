@@ -1,14 +1,5 @@
 .include "macros.inc"
 
-.section .data, "wa"
-.balign 0x8
-.global lbl_803B04D8
-lbl_803B04D8:
-	.incbin "baserom.dol", 0x3AC5D8, 0x14
-.global lbl_803B04EC
-lbl_803B04EC:
-	.incbin "baserom.dol", 0x3AC5EC, 0x24
-
 .section .bss, "wa"
 .balign 0x8
 .global btu_cb

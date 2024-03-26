@@ -4,7 +4,7 @@
  *  2024/03/25:
  *      - Remove linux functionality for RVL target
  * 
- *  Compile with BTE_RVL_TARGET defined to include these changes.
+ *  Compile with REVOLUTION defined to include these changes.
  * 
  ******************************************************************************/
 
@@ -106,7 +106,7 @@ typedef struct {
 
 extern tBTE_APPL_CFG bte_appl_cfg;
 
-#ifndef BTE_RVL_TARGET
+#ifndef REVOLUTION
 typedef struct {
     pthread_mutex_t     mutex;  /* mutex to protect below signal condition */
     pthread_cond_t      cond;   /* signal event */

@@ -4,7 +4,7 @@
  *  2024/03/25:
  *      - Add #defines for RVL target
  * 
- *  Compile with BTE_RVL_TARGET defined to include these changes.
+ *  Compile with REVOLUTION defined to include these changes.
  * 
  ******************************************************************************/
 
@@ -33,7 +33,7 @@
 /**
  * Modifications for decomp
  */
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
 
 #define GKI_MAX_TASKS               8
 #define GKI_NUM_TIMERS              2

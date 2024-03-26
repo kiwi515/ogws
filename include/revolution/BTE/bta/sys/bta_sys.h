@@ -5,7 +5,7 @@
  *      - Add #defines for RVL target
  *      - Add prototype for bta_sys_compress_register
  * 
- *  Compile with BTE_RVL_TARGET defined to include these changes.
+ *  Compile with REVOLUTION defined to include these changes.
  * 
  ******************************************************************************/
 
@@ -99,6 +99,9 @@ typedef UINT16 tBTA_SYS_HW_MODULE;
 #define BTA_ID_HH           23           /* Human Interface Device Host */
 #define BTA_ID_PBS          24           /* Phone Book Access Server */
 #define BTA_ID_PBC          25           /* Phone Book Access Client */
+
+#ifndef REVOLUTION
+
 #define BTA_ID_JV           26           /* Java */
 #define BTA_ID_HS           27           /* Headset */
 #define BTA_ID_MSE          28           /* Message Server Equipment */
@@ -107,6 +110,7 @@ typedef UINT16 tBTA_SYS_HW_MODULE;
 #define BTA_ID_GATTC        31           /* GATT Client */
 #define BTA_ID_GATTS        32           /* GATT Client */
 #define BTA_ID_BLUETOOTH_MAX   33        /* last BT profile */
+
 
 /* FM */
 #define BTA_ID_FM           34           /* FM  */
@@ -130,10 +134,13 @@ typedef UINT16 tBTA_SYS_HW_MODULE;
 #define BTA_ID_JV1          43           /* JV1 */
 #define BTA_ID_JV2          44           /* JV2 */
 
-#ifdef BTE_RVL_TARGET
-#define BTA_ID_MAX          26
-#else
 #define BTA_ID_MAX          (43 + BTA_DM_NUM_JV_ID)
+
+#else
+
+#define BTA_ID_BLUETOOTH_MAX   26        /* last BT profile */
+#define BTA_ID_MAX             26
+
 #endif
 
 typedef UINT8 tBTA_SYS_ID;

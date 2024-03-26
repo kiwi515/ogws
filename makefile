@@ -62,7 +62,7 @@ CFLAGS_RVL := -lang c -enum int -O4,p -inline auto -ipa file -Cpp_exceptions off
 # Compiler flags for the BTE library
 CFLAGS_BTE := -lang c -enum int -O4,p -inline auto -ipa file -Cpp_exceptions off -RTTI off -proc gekko -fp hard -I- -Iinclude -ir include/MSL -ir include/revolution -ir include/revolution/BTE -ir include/revolution/BTE/include \
 	-ir include/revolution/BTE/embdrv/sbc/encoder/include -ir include/revolution/BTE/btif/include -ir include/revolution/BTE/bta/include -ir include/revolution/BTE/utils/include  -ir include/revolution/BTE/udrv/include \
-	-ir include/revolution/BTE/stack/include -ir include/revolution/BTE/hci/include -nodefaults -DBIG_ENDIAN -DHAS_NO_BDROID_BUILDCFG -DBTE_RVL_TARGET
+	-ir include/revolution/BTE/stack/include -ir include/revolution/BTE/hci/include -nodefaults -DBIG_ENDIAN -DHAS_NO_BDROID_BUILDCFG -DREVOLUTION
 # Compiler flags for the RVL Face Library
 CFLAGS_RFL := -lang c -enum int -O4,p -inline auto -ipa file -volatileasm -Cpp_exceptions off -RTTI off -proc gekko -fp hard -I- -Iinclude -ir include/MSL -ir include/revolution -nodefaults
 

@@ -8,7 +8,7 @@
  *      - Modify bta_sys_idle to match RVL version
  *      - Modify bta_sys_busy to match RVL version
  * 
- *  Compile with BTE_RVL_TARGET defined to include these changes.
+ *  Compile with REVOLUTION defined to include these changes.
  * 
  ******************************************************************************/
 
@@ -59,7 +59,7 @@ void bta_sys_rm_register(tBTA_SYS_CONN_CBACK * p_cback)
     bta_sys_cb.prm_cb = p_cback;
 }
 
-#ifndef BTE_RVL_TARGET
+#ifndef REVOLUTION
 /*******************************************************************************
 **
 ** Function         bta_sys_policy_register
@@ -246,7 +246,7 @@ void bta_sys_conn_open(UINT8 id, UINT8 app_id, BD_ADDR peer_addr)
 
     }
 
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
     if(bta_sys_cb.compress_cb)
     {
 
@@ -285,7 +285,7 @@ void bta_sys_conn_close(UINT8 id, UINT8 app_id, BD_ADDR peer_addr)
 
     }
 
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
     if(bta_sys_cb.compress_cb)
     {
 
@@ -348,7 +348,7 @@ void bta_sys_app_close(UINT8 id, UINT8 app_id, BD_ADDR peer_addr)
 *******************************************************************************/
 void bta_sys_sco_open(UINT8 id, UINT8 app_id, BD_ADDR peer_addr)
 {
-#ifndef BTE_RVL_TARGET
+#ifndef REVOLUTION
     /* AG triggers p_sco_cb by bta_sys_sco_use. */
     if((id != BTA_ID_AG) && (bta_sys_cb.p_sco_cb))
     {
@@ -375,7 +375,7 @@ void bta_sys_sco_open(UINT8 id, UINT8 app_id, BD_ADDR peer_addr)
 *******************************************************************************/
 void bta_sys_sco_close(UINT8 id, UINT8 app_id, BD_ADDR peer_addr)
 {
-#ifndef BTE_RVL_TARGET
+#ifndef REVOLUTION
     UINT8 num_sco_links;
 
     if((id != BTA_ID_AG) && (bta_sys_cb.p_sco_cb))
@@ -391,7 +391,7 @@ void bta_sys_sco_close(UINT8 id, UINT8 app_id, BD_ADDR peer_addr)
     }
 }
 
-#ifndef BTE_RVL_TARGET
+#ifndef REVOLUTION
 /*******************************************************************************
 **
 ** Function         bta_sys_sco_use
@@ -536,7 +536,7 @@ void bta_sys_clear_default_policy (UINT8 id, UINT8 policy)
 *******************************************************************************/
 void bta_sys_idle(UINT8 id, UINT8 app_id, BD_ADDR peer_addr)
 {
-#ifndef BTE_RVL_TARGET
+#ifndef REVOLUTION
     if(bta_sys_cb.prm_cb)
     {
 
@@ -564,7 +564,7 @@ void bta_sys_idle(UINT8 id, UINT8 app_id, BD_ADDR peer_addr)
 *******************************************************************************/
 void bta_sys_busy(UINT8 id, UINT8 app_id, BD_ADDR peer_addr)
 {
-#ifndef BTE_RVL_TARGET
+#ifndef REVOLUTION
     if(bta_sys_cb.prm_cb)
     {
 

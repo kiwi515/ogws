@@ -4,7 +4,7 @@
  *  2024/03/25:
  *      - Add #defines for RVL target
  * 
- *  Compile with BTE_RVL_TARGET defined to include these changes.
+ *  Compile with REVOLUTION defined to include these changes.
  * 
  ******************************************************************************/
 
@@ -34,9 +34,8 @@
 /**
  * Modifications for decomp
  */
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
 
-#define BTA_DM_COD              {0x40, 0x02, 0x04}
 #define RFCOMM_INCLUDED         TRUE
 #define GAP_INCLUDED            TRUE
 #define HID_DEV_INCLUDED        TRUE
@@ -44,9 +43,14 @@
 #define BNEP_INCLUDED           FALSE
 #define A2D_INCLUDED            FALSE
 #define AVRC_INCLUDED           FALSE
+
+#define BT_USE_TRACES           TRUE
+
 #define BTM_SSR_INCLUDED        FALSE
-#define BT_USE_TRACES           FALSE
 #define BTM_EIR_SERVER_INCLUDED FALSE
+
+#define BTA_DM_COD              {0x40, 0x02, 0x04}
+#define BTA_SYS_TIMER_PERIOD    1000
 
 #endif
 

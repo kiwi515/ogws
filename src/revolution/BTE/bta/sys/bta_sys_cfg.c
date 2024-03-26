@@ -4,7 +4,7 @@
  *  2024/03/26:
  *      - Add #defines to change configurations for RVL target
  * 
- *  Compile with BTE_RVL_TARGET defined to include these changes.
+ *  Compile with REVOLUTION defined to include these changes.
  * 
  ******************************************************************************/
 
@@ -59,7 +59,7 @@ const tBTA_SYS_CFG bta_sys_cfg =
     BTA_MBOX_EVT,               /* GKI mailbox event */
     BTA_MBOX,                   /* GKI mailbox id */
     BTA_TIMER,                  /* GKI timer id */
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
     BT_TRACE_LEVEL_NONE         /* initial trace level */
 #else
     APPL_INITIAL_TRACE_LEVEL    /* initial trace level */

@@ -4,7 +4,7 @@
  *  2024/03/25:
  *      - Move from ulinux/ to platform/
  * 
- *  Compile with BTE_RVL_TARGET defined to include these changes.
+ *  Compile with REVOLUTION defined to include these changes.
  * 
  ******************************************************************************/
 
@@ -28,8 +28,8 @@
  *
  ******************************************************************************/
 
-#ifndef BTE_RVL_TARGET
-#error Please compile the BTE library with BTE_RVL_TARGET!
+#ifndef REVOLUTION
+#error Please compile the BTE library with REVOLUTION!
 #endif
 
 #include "gki_int.h"

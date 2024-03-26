@@ -8,7 +8,7 @@
  *      - Modified GKI_add_to_timer_list to match RVL version
  *      - Modified GKI_remove_from_timer_list to match RVL version
  * 
- *  Compile with BTE_RVL_TARGET defined to include these changes.
+ *  Compile with REVOLUTION defined to include these changes.
  * 
  ******************************************************************************/
 
@@ -94,7 +94,7 @@ void gki_timers_init(void)
 #endif
     }
 
-#ifndef BTE_RVL_TARGET
+#ifndef REVOLUTION
     for (tt = 0; tt < GKI_MAX_TIMER_QUEUES; tt++)
     {
         gki_cb.com.timer_queues[tt] = NULL;
@@ -234,7 +234,7 @@ void GKI_start_timer (UINT8 tnum, INT32 ticks, BOOLEAN is_continuous)
 
     GKI_disable();
 
-#ifndef BTE_RVL_TARGET
+#ifndef REVOLUTION
     if(gki_timers_is_timer_running() == FALSE)
     {
 #if (defined(GKI_DELAY_STOP_SYS_TICK) && (GKI_DELAY_STOP_SYS_TICK > 0))
@@ -362,7 +362,7 @@ void GKI_stop_timer (UINT8 tnum)
 #endif
     }
 
-#ifndef BTE_RVL_TARGET
+#ifndef REVOLUTION
     GKI_disable();
 
     if (gki_timers_is_timer_running() == FALSE)
@@ -606,7 +606,7 @@ void GKI_timer_update (INT32 ticks_since_last_update)
 }
 
 
-#ifndef BTE_RVL_TARGET
+#ifndef REVOLUTION
 
 /*******************************************************************************
 **
@@ -898,7 +898,7 @@ void GKI_add_to_timer_list (TIMER_LIST_Q *p_timer_listq, TIMER_LIST_ENT  *p_tle)
 
         p_tle->in_use = TRUE;
 
-#ifndef BTE_RVL_TARGET
+#ifndef REVOLUTION
         /* if we already add this timer queue to the array */
         for (tt = 0; tt < GKI_MAX_TIMER_QUEUES; tt++)
         {
@@ -1002,7 +1002,7 @@ void GKI_remove_from_timer_list (TIMER_LIST_Q *p_timer_listq, TIMER_LIST_ENT  *p
     p_tle->ticks = GKI_UNUSED_LIST_ENTRY;
     p_tle->in_use = FALSE;
 
-#ifndef BTE_RVL_TARGET
+#ifndef REVOLUTION
     /* if timer queue is empty */
     if (p_timer_listq->p_first == NULL && p_timer_listq->p_last == NULL)
     {

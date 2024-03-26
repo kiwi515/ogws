@@ -4,7 +4,7 @@
  *  2024/03/26:
  *      - Add power mode #defines for RVL target
  * 
- *  Compile with BTE_RVL_TARGET defined to include these changes.
+ *  Compile with REVOLUTION defined to include these changes.
  * 
  ******************************************************************************/
 
@@ -853,7 +853,7 @@ typedef UINT16 tBTA_DM_LP_MASK;
 #define BTA_DM_PM_RETRY        0x80       /* retry power mode based on current settings */
 #define BTA_DM_PM_NO_PREF      0x01       /* service has no prefernce on power mode setting. eg. connection to service got closed */
 
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
 // Were these values previously reversed?
 #define BTA_DM_PM_SNIFF_RVL 0x02
 #define BTA_DM_PM_RETRY_RVL 0x08

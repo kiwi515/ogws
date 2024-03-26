@@ -4,7 +4,7 @@
  *  2024/03/26:
  *      - Add #defines to change configurations for RVL target
  * 
- *  Compile with BTE_RVL_TARGET defined to include these changes.
+ *  Compile with REVOLUTION defined to include these changes.
  * 
  ******************************************************************************/
 
@@ -39,7 +39,7 @@
 #include "bta_hh_api.h"
 
 /* max number of device types supported by BTA */
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
 #define BTA_HH_MAX_DEVT_SPT 4
 #else
 #define BTA_HH_MAX_DEVT_SPT         7
@@ -47,7 +47,7 @@
 
 /* size of database for service discovery */
 #ifndef BTA_HH_DISC_BUF_SIZE
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
 #define BTA_HH_DISC_BUF_SIZE        1024
 #else
 #define BTA_HH_DISC_BUF_SIZE        GKI_MAX_BUF_SIZE
@@ -64,7 +64,7 @@
 /* The type of devices supported by BTA HH and corresponding application ID */
 tBTA_HH_SPT_TOD p_devt_list[BTA_HH_MAX_DEVT_SPT] =
 {
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
     {BTA_HH_DEVT_MIC,                 BTA_HH_APP_ID_MI},
     {BTA_HH_DEVT_KBD,                 BTA_HH_APP_ID_KB},
     {BTA_HH_DEVT_JOS,                 BTA_HH_APP_ID_RMC},

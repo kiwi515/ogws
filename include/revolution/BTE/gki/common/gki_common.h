@@ -5,7 +5,7 @@
  *      - Disable GKI_USE_DEFERED_ALLOC_BUF_POOLS
  *      - Modify tGKI_COM_CB structure to match RVL target
  * 
- *  Compile with BTE_RVL_TARGET defined to include these changes.
+ *  Compile with REVOLUTION defined to include these changes.
  * 
  ******************************************************************************/
 
@@ -102,7 +102,7 @@ typedef struct _free_queue
 #define BUF_STATUS_QUEUED   2
 
 // btla-specific ++
-#ifndef BTE_RVL_TARGET
+#ifndef REVOLUTION
 #define GKI_USE_DEFERED_ALLOC_BUF_POOLS
 #endif
 // btla-specific --
@@ -321,7 +321,7 @@ typedef struct
     */
     FREE_QUEUE_T    freeq[GKI_NUM_TOTAL_BUF_POOLS];
 
-#ifndef BTE_RVL_TARGET
+#ifndef REVOLUTION
     UINT16   pool_buf_size[GKI_NUM_TOTAL_BUF_POOLS];
     UINT16   pool_max_count[GKI_NUM_TOTAL_BUF_POOLS];
     UINT16   pool_additions[GKI_NUM_TOTAL_BUF_POOLS];
@@ -341,12 +341,12 @@ typedef struct
 
     BOOLEAN     timer_nesting;                      /* flag to prevent timer interrupt nesting */
 
-#ifndef BTE_RVL_TARGET
+#ifndef REVOLUTION
     /* Time queue arrays */
     TIMER_LIST_Q *timer_queues[GKI_MAX_TIMER_QUEUES];
 #endif
 
-#ifndef BTE_RVL_TARGET
+#ifndef REVOLUTION
     /* System tick callback */
     SYSTEM_TICK_CBACK *p_tick_cb;
     BOOLEAN     system_tick_running;                /* TRUE if system tick is running. Valid only if p_tick_cb is not NULL */

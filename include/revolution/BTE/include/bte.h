@@ -4,7 +4,7 @@
  *  2024/03/25:
  *      - Remove Linux #includes for RVL target
  * 
- *  Compile with BTE_RVL_TARGET defined to include these changes.
+ *  Compile with REVOLUTION defined to include these changes.
  * 
  ******************************************************************************/
 
@@ -36,7 +36,7 @@
 #ifndef BTE_H
 #define BTE_H
 
-#ifndef BTE_RVL_TARGET
+#ifndef REVOLUTION
 #include <semaphore.h>
 #include <signal.h>
 #include <pthread.h>

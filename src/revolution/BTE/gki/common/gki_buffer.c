@@ -6,7 +6,7 @@
  *      - Modified gki_init_free_queue to match RVL version
  *      - Modified GKI_enqueue to match RVL version
  * 
- *  Compile with BTE_RVL_TARGET defined to include these changes.
+ *  Compile with REVOLUTION defined to include these changes.
  * 
  ******************************************************************************/
 
@@ -28,7 +28,7 @@
  *
  ******************************************************************************/
 #include "gki_int.h"
-#ifndef BTE_RVL_TARGET
+#ifndef REVOLUTION
 #include <cutils/log.h>
 #endif
 
@@ -65,13 +65,13 @@ static void gki_init_free_queue (UINT8 id, UINT16 size, UINT16 total, void *p_me
 
     /* Remember pool start and end addresses */
 // btla-specific ++
-#ifndef BTE_RVL_TARGET
+#ifndef REVOLUTION
     if(p_mem)
     {
 #endif
         p_cb->pool_start[id] = (UINT8 *)p_mem;
         p_cb->pool_end[id]   = (UINT8 *)p_mem + (act_size * total);
-#ifndef BTE_RVL_TARGET
+#ifndef REVOLUTION
     }
 #endif
 // btla-specific --
@@ -85,7 +85,7 @@ static void gki_init_free_queue (UINT8 id, UINT16 size, UINT16 total, void *p_me
 
     /* Initialize  index table */
 // btla-specific ++
-#ifndef BTE_RVL_TARGET
+#ifndef REVOLUTION
     if(p_mem)
     {
 #endif
@@ -104,7 +104,7 @@ static void gki_init_free_queue (UINT8 id, UINT16 size, UINT16 total, void *p_me
         }
         hdr1->p_next = NULL;
         p_cb->freeq[id].p_last = hdr1;
-#ifndef BTE_RVL_TARGET
+#ifndef REVOLUTION
     }
 #endif
 // btla-specific --
@@ -781,7 +781,7 @@ void GKI_enqueue (BUFFER_Q *p_q, void *p_buf)
     GKI_disable();
 
     /* Since the queue is exposed (C vs C++), keep the pointers in exposed format */
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
     if (p_q->p_first)
 #else
     if (p_q->p_last)

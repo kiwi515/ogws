@@ -5,7 +5,7 @@
  *      - Move from ulinux/ to platform/
  *      - Add #include for RVL types (include/types.h)
  * 
- *  Compile with BTE_RVL_TARGET defined to include these changes.
+ *  Compile with REVOLUTION defined to include these changes.
  * 
  ******************************************************************************/
 
@@ -32,7 +32,7 @@
 #ifndef DATA_TYPES_H
 #define DATA_TYPES_H
 
-#ifdef BTE_RVL_TARGET
+#ifdef REVOLUTION
 #include <types.h>
 #endif
 
