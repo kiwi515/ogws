@@ -1,5 +1,21 @@
 /******************************************************************************
  *
+ *  NOTICE OF CHANGES
+ *  2024/03/25:
+ *      - Modified gki_timers_init to match RVL version
+ *      - Modified GKI_start_timer to match RVL version
+ *      - Modified GKI_stop_timer to match RVL version
+ *      - Modified GKI_add_to_timer_list to match RVL version
+ *      - Modified GKI_remove_from_timer_list to match RVL version
+ * 
+ *  Compile with BTE_RVL_TARGET define to include these changes.
+ * 
+ ******************************************************************************/
+
+
+
+/******************************************************************************
+ *
  *  Copyright (C) 1999-2012 Broadcom Corporation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -78,6 +94,7 @@ void gki_timers_init(void)
 #endif
     }
 
+#ifndef BTE_RVL_TARGET
     for (tt = 0; tt < GKI_MAX_TIMER_QUEUES; tt++)
     {
         gki_cb.com.timer_queues[tt] = NULL;
@@ -85,6 +102,7 @@ void gki_timers_init(void)
 
     gki_cb.com.p_tick_cb = NULL;
     gki_cb.com.system_tick_running = FALSE;
+#endif
 
     return;
 }
@@ -216,6 +234,7 @@ void GKI_start_timer (UINT8 tnum, INT32 ticks, BOOLEAN is_continuous)
 
     GKI_disable();
 
+#ifndef BTE_RVL_TARGET
     if(gki_timers_is_timer_running() == FALSE)
     {
 #if (defined(GKI_DELAY_STOP_SYS_TICK) && (GKI_DELAY_STOP_SYS_TICK > 0))
@@ -238,6 +257,8 @@ void GKI_start_timer (UINT8 tnum, INT32 ticks, BOOLEAN is_continuous)
         }
 #endif
     }
+#endif
+
     /* Add the time since the last task timer update.
     ** Note that this works when no timers are active since
     ** both OSNumOrigTicks and OSTicksTilExp are 0.
@@ -341,6 +362,7 @@ void GKI_stop_timer (UINT8 tnum)
 #endif
     }
 
+#ifndef BTE_RVL_TARGET
     GKI_disable();
 
     if (gki_timers_is_timer_running() == FALSE)
@@ -363,6 +385,7 @@ void GKI_stop_timer (UINT8 tnum)
     }
 
     GKI_enable();
+#endif
 
 
 }
@@ -871,6 +894,7 @@ void GKI_add_to_timer_list (TIMER_LIST_Q *p_timer_listq, TIMER_LIST_ENT  *p_tle)
 
         p_tle->in_use = TRUE;
 
+#ifndef BTE_RVL_TARGET
         /* if we already add this timer queue to the array */
         for (tt = 0; tt < GKI_MAX_TIMER_QUEUES; tt++)
         {
@@ -887,6 +911,7 @@ void GKI_add_to_timer_list (TIMER_LIST_Q *p_timer_listq, TIMER_LIST_ENT  *p_tle)
         {
             gki_cb.com.timer_queues[tt] = p_timer_listq;
         }
+#endif
     }
 
     return;
@@ -973,6 +998,7 @@ void GKI_remove_from_timer_list (TIMER_LIST_Q *p_timer_listq, TIMER_LIST_ENT  *p
     p_tle->ticks = GKI_UNUSED_LIST_ENTRY;
     p_tle->in_use = FALSE;
 
+#ifndef BTE_RVL_TARGET
     /* if timer queue is empty */
     if (p_timer_listq->p_first == NULL && p_timer_listq->p_last == NULL)
     {
@@ -985,6 +1011,7 @@ void GKI_remove_from_timer_list (TIMER_LIST_Q *p_timer_listq, TIMER_LIST_ENT  *p
             }
         }
     }
+#endif
 
     return;
 }
