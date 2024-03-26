@@ -1,5 +1,18 @@
 /******************************************************************************
  *
+ *  NOTICE OF CHANGES
+ *  2024/03/26:
+ *      - Add #defines for RVL target
+ *      - Add prototype for bta_sys_compress_register
+ * 
+ *  Compile with BTE_RVL_TARGET defined to include these changes.
+ * 
+ ******************************************************************************/
+
+
+
+/******************************************************************************
+ *
  *  Copyright (C) 2003-2012 Broadcom Corporation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -117,7 +130,11 @@ typedef UINT16 tBTA_SYS_HW_MODULE;
 #define BTA_ID_JV1          43           /* JV1 */
 #define BTA_ID_JV2          44           /* JV2 */
 
+#ifdef BTE_RVL_TARGET
+#define BTA_ID_MAX          26
+#else
 #define BTA_ID_MAX          (43 + BTA_DM_NUM_JV_ID)
+#endif
 
 typedef UINT8 tBTA_SYS_ID;
 
@@ -259,6 +276,7 @@ extern void bta_sys_hw_unregister( tBTA_SYS_HW_MODULE module );
 
 
 extern void bta_sys_rm_register(tBTA_SYS_CONN_CBACK * p_cback);
+extern void bta_sys_compress_register(tBTA_SYS_CONN_CBACK * p_cback);
 extern void bta_sys_pm_register(tBTA_SYS_CONN_CBACK * p_cback);
 
 extern void bta_sys_policy_register(tBTA_SYS_CONN_CBACK * p_cback);

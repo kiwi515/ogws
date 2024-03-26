@@ -842,7 +842,7 @@ typedef struct
 {
     UINT8   id;
     UINT8   app_id;
-    UINT8   cfg;
+    UINT8   mask;
 } tBTA_DM_COMPRESS_CFG;
 
 extern tBTA_DM_COMPRESS_CFG* p_bta_dm_compress_cfg;

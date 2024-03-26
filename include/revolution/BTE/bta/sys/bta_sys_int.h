@@ -1,5 +1,17 @@
 /******************************************************************************
  *
+ *  NOTICE OF CHANGES
+ *  2024/03/26:
+ *      - Modify tBTA_SYS_CB structure to match RVL target
+ * 
+ *  Compile with BTE_RVL_TARGET defined to include these changes.
+ * 
+ ******************************************************************************/
+
+
+
+/******************************************************************************
+ *
  *  Copyright (C) 2003-2012 Broadcom Corporation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -57,17 +69,38 @@ typedef struct
 typedef struct
 {
     tBTA_SYS_REG            *reg[BTA_ID_MAX];       /* registration structures */
+
+#ifndef BTE_RVL_TARGET
     BOOLEAN                 is_reg[BTA_ID_MAX];     /* registration structures */
+#endif
+
     tPTIM_CB                ptim_cb;                /* protocol timer list */
+
+#ifndef BTE_RVL_TARGET
     BOOLEAN                 timers_disabled;        /* TRUE if sys timers disabled */
+#endif
+
     UINT8                   task_id;                /* GKI task id */
+
+#ifndef BTE_RVL_TARGET
     tBTA_SYS_HW_STATE state;
     tBTA_SYS_HW_CBACK *sys_hw_cback[BTA_SYS_MAX_HW_MODULES];    /* enable callback for each HW modules */
     UINT32                  sys_hw_module_active;   /* bitmask of all active modules */
     UINT16                  sys_features;           /* Bitmask of sys features */
+#endif
+
+#ifdef BTE_RVL_TARGET
+    BOOLEAN                 events_disabled;
+#endif
 
     tBTA_SYS_CONN_CBACK     *prm_cb;                 /* role management callback registered by DM */
     tBTA_SYS_CONN_CBACK     *ppm_cb;                 /* low power management callback registered by DM */
+
+#ifdef BTE_RVL_TARGET
+    tBTA_SYS_CONN_CBACK     *compress_cb;
+#endif
+
+#ifndef BTE_RVL_TARGET
     tBTA_SYS_CONN_CBACK     *p_policy_cb;            /* link policy change callback registered by DM */
     tBTA_SYS_CONN_CBACK     *p_sco_cb;               /* SCO connection change callback registered by AV */
     tBTA_SYS_CONN_CBACK     *p_role_cb;              /* role change callback registered by AV */
@@ -77,6 +110,7 @@ typedef struct
 #endif
 #if (BTM_SSR_INCLUDED == TRUE)
     tBTA_SYS_SSR_CFG_CBACK      *p_ssr_cb;
+#endif
 #endif
 } tBTA_SYS_CB;
 

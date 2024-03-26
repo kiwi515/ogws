@@ -1,5 +1,17 @@
 /******************************************************************************
  *
+ *  NOTICE OF CHANGES
+ *  2024/03/26:
+ *      - Modify tPTIM_CB structure to match RVL target
+ * 
+ *  Compile with BTE_RVL_TARGET defined to include these changes.
+ * 
+ ******************************************************************************/
+
+
+
+/******************************************************************************
+ *
  *  Copyright (C) 2003-2012 Broadcom Corporation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,7 +46,9 @@ typedef struct
 {
     TIMER_LIST_Q        timer_queue;        /* GKI timer queue */
     INT32               period;             /* Timer period in milliseconds */
+#ifndef BTE_RVL_TARGET
     UINT32              last_gki_ticks;     /* GKI ticks since last time update called */
+#endif
     UINT8               timer_id;           /* GKI timer id */
 } tPTIM_CB;
 

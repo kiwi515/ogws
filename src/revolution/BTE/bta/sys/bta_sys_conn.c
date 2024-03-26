@@ -1,5 +1,21 @@
 /******************************************************************************
  *
+ *  NOTICE OF CHANGES
+ *  2024/03/26:
+ *      - Add #defines for RVL target
+ *      - Modify bta_sys_conn_open to match RVL version
+ *      - Modify bta_sys_conn_close to match RVL version
+ *      - Modify bta_sys_idle to match RVL version
+ *      - Modify bta_sys_busy to match RVL version
+ * 
+ *  Compile with BTE_RVL_TARGET defined to include these changes.
+ * 
+ ******************************************************************************/
+
+
+
+/******************************************************************************
+ *
  *  Copyright (C) 2003-2012 Broadcom Corporation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,7 +59,7 @@ void bta_sys_rm_register(tBTA_SYS_CONN_CBACK * p_cback)
     bta_sys_cb.prm_cb = p_cback;
 }
 
-
+#ifndef BTE_RVL_TARGET
 /*******************************************************************************
 **
 ** Function         bta_sys_policy_register
@@ -171,6 +187,22 @@ void bta_sys_sco_register(tBTA_SYS_CONN_CBACK * p_cback)
 {
     bta_sys_cb.p_sco_cb = p_cback;
 }
+#endif
+
+/*******************************************************************************
+**
+** Function         bta_sys_compress_register
+**
+** Description      Called by BTA DM to register compression(?) callbacks
+**
+**
+** Returns          void
+**
+*******************************************************************************/
+void bta_sys_compress_register(tBTA_SYS_CONN_CBACK * p_cback)
+{
+    bta_sys_cb.compress_cb = p_cback;
+}
 
 /*******************************************************************************
 **
@@ -213,6 +245,15 @@ void bta_sys_conn_open(UINT8 id, UINT8 app_id, BD_ADDR peer_addr)
         bta_sys_cb.ppm_cb(BTA_SYS_CONN_OPEN, id, app_id, peer_addr);
 
     }
+
+#ifdef BTE_RVL_TARGET
+    if(bta_sys_cb.compress_cb)
+    {
+
+        bta_sys_cb.compress_cb(BTA_SYS_CONN_OPEN, id, app_id, peer_addr);
+
+    }
+#endif
 }
 
 
@@ -243,6 +284,15 @@ void bta_sys_conn_close(UINT8 id, UINT8 app_id, BD_ADDR peer_addr)
         bta_sys_cb.ppm_cb(BTA_SYS_CONN_CLOSE, id, app_id, peer_addr);
 
     }
+
+#ifdef BTE_RVL_TARGET
+    if(bta_sys_cb.compress_cb)
+    {
+
+        bta_sys_cb.compress_cb(BTA_SYS_CONN_CLOSE, id, app_id, peer_addr);
+
+    }
+#endif
 }
 
 
@@ -298,12 +348,14 @@ void bta_sys_app_close(UINT8 id, UINT8 app_id, BD_ADDR peer_addr)
 *******************************************************************************/
 void bta_sys_sco_open(UINT8 id, UINT8 app_id, BD_ADDR peer_addr)
 {
+#ifndef BTE_RVL_TARGET
     /* AG triggers p_sco_cb by bta_sys_sco_use. */
     if((id != BTA_ID_AG) && (bta_sys_cb.p_sco_cb))
     {
         /* without querying BTM_GetNumScoLinks() */
         bta_sys_cb.p_sco_cb(BTA_SYS_SCO_OPEN, 1, app_id, peer_addr);
     }
+#endif
 
     if(bta_sys_cb.ppm_cb)
     {
@@ -323,6 +375,7 @@ void bta_sys_sco_open(UINT8 id, UINT8 app_id, BD_ADDR peer_addr)
 *******************************************************************************/
 void bta_sys_sco_close(UINT8 id, UINT8 app_id, BD_ADDR peer_addr)
 {
+#ifndef BTE_RVL_TARGET
     UINT8 num_sco_links;
 
     if((id != BTA_ID_AG) && (bta_sys_cb.p_sco_cb))
@@ -330,6 +383,7 @@ void bta_sys_sco_close(UINT8 id, UINT8 app_id, BD_ADDR peer_addr)
         num_sco_links = BTM_GetNumScoLinks();
         bta_sys_cb.p_sco_cb(BTA_SYS_SCO_CLOSE, num_sco_links, app_id, peer_addr);
     }
+#endif
 
     if(bta_sys_cb.ppm_cb)
     {
@@ -337,6 +391,7 @@ void bta_sys_sco_close(UINT8 id, UINT8 app_id, BD_ADDR peer_addr)
     }
 }
 
+#ifndef BTE_RVL_TARGET
 /*******************************************************************************
 **
 ** Function         bta_sys_sco_use
@@ -467,6 +522,7 @@ void bta_sys_clear_default_policy (UINT8 id, UINT8 policy)
         bta_sys_cb.p_policy_cb(BTA_SYS_PLCY_DEF_CLR, id, policy, NULL);
     }
 }
+#endif
 
 /*******************************************************************************
 **
@@ -480,13 +536,14 @@ void bta_sys_clear_default_policy (UINT8 id, UINT8 policy)
 *******************************************************************************/
 void bta_sys_idle(UINT8 id, UINT8 app_id, BD_ADDR peer_addr)
 {
-
+#ifndef BTE_RVL_TARGET
     if(bta_sys_cb.prm_cb)
     {
 
         bta_sys_cb.prm_cb(BTA_SYS_CONN_IDLE, id, app_id, peer_addr);
 
     }
+#endif
 
     if(bta_sys_cb.ppm_cb)
     {
@@ -507,12 +564,14 @@ void bta_sys_idle(UINT8 id, UINT8 app_id, BD_ADDR peer_addr)
 *******************************************************************************/
 void bta_sys_busy(UINT8 id, UINT8 app_id, BD_ADDR peer_addr)
 {
+#ifndef BTE_RVL_TARGET
     if(bta_sys_cb.prm_cb)
     {
 
         bta_sys_cb.prm_cb(BTA_SYS_CONN_BUSY, id, app_id, peer_addr);
 
     }
+#endif
 
     if(bta_sys_cb.ppm_cb)
     {
