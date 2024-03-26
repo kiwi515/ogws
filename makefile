@@ -59,6 +59,10 @@ CFLAGS_NW4R := -lang c99 -enum int -inline auto -Cpp_exceptions off -RTTI off -p
 CFLAGS_EGG := -lang c99 -enum int -inline auto -Cpp_exceptions off -RTTI off -proc gekko -fp hard -O4,p  -ir include/egg -ir include/nw4r -I- -Iinclude -ir include/MSL -ir include/revolution -nodefaults -rostr -str pool
 # Compiler flags for the RVL SDK
 CFLAGS_RVL := -lang c -enum int -O4,p -inline auto -ipa file -Cpp_exceptions off -RTTI off -proc gekko -fp hard -I- -Iinclude -ir include/MSL -ir include/revolution -nodefaults
+# Compiler flags for the BTE library
+CFLAGS_BTE := -lang c -enum int -O4,p -inline auto -ipa file -Cpp_exceptions off -RTTI off -proc gekko -fp hard -I- -Iinclude -ir include/MSL -ir include/revolution -ir include/revolution/BTE -ir include/revolution/BTE/include \
+	-ir include/revolution/BTE/embdrv/sbc/encoder/include -ir include/revolution/BTE/btif/include -ir include/revolution/BTE/bta/include -ir include/revolution/BTE/utils/include  -ir include/revolution/BTE/udrv/include \
+	-ir include/revolution/BTE/stack/include -ir include/revolution/BTE/hci/include -nodefaults -DBIG_ENDIAN -DHAS_NO_BDROID_BUILDCFG -DGKI_MAX_TASKS=8
 # Compiler flags for the RVL Face Library
 CFLAGS_RFL := -lang c -enum int -O4,p -inline auto -ipa file -volatileasm -Cpp_exceptions off -RTTI off -proc gekko -fp hard -I- -Iinclude -ir include/MSL -ir include/revolution -nodefaults
 
@@ -89,7 +93,8 @@ SRC_DIRS := src \
 	revolution/NdevExi2AD revolution/KPAD revolution/PAD revolution/WPAD revolution/EUART revolution/EXI revolution/FS \
 	revolution/GX revolution/IPC revolution/MEM revolution/MTX revolution/NAND revolution/OS revolution/SC \
 	revolution/USB revolution/VI revolution/WUD revolution/AI revolution/ARC revolution/AX revolution/AXFX \
-	revolution/BASE revolution/BTE revolution/DB revolution/DSP revolution/DVD revolution/SI revolution/TPL \
+	revolution/BASE revolution/BTE revolution/BTE/gki revolution/BTE/gki/common \
+	revolution/DB revolution/DSP revolution/DVD revolution/SI revolution/TPL \
 	revolution/WENC revolution/CNT revolution/ESP revolution/NET revolution/NWC24 revolution/VF \
 	nw4r/ut nw4r/ef nw4r/math nw4r/snd nw4r/g3d nw4r/lyt \
 	egg/math egg/core egg/audio egg/util egg/gfx egg/prim
@@ -168,6 +173,11 @@ $(BUILD_DIR)/MetroTRK/%.o: src/MetroTRK/%.c
 # EXIBios is a special case, compiled differently from rest of library
 $(BUILD_DIR)/revolution/EXI/EXIBios.o: src/revolution/EXI/EXIBios.c
 	$(CC) $(CFLAGS_EXIBIOS) -c -o $@ $<
+	$(PPROC) $(PPROCFLAGS) $@
+
+# BTE flags to allow minimal changes to the original source
+$(BUILD_DIR)/revolution/BTE/%.o: src/revolution/BTE/%.c
+	$(CC) $(CFLAGS_BTE) -c -o $@ $<
 	$(PPROC) $(PPROCFLAGS) $@
 
 $(BUILD_DIR)/revolution/%.o: src/revolution/%.c
