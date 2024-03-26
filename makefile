@@ -75,33 +75,6 @@ CFLAGS_EXIBIOS := -lang c -enum int -O3 -inline auto -ipa file -volatileasm -Cpp
 # elf2dol needs to know these in order to calculate sbss correctly.
 BSS_PDHR := 9
 
-ASM_DIRS := asm \
-	asm/revolution asm/nw4r asm/egg asm/runtime asm/MSL asm/MetroTRK asm/RVLFaceLib asm/homebuttonMiniLib asm/RP \
-	asm/MetroTRK/debugger/Export asm/MetroTRK/debugger/Os asm/MetroTRK/debugger/Os/dolphin asm/MetroTRK/debugger/Portable asm/MetroTRK/debugger/Processor asm/MetroTRK/gamedev \
-	asm/revolution/NdevExi2AD asm/revolution/KPAD asm/revolution/PAD asm/revolution/WPAD asm/revolution/EUART asm/revolution/EXI asm/revolution/FS \
-	asm/revolution/GX asm/revolution/IPC asm/revolution/MEM asm/revolution/MTX asm/revolution/NAND asm/revolution/OS asm/revolution/SC \
-	asm/revolution/USB asm/revolution/VI asm/revolution/WUD asm/revolution/AI asm/revolution/ARC asm/revolution/AX asm/revolution/AXFX \
-	asm/revolution/BASE asm/revolution/BTE asm/revolution/BTE/gki asm/revolution/BTE/gki/common asm/revolution/BTE/gki/platform \
-	asm/revolution/BTE/hci asm/revolution/BTE/udrv asm/revolution/BTE/main asm/revolution/BTE/bta/dm asm/revolution/BTE/bta/hh asm/revolution/BTE/bta/sys \
-	asm/revolution/DB asm/revolution/DSP asm/revolution/DVD asm/revolution/SI asm/revolution/TPL \
-	asm/revolution/WENC asm/revolution/CNT asm/revolution/ESP asm/revolution/NET asm/revolution/NWC24 asm/revolution/VF \
-	asm/nw4r/ut asm/nw4r/ef asm/nw4r/math asm/nw4r/snd asm/nw4r/g3d asm/nw4r/lyt \
-	asm/egg/gfx asm/egg/math asm/egg/core asm/egg/audio asm/egg/util \
-	asm/RP/RPKernel asm/RP/RPSystem
-
-SRC_DIRS := src \
-	revolution nw4r egg runtime MetroTRK MSL RVLFaceLib homebuttonMiniLib \
-	MetroTRK/debugger/Export MetroTRK/debugger/Os MetroTRK/debugger/Os/dolphin MetroTRK/debugger/Portable MetroTRK/debugger/Processor MetroTRK/gamedev \
-	revolution/NdevExi2AD revolution/KPAD revolution/PAD revolution/WPAD revolution/EUART revolution/EXI revolution/FS \
-	revolution/GX revolution/IPC revolution/MEM revolution/MTX revolution/NAND revolution/OS revolution/SC \
-	revolution/USB revolution/VI revolution/WUD revolution/AI revolution/ARC revolution/AX revolution/AXFX \
-	revolution/BASE revolution/BTE revolution/BTE/gki revolution/BTE/gki/common revolution/BTE/gki/platform revolution/BTE/hci \
-	revolution/BTE/udrv revolution/BTE/main revolution/BTE/bta/dm revolution/BTE/bta/hh revolution/BTE/bta/sys \
-	revolution/DB revolution/DSP revolution/DVD revolution/SI revolution/TPL \
-	revolution/WENC revolution/CNT revolution/ESP revolution/NET revolution/NWC24 revolution/VF \
-	nw4r/ut nw4r/ef nw4r/math nw4r/snd nw4r/g3d nw4r/lyt \
-	egg/math egg/core egg/audio egg/util egg/gfx egg/prim
-
 # Flags for Riidefi's post-processing script
 PPROCFLAGS := -fsymbol-fixup
 
@@ -116,7 +89,7 @@ default: all
 
 all: $(DOL)
 
-ALL_DIRS := build $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(SRC_DIRS) $(ASM_DIRS))
+ALL_DIRS := build $(BUILD_DIR) $(sort $(dir $(O_FILES)))
 $(warning ALL_DIRS is $(ALL_DIRS))
 # Make sure build directory exists before compiling anything
 DUMMY != mkdir -p $(ALL_DIRS)
