@@ -28,7 +28,7 @@ hcisu_preamble_table:
 	.incbin "baserom.dol", 0x3C9FC0, 0x8
 .global hcisu_msg_evt_table
 hcisu_msg_evt_table:
-	.incbin "baserom.dol", 0x3C9FC8, 0x10
+	.incbin "baserom.dol", 0x3C9FC8, 0x8
 
 .section .text, "ax"
 .global hcisu_h2_usb_cback

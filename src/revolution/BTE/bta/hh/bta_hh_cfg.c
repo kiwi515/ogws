@@ -1,5 +1,17 @@
 /******************************************************************************
  *
+ *  NOTICE OF CHANGES
+ *  2024/03/26:
+ *      - Add #defines to change configurations for RVL target
+ * 
+ *  Compile with BTE_RVL_TARGET defined to include these changes.
+ * 
+ ******************************************************************************/
+
+
+
+/******************************************************************************
+ *
  *  Copyright (C) 2005-2012 Broadcom Corporation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,11 +39,19 @@
 #include "bta_hh_api.h"
 
 /* max number of device types supported by BTA */
+#ifdef BTE_RVL_TARGET
+#define BTA_HH_MAX_DEVT_SPT 4
+#else
 #define BTA_HH_MAX_DEVT_SPT         7
+#endif
 
 /* size of database for service discovery */
 #ifndef BTA_HH_DISC_BUF_SIZE
+#ifdef BTE_RVL_TARGET
+#define BTA_HH_DISC_BUF_SIZE        1024
+#else
 #define BTA_HH_DISC_BUF_SIZE        GKI_MAX_BUF_SIZE
+#endif
 #endif
 
 /* application ID(none-zero) for each type of device */
@@ -44,6 +64,12 @@
 /* The type of devices supported by BTA HH and corresponding application ID */
 tBTA_HH_SPT_TOD p_devt_list[BTA_HH_MAX_DEVT_SPT] =
 {
+#ifdef BTE_RVL_TARGET
+    {BTA_HH_DEVT_MIC,                 BTA_HH_APP_ID_MI},
+    {BTA_HH_DEVT_KBD,                 BTA_HH_APP_ID_KB},
+    {BTA_HH_DEVT_JOS,                 BTA_HH_APP_ID_RMC},
+    {BTA_HH_DEVT_COM|BTA_HH_DEVT_JOS, BTA_HH_APP_ID_KB}
+#else
     {BTA_HH_DEVT_MIC, BTA_HH_APP_ID_MI},
     {BTA_HH_DEVT_KBD, BTA_HH_APP_ID_KB},
     {BTA_HH_DEVT_KBD|BTA_HH_DEVT_MIC, BTA_HH_APP_ID_KB},
@@ -51,6 +77,7 @@ tBTA_HH_SPT_TOD p_devt_list[BTA_HH_MAX_DEVT_SPT] =
     {BTA_HH_DEVT_RMC | BTA_HH_DEVT_KBD, BTA_HH_APP_ID_RMC},
     {BTA_HH_DEVT_MIC | BTA_HH_DEVT_DGT, BTA_HH_APP_ID_MI},
     {BTA_HH_DEVT_UNKNOWN, BTA_HH_APP_ID_3DSG}
+#endif
 };
 
 

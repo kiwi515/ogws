@@ -1,5 +1,17 @@
 /******************************************************************************
  *
+ *  NOTICE OF CHANGES
+ *  2024/03/26:
+ *      - Add #defines to change configurations for RVL target
+ * 
+ *  Compile with BTE_RVL_TARGET defined to include these changes.
+ * 
+ ******************************************************************************/
+
+
+
+/******************************************************************************
+ *
  *  Copyright (C) 2003-2012 Broadcom Corporation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -47,7 +59,11 @@ const tBTA_SYS_CFG bta_sys_cfg =
     BTA_MBOX_EVT,               /* GKI mailbox event */
     BTA_MBOX,                   /* GKI mailbox id */
     BTA_TIMER,                  /* GKI timer id */
+#ifdef BTE_RVL_TARGET
+    BT_TRACE_LEVEL_NONE         /* initial trace level */
+#else
     APPL_INITIAL_TRACE_LEVEL    /* initial trace level */
+#endif
 };
 
 tBTA_SYS_CFG *p_bta_sys_cfg = (tBTA_SYS_CFG *)&bta_sys_cfg;
