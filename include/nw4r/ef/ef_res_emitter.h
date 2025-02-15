@@ -117,10 +117,34 @@ struct EmitterDrawSetting {
         ALPHAFLICK_SINE
     };
 
-    enum OptionTypeCommon { TYPE_CMN_NORMAL, TYPE_CMN_CROSS };
+    enum Assist {
+        // Common
+        ASSIST_CMN_NORMAL = 0,
+        ASSIST_CMN_CROSS,
 
-    enum DirType {
-        DIR_NO_DESIGN = 5,
+        // Billboard
+        ASSIST_BB_NORMAL = 0,
+        ASSIST_BB_Y,
+        ASSIST_BB_DIRECTIONAL,
+        ASSIST_BB_NOROLL,
+
+        // Stripe
+        ASSIST_ST_NORMAL = 0,
+        ASSIST_ST_CROSS,
+        ASSIST_ST_BILLBOARD,
+        ASSIST_ST_TUBE,
+    };
+
+    enum Ahead {
+        // Common
+        AHEAD_CMN_NODESIGN = 5,
+
+        // Billboard
+        AHEAD_BB_SPEED = 0,
+        AHEAD_BB_EMITTER_CENTER,
+        AHEAD_BB_EMITTER_DESIGN,
+        AHEAD_BB_PARTICLE,
+        AHEAD_BB_PARTICLE_BOTH,
     };
 
     u16 mFlags;                     // at 0x0

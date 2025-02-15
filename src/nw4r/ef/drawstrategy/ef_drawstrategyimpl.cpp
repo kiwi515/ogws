@@ -937,7 +937,7 @@ DrawStrategyImpl::AheadContext::AheadContext(const math::MTX34& rViewMtx,
     EmitterDrawSetting& rDesc = *pManager->mResource->GetEmitterDrawSetting();
 
     switch (rDesc.typeDir) {
-    case EmitterDrawSetting::DIR_NO_DESIGN: {
+    case EmitterDrawSetting::AHEAD_CMN_NODESIGN: {
         math::MTX34& rMtx = mCommon.mParticleManagerMtxInv;
         math::VEC3 worldAxisY(rMtx._01, rMtx._11, rMtx._21);
 

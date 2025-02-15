@@ -9,14 +9,12 @@
 namespace nw4r {
 namespace ef {
 
-static void GXPosition(const math::VEC3& rPos);
+static u8 free_tex0_u8[] = {0x00, 0x01, 0x00, 0x00, 0x01, 0x00, 0x01, 0x01};
 
 static math::MTX34 CalcLocalTransform(f32 px, f32 py, f32 sx, f32 sy,
                                       const nw4r::math::MTX34& rRot);
 
 static math::MTX34 CalcRotate(Particle* pParticle, u8 axis);
-
-static u8 free_tex0_u8[] = {0x00, 0x01, 0x00, 0x00, 0x01, 0x00, 0x01, 0x01};
 
 static void DrawQuad(const math::MTX34& rMtx, const math::_VEC3* pPosArray,
                      bool texCoord) {
@@ -55,10 +53,6 @@ static void DrawQuad(const math::MTX34& rMtx, const math::_VEC3* pPosArray,
         }
     }
     GXEnd();
-}
-
-static void GXPosition(const math::VEC3& rPos) {
-    GXPosition3f32(rPos.x, rPos.y, rPos.z);
 }
 
 DrawFreeStrategy::DrawFreeStrategy() {}
@@ -121,7 +115,7 @@ void DrawFreeStrategy::Draw(const DrawInfo& rInfo, ParticleManager* pManager) {
 
         DrawQuad(locMtx, p, mNumTexmap > 0);
 
-        if (rSetting.typeOption == EmitterDrawSetting::TYPE_CMN_CROSS) {
+        if (rSetting.typeOption == EmitterDrawSetting::ASSIST_CMN_CROSS) {
             // clang-format off
             static const math::_VEC3 px[4] = {
                 0.0f, -1.0f,  1.0f,

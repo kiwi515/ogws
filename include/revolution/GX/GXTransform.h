@@ -9,6 +9,8 @@
 extern "C" {
 #endif
 
+#define GX_PROJ_V_SIZE 7
+
 typedef enum {
     GX_FIELD_EVEN,
     GX_FIELD_ODD,
