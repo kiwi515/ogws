@@ -6,6 +6,9 @@ namespace EGG {
 
 template <typename T> class TBitFlag {
 public:
+    typedef TBitFlag<T> self_type;
+    typedef T value_type;
+
     TBitFlag() {
         makeAllZero();
     }
@@ -33,11 +36,13 @@ public:
     /******************************************************************************
      * Bit mask operations
      ******************************************************************************/
-    void set(T mask) {
+    self_type& set(T mask) {
         mValue |= mask;
+        return *this;
     }
-    void reset(T mask) {
+    self_type& reset(T mask) {
         mValue &= ~mask;
+        return *this;
     }
 
     void change(T mask, bool on) {
@@ -58,11 +63,13 @@ public:
     /******************************************************************************
      * Bit index operations
      ******************************************************************************/
-    void setBit(u8 bit) {
+    self_type& setBit(u8 bit) {
         set(makeMask(bit));
+        return *this;
     }
-    void resetBit(u8 bit) {
+    self_type& resetBit(u8 bit) {
         reset(makeMask(bit));
+        return *this;
     }
 
     void changeBit(u8 bit, bool on) {
