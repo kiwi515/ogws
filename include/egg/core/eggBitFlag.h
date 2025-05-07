@@ -4,6 +4,34 @@
 
 namespace EGG {
 
+namespace detail {
+
+// There's no chance this existed in the original library.
+// One QoL improvement to TBitFlag is constraining T to u8, u16, and u32.
+//
+// Because we don't have C++20 constraints, or even C++11 type traits,
+// we instead define these manually in a detail namespace.
+
+template <typename T> struct TBitFlagValid {
+    enum { value = false };
+};
+
+template <> struct TBitFlagValid<u8> {
+    enum { value = true };
+};
+template <> struct TBitFlagValid<u16> {
+    enum { value = true };
+};
+template <> struct TBitFlagValid<u32> {
+    enum { value = true };
+};
+
+template <bool> struct TTypeTrap;
+
+template <> struct TTypeTrap<true> {};
+
+} // namespace detail
+
 template <typename T> class TBitFlag {
 public:
     typedef TBitFlag<T> self_type;
@@ -92,7 +120,15 @@ private:
     }
 
 private:
-    T mValue; // at 0x0
+    union {
+        T mValue; // at 0x0
+
+        // We require a union because, despite being an empty struct,
+        // this still has a size of 1. This struct being a static member of
+        // TBitFlag doesn't work either. Fortunately, sizeof(T) is always >= 1,
+        // so we can safely union this and still get the compile time checks.
+        detail::TTypeTrap<detail::TBitFlagValid<T>::value> trap;
+    };
 };
 
 } // namespace EGG
