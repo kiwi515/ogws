@@ -9,27 +9,27 @@ typedef enum {
 } SIStatus;
 
 typedef struct SIMain {
-    s32 chan;            // at 0x0
-    u32 poll;            // at 0x4
-    u32 inSize;          // at 0x8
-    void* inAddr;        // at 0xC
-    SICallback callback; // at 0x10
+    s32 chan;             // at 0x0
+    u32 poll;             // at 0x4
+    u32 inSize;           // at 0x8
+    void* pIn;            // at 0xC
+    SICallback pCallback; // at 0x10
 } SIMain;
 
 typedef struct SIPacket {
-    s32 chan;            // at 0x0
-    void* outAddr;       // at 0x4
-    u32 outSize;         // at 0x8
-    void* inAddr;        // at 0xC
-    u32 inSize;          // at 0x10
-    SICallback callback; // at 0x14
-    s64 fire;            // at 0x18
+    s32 chan;             // at 0x0
+    void* pOut;           // at 0x4
+    u32 outSize;          // at 0x8
+    void* pIn;            // at 0xC
+    u32 inSize;           // at 0x10
+    SICallback pCallback; // at 0x14
+    s64 fire;             // at 0x18
 } SIPacket;
 
 const char* __SIVersion =
     "<< RVL_SDK - SI \trelease build: Nov 30 2006 03:31:44 (0x4199_60831) >>";
 
-static SIMain Si = {SI_CHAN_NONE};
+static SIMain Si = {/* chan = */ SI_CHAN_NONE};
 static u32 Type[SI_MAX_CHAN] = {SI_ERROR_NOREP, SI_ERROR_NOREP, SI_ERROR_NOREP,
                                 SI_ERROR_NOREP};
 
@@ -55,7 +55,7 @@ static void SIClearTCInterrupt(void) {
 static u32 CompleteTransfer(void) {
     u32 i;
     u32 sr;
-    u8* dst;
+    u8* pDst;
     u32 size;
     u32 imm;
 
@@ -65,19 +65,19 @@ static u32 CompleteTransfer(void) {
     if (Si.chan != SI_CHAN_NONE) {
         XferTime[Si.chan] = __OSGetSystemTime();
 
-        dst = (u8*)Si.inAddr;
+        pDst = (u8*)Si.pIn;
 
         size = Si.inSize / sizeof(u32);
-        for (i = 0; i < size; dst += sizeof(u32), i++) {
-            *(u32*)dst = SI_HW_REGS[SI_RAM_BASE + i];
+        for (i = 0; i < size; pDst += sizeof(u32), i++) {
+            *(u32*)pDst = SI_HW_REGS[SI_RAM_BASE + i];
         }
 
         size = Si.inSize % sizeof(u32);
         if (size > 0) {
             imm = SI_HW_REGS[SI_RAM_BASE + i];
 
-            for (i = 0; i < size; dst++, i++) {
-                *dst = imm >> (3 - i) * 8;
+            for (i = 0; i < size; pDst++, i++) {
+                *pDst = imm >> (3 - i) * 8;
             }
         }
 
@@ -105,7 +105,7 @@ static u32 CompleteTransfer(void) {
 }
 
 // TODO
-static void SIInterruptHandler(s16 intr, OSContext* ctx) {
+static void SIInterruptHandler(s16 intr, OSContext* pCtx) {
     ;
 }
 
@@ -141,8 +141,8 @@ void SIInit(void) {
     Initialized = TRUE;
 }
 
-static BOOL __SITransfer(s32 chan, void* outAddr, u32 outSize, void* inAddr,
-                         u32 inSize, SICallback callback) {
+static BOOL __SITransfer(s32 chan, void* pOut, u32 outSize, void* pIn,
+                         u32 inSize, SICallback pCallback) {
     BOOL enabled;
     u32 sr;
     u32 alignSize;
@@ -180,19 +180,19 @@ static BOOL __SITransfer(s32 chan, void* outAddr, u32 outSize, void* inAddr,
     SI_HW_REGS[SI_SISR] = sr;
 
     Si.chan = chan;
-    Si.callback = callback;
+    Si.pCallback = pCallback;
     Si.inSize = inSize;
-    Si.inAddr = inAddr;
+    Si.pIn = pIn;
 
     alignSize = (outSize + 3) / 4;
     for (i = 0; i < alignSize; i++) {
-        SI_HW_REGS[SI_RAM_BASE + i] = ((u32*)outAddr)[i];
+        SI_HW_REGS[SI_RAM_BASE + i] = ((u32*)pOut)[i];
     }
 
     comscr.reg = SI_HW_REGS[SI_SICOMSCR];
 
     comscr.TCINT = TRUE;
-    comscr.TCINTMSK = callback != NULL;
+    comscr.TCINTMSK = pCallback != NULL;
     // Minimum transfer is 1 byte. 0x00 will transfer 128 bytes
     comscr.OUTLNGTH = outSize == 128 ? 0 : outSize;
     comscr.INLNGTH = inSize == 128 ? 0 : inSize;
@@ -209,8 +209,8 @@ u32 SISetXY(u32 lines, u32 times) {
     BOOL enabled;
     u32 poll;
 
-    poll = lines << 16;
-    poll |= times << 8;
+    poll = lines << 16; /* SI_SIPOLL_X */
+    poll |= times << 8; /* SI_SIPOLL_Y */
 
     enabled = OSDisableInterrupts();
 
@@ -224,32 +224,34 @@ u32 SISetXY(u32 lines, u32 times) {
     return poll;
 }
 
-static void AlarmHandler(OSAlarm* alarm, OSContext* ctx) {
+static void AlarmHandler(OSAlarm* pAlarm, OSContext* pCtx) {
+#pragma unused(pCtx)
+
     s32 chan;
-    SIPacket* packet;
+    SIPacket* pPacket;
 
-    chan = alarm - Alarm;
-    packet = &Packet[chan];
+    chan = pAlarm - Alarm;
+    pPacket = &Packet[chan];
 
-    if (packet->chan != SI_CHAN_NONE) {
-        if (__SITransfer(packet->chan, packet->outAddr, packet->outSize,
-                         packet->inAddr, packet->inSize, packet->callback)) {
-            packet->chan = SI_CHAN_NONE;
-        }
+    if (pPacket->chan != SI_CHAN_NONE &&
+        __SITransfer(pPacket->chan, pPacket->pOut, pPacket->outSize,
+                     pPacket->pIn, pPacket->inSize, pPacket->pCallback)) {
+
+        pPacket->chan = SI_CHAN_NONE;
     }
 }
 
-BOOL SITransfer(s32 chan, void* outAddr, u32 outSize, void* inAddr, u32 inSize,
-                SICallback callback, s64 wait) {
-    SIPacket* packet;
+BOOL SITransfer(s32 chan, void* pOut, u32 outSize, void* pIn, u32 inSize,
+                SICallback pCallback, s64 wait) {
+    SIPacket* pPacket;
     BOOL enabled;
     s64 start;
     s64 fire;
 
-    packet = &Packet[chan];
+    pPacket = &Packet[chan];
     enabled = OSDisableInterrupts();
 
-    if (packet->chan != SI_CHAN_NONE || Si.chan == packet->chan) {
+    if (pPacket->chan != SI_CHAN_NONE || Si.chan == chan) {
         OSRestoreInterrupts(enabled);
         return FALSE;
     }
@@ -259,18 +261,18 @@ BOOL SITransfer(s32 chan, void* outAddr, u32 outSize, void* inAddr, u32 inSize,
 
     if (start < fire) {
         OSSetAlarm(&Alarm[chan], fire - start, AlarmHandler);
-    } else if (__SITransfer(chan, outAddr, outSize, inAddr, inSize, callback)) {
+    } else if (__SITransfer(chan, pOut, outSize, pIn, inSize, pCallback)) {
         OSRestoreInterrupts(enabled);
         return TRUE;
     }
 
-    packet->chan = chan;
-    packet->outAddr = outAddr;
-    packet->outSize = outSize;
-    packet->inAddr = inAddr;
-    packet->inSize = inSize;
-    packet->callback = callback;
-    packet->fire = fire;
+    pPacket->chan = chan;
+    pPacket->pOut = pOut;
+    pPacket->outSize = outSize;
+    pPacket->pIn = pIn;
+    pPacket->inSize = inSize;
+    pPacket->pCallback = pCallback;
+    pPacket->fire = fire;
 
     OSRestoreInterrupts(enabled);
     return TRUE;

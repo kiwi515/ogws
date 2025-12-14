@@ -5,6 +5,7 @@ extern "C" {
 #endif
 
 #include <revolution/KPAD/KPAD.h>
+#include <revolution/KPAD/KPADInternal.h>
 
 #ifdef __cplusplus
 }

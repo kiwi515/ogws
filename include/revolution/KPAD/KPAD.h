@@ -3,11 +3,14 @@
 #include <types.h>
 
 #include <revolution/MTX.h>
+#include <revolution/WPAD.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #define KPAD_MAX_SAMPLES 16
+
+typedef WPADCallback KPADCallback;
 
 typedef union KPADEXStatus {
     struct {
@@ -52,7 +55,7 @@ typedef struct KPADStatus {
     KPADEXStatus ex_status; // at 0x60
 } KPADStatus;
 
-void KPADSetBtnRepeat(s32 chan, f32, f32);
+void KPADSetBtnRepeat(s32 chan, f32 arg1, f32 arg2);
 
 void KPADSetPosParam(s32 chan, f32 playRadius, f32 sensitivity);
 void KPADSetHoriParam(s32 chan, f32 playRadius, f32 sensitivity);
