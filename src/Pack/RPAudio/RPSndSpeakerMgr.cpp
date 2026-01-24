@@ -1,5 +1,7 @@
 #include <Pack/RPAudio.h>
 
+#include <egg/audio.h>
+
 #include <revolution/OS.h>
 #include <revolution/WPAD.h>
 

@@ -4,6 +4,8 @@
 
 #include <egg/audio.h>
 
+#include <nw4r/snd.h>
+
 #include <revolution/WPAD.h>
 
 //! @addtogroup rp_audio
