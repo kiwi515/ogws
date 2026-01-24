@@ -100,8 +100,6 @@ void RPSndStaticMgr::setRemoteSend(u32 playerFlag) {
     }
 
     u32 param = getSoundArchive().GetSoundUserParam(mSoundHandle.GetId());
-
-    // Remote send configuration is stored in userdata
     if (!(param & 0xFFFF0000)) {
         return;
     }
