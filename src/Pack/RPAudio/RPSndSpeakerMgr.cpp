@@ -111,13 +111,13 @@ bool RPSndSpeakerMgr::setEnableSw(s32 chan, bool enable) {
  * sound handle
  *
  * @param pHandle Sound handle
- * @param channelFlag Remote channel output line flags
+ * @param playerFlag Player output line flags
  * @param mainOut Main output volume
  * @param remoteOut Remote output volume
  * @param muteOut Main output volume when the remote speaker is muted
  */
 void RPSndSpeakerMgr::setRemoteSend(nw4r::snd::SoundHandle* pHandle,
-                                    u32 channelFlag, f32 mainOut, f32 remoteOut,
+                                    u32 playerFlag, f32 mainOut, f32 remoteOut,
                                     f32 muteOut) {
     if (pHandle == NULL) {
         return;
@@ -129,7 +129,7 @@ void RPSndSpeakerMgr::setRemoteSend(nw4r::snd::SoundHandle* pHandle,
     }
 
     u32 remoteOutFlag =
-        channelFlag == 0 ? 0 : changeBitPlayerToChannel(channelFlag);
+        playerFlag == 0 ? 0 : changeBitPlayerToChannel(playerFlag);
 
     u32 outputFlag = 0;
     u32 mainOutFlag = 0;
