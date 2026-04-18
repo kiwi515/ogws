@@ -13,7 +13,6 @@ public:
     CapTexture() {}
     CapTexture(u16 w, u16 h, GXTexFmt fmt) : CpuTexture(w, h, fmt) {}
 
-    virtual ~CapTexture() {}           // at 0x8
     virtual void configure();          // at 0xC
     virtual void load(GXTexMapID map); // at 0x14
 
