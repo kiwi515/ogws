@@ -22,6 +22,8 @@ const DrawGX::DL DrawGX::s_circleDLTbl[CIRCLE_MAX] = {DL_CIRCLE_16,
 nw4r::math::MTX34 DrawGX::s_cameraMtx;
 u32 DrawGX::s_flag = 0;
 
+} // namespace EGG
+
 namespace {
 
 GXLightID LIGHTMASK_DEFAULT = GX_LIGHT0;
@@ -36,10 +38,6 @@ u32 CLEAR_Z_TX[4 * 4] ALIGN(32) = {
     0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF
     // clang-format on
 };
-
-} // namespace
-
-namespace {
 
 void DrawQuadNormal(u8 p1, u8 p2, u8 p3, u8 p4, u8 n) {
     GXPosition1x8(p1);
@@ -68,6 +66,9 @@ void DrawQuadLineStripNormal(u8 p1, u8 p2, u8 p3, u8 p4, u8 n) {
         GXNormal1x8(n);
 
         GXPosition1x8(p4);
+        GXNormal1x8(n);
+
+        GXPosition1x8(p1);
         GXNormal1x8(n);
     }
     GXEnd();
@@ -124,6 +125,8 @@ void DrawCircleYPolygonFan(const nw4r::math::MTX34& rMtx, f32 radius,
 }
 
 } // namespace
+
+namespace EGG {
 
 void DrawGX::Initialize(Heap* pHeap) {
     pHeap = pHeap == NULL ? Heap::getCurrentHeap() : pHeap;
