@@ -14,29 +14,35 @@ public:
     virtual void reset();               // at 0x14
     virtual void setMaterialInternal(); // at 0x18
 
-    void setupRange();
+    void calcScale();
 
 private:
-    enum TevStage {
-        TevStage_0,
-        TevStage_1,
-        TevStage_2,
+    enum ETevStage {
+        ETevStage_Extract,
+        ETevStage_Amplify,
+        ETevStage_Stabilize,
 
-        TevStage_Max
+        ETevStage_Max
+    };
+
+    enum {
+        EFlag_0 = 1 << 0,
     };
 
 private:
-    GXColor COLOR_0x20;
-    GXColor COLOR_0x24;
-    f32 FLOAT_0x28;
-    f32 FLOAT_0x2C;
-    GXColor COLOR_0x30;
-    GXColor COLOR_0x34;
-    GXColor COLOR_0x38;
-    GXTevScale mTevScale;  // at 0x3C
-    GXTevScale mTevScale2; // at 0x40
-    bool BOOL_0x44;
-    u8 BYTE_0x45;
+    GXColor mHighlightColor; // at 0x20
+    GXColor mGainColor;      // at 0x24
+    f32 mHighlightScale;     // at 0x28
+    f32 mGainScale;          // at 0x2C
+
+    GXColor mFractionalGain;        // at 0x30
+    GXColor mBrightnessThreshold;   // at 0x34
+    GXColor mBrightnessColor;       // at 0x38
+    GXTevScale mBrightnessTevScale; // at 0x3C
+    GXTevScale mGainTevScale;       // at 0x40
+
+    bool mIsSubtractive; // at 0x44
+    u8 mFlags;           // at 0x45
 };
 
 } // namespace EGG
