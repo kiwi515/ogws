@@ -37,7 +37,8 @@ protected:
 
 public:
     PostEffectBase();
-    virtual ~PostEffectBase() {}                                 // at 0x8
+    virtual ~PostEffectBase() {} // at 0x8
+
     virtual void configure();                                    // at 0xC
     virtual void draw(f32 w, f32 h);                             // at 0x10
     virtual void reset();                                        // at 0x14

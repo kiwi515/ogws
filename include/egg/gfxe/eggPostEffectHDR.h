@@ -11,6 +11,7 @@ namespace EGG {
 class PostEffectHDR : public PostEffectBase {
 public:
     PostEffectHDR();
+
     virtual void reset();               // at 0x14
     virtual void setMaterialInternal(); // at 0x18
 
@@ -30,16 +31,16 @@ private:
     };
 
 private:
-    GXColor mHighlightColor; // at 0x20
-    GXColor mGainColor;      // at 0x24
-    f32 mHighlightScale;     // at 0x28
-    f32 mGainScale;          // at 0x2C
+    GXColor mLDRLimitColor; // at 0x20
+    GXColor mExposureColor; // at 0x24
+    f32 mLDRLimitScale;     // at 0x28
+    f32 mExposureInv;       // at 0x2C
 
-    GXColor mFractionalGain;        // at 0x30
-    GXColor mBrightnessThreshold;   // at 0x34
-    GXColor mBrightnessColor;       // at 0x38
-    GXTevScale mBrightnessTevScale; // at 0x3C
-    GXTevScale mGainTevScale;       // at 0x40
+    GXColor mFracExposureColor;   // at 0x30
+    GXColor mCutoffColor;         // at 0x34
+    GXColor mBrightnessColor;     // at 0x38
+    GXTevScale mCutoffTevScale;   // at 0x3C
+    GXTevScale mExposureTevScale; // at 0x40
 
     bool mIsSubtractive; // at 0x44
     u8 mFlags;           // at 0x45

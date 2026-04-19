@@ -9,61 +9,61 @@ PostEffectHDR::PostEffectHDR() {}
 void PostEffectHDR::reset() {
     mBrightnessColor = DrawGX::WHITE;
 
-    mFractionalGain = mBrightnessColor;
-    mHighlightColor = mBrightnessColor;
-    mBrightnessThreshold = mBrightnessColor;
-    mGainColor = mBrightnessColor;
+    mFracExposureColor = mBrightnessColor;
+    mLDRLimitColor = mBrightnessColor;
+    mCutoffColor = mBrightnessColor;
+    mExposureColor = mBrightnessColor;
 
-    mGainScale = 1.0f;
-    mHighlightScale = 0.0f;
+    mExposureInv = 1.0f;
+    mLDRLimitScale = 0.0f;
 
     mFlags = 0;
-    mBrightnessTevScale = GX_CS_SCALE_1;
-    mGainTevScale = GX_CS_SCALE_1;
+    mCutoffTevScale = GX_CS_SCALE_1;
+    mExposureTevScale = GX_CS_SCALE_1;
 }
 
 void PostEffectHDR::calcScale() {
     f32 divisor = 6.0f;
 
     f32 scale = 1.0f / divisor;
-    scale = mGainScale > scale ? mGainScale : scale;
+    scale = mExposureInv > scale ? mExposureInv : scale;
 
     mIsSubtractive = false;
     scale = 1.0f / scale - 1.0f;
 
     if (scale <= 1.0f) {
-        mBrightnessTevScale = GX_CS_SCALE_1;
-        mGainTevScale = GX_CS_SCALE_1;
+        mCutoffTevScale = GX_CS_SCALE_1;
+        mExposureTevScale = GX_CS_SCALE_1;
 
     } else if (scale <= 2.0f) {
-        mBrightnessTevScale = GX_CS_SCALE_1;
-        mGainTevScale = GX_CS_SCALE_2;
+        mCutoffTevScale = GX_CS_SCALE_1;
+        mExposureTevScale = GX_CS_SCALE_2;
         scale = 0.5f * (scale - 1.0f);
 
     } else if (scale <= 3.0f) {
-        mBrightnessTevScale = GX_CS_SCALE_1;
-        mGainTevScale = GX_CS_SCALE_2;
+        mCutoffTevScale = GX_CS_SCALE_1;
+        mExposureTevScale = GX_CS_SCALE_2;
         scale = 0.5f * (1.0f + (scale - 2.0f));
 
     } else if (scale <= 4.0f) {
-        mBrightnessTevScale = GX_CS_SCALE_1;
-        mGainTevScale = GX_CS_SCALE_4;
+        mCutoffTevScale = GX_CS_SCALE_1;
+        mExposureTevScale = GX_CS_SCALE_4;
         scale = 0.25f * (scale - 3.0f);
 
     } else if (scale <= 5.0f) {
-        mBrightnessTevScale = GX_CS_SCALE_1;
-        mGainTevScale = GX_CS_SCALE_4;
+        mCutoffTevScale = GX_CS_SCALE_1;
+        mExposureTevScale = GX_CS_SCALE_4;
         scale = 0.25f * (1.0f + (scale - 4.0f));
     }
 
-    GXColor threshold;
-    scaleRGBA(&threshold, mHighlightColor, mHighlightScale, true);
+    GXColor cutoff;
+    scaleRGBA(&cutoff, mLDRLimitColor, mLDRLimitScale, true);
 
     GXColor frac;
-    scaleRGBA(&frac, mGainColor, scale, true);
+    scaleRGBA(&frac, mExposureColor, scale, true);
 
-    mFractionalGain = frac;
-    mBrightnessThreshold = threshold;
+    mFracExposureColor = frac;
+    mCutoffColor = cutoff;
 }
 
 void PostEffectHDR::setMaterialInternal() {
@@ -80,8 +80,8 @@ void PostEffectHDR::setMaterialInternal() {
 
     setMatInd();
 
-    GXSetTevKColor(GX_KCOLOR0, mBrightnessThreshold);
-    GXSetTevKColor(GX_KCOLOR1, mFractionalGain);
+    GXSetTevKColor(GX_KCOLOR0, mCutoffColor);
+    GXSetTevKColor(GX_KCOLOR1, mFracExposureColor);
 
     GXSetTevSwapModeTable(GX_TEV_SWAP0, GX_CH_RED, GX_CH_GREEN, GX_CH_BLUE,
                           GX_CH_ALPHA);
@@ -101,13 +101,13 @@ void PostEffectHDR::setMaterialInternal() {
             GXSetTevOrder(static_cast<GXTevStageID>(i), GX_TEXCOORD0,
                           getCapTexture()->getLoadMap(), GX_COLOR_NULL);
 
-            // Tev0.RGB = (Tex.RGB - mBrightnessThreshold.RGB)
+            // Tev0.RGB = (Tex.RGB - mCutoffColor.RGB)
             GXSetTevColorIn(static_cast<GXTevStageID>(i), GX_CC_KONST,
                             GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC);
-            // Tev0.RGB *= mBrightnessTevScale
+
+            // Tev0.RGB *= mCutoffTevScale
             GXSetTevColorOp(static_cast<GXTevStageID>(i), GX_TEV_SUB,
-                            GX_TB_ZERO, mBrightnessTevScale, GX_TRUE,
-                            GX_TEVREG0);
+                            GX_TB_ZERO, mCutoffTevScale, GX_TRUE, GX_TEVREG0);
             break;
         }
 
@@ -118,15 +118,17 @@ void PostEffectHDR::setMaterialInternal() {
                           GX_TEXMAP_NULL, GX_COLOR_NULL);
 
             if (!useStage2) {
-                // Color = Tev0.RGB (+/-) (mFractionalGain.RGB * Tev0.RGB)
+                // Color = Tev0.RGB (+/-) (mFracExposureColor.RGB * Tev0.RGB)
                 GXSetTevColorIn(static_cast<GXTevStageID>(i), GX_CC_ZERO,
                                 GX_CC_C0, GX_CC_KONST, GX_CC_C0);
-                // Color *= mGainTevScale
+
+                // Color *= mExposureTevScale
                 GXSetTevColorOp(static_cast<GXTevStageID>(i),
                                 mIsSubtractive ? GX_TEV_SUB : GX_TEV_ADD,
-                                GX_TB_ZERO, mGainTevScale, GX_TRUE, GX_TEVPREV);
+                                GX_TB_ZERO, mExposureTevScale, GX_TRUE,
+                                GX_TEVPREV);
             } else {
-                // Color = mFractionalGain.RGB * Tev0.RGB
+                // Color = mFracExposureColor.RGB * Tev0.RGB
                 GXSetTevColorIn(static_cast<GXTevStageID>(i), GX_CC_ZERO,
                                 GX_CC_C0, GX_CC_KONST, GX_CC_ZERO);
                 GXSetTevColorOp(static_cast<GXTevStageID>(i), GX_TEV_ADD,
@@ -142,10 +144,11 @@ void PostEffectHDR::setMaterialInternal() {
             // Color = Tev0.RGB (+/-) ((1 - Tev0.RGB) * Color)
             GXSetTevColorIn(static_cast<GXTevStageID>(i), GX_CC_CPREV,
                             GX_CC_ZERO, GX_CC_C0, GX_CC_C0);
-            // Color *= mGainTevScale
+
+            // Color *= mExposureTevScale
             GXSetTevColorOp(static_cast<GXTevStageID>(i),
                             mIsSubtractive ? GX_TEV_SUB : GX_TEV_ADD,
-                            GX_TB_ZERO, mGainTevScale, GX_TRUE, GX_TEVPREV);
+                            GX_TB_ZERO, mExposureTevScale, GX_TRUE, GX_TEVPREV);
             break;
         }
 
