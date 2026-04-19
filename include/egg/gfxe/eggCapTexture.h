@@ -42,62 +42,62 @@ public:
     }
 
     bool checkColorUpdate() const {
-        return testFlag(FLAG_COLOR_UPDATE);
+        return testFlag(EFlag_ColorUpdate);
     }
     void enableColorUpdate() {
-        setFlag(FLAG_COLOR_UPDATE);
+        setFlag(EFlag_ColorUpdate);
     }
     void disableColorUpdate() {
-        clearFlag(FLAG_COLOR_UPDATE);
+        clearFlag(EFlag_ColorUpdate);
     }
 
     bool checkAlphaUpdate() const {
-        return testFlag(FLAG_ALPHA_UPDATE);
+        return testFlag(EFlag_AlphaUpdate);
     }
     void enableAlphaUpdate() {
-        setFlag(FLAG_ALPHA_UPDATE);
+        setFlag(EFlag_AlphaUpdate);
     }
     void disableAlphaUpdate() {
-        clearFlag(FLAG_ALPHA_UPDATE);
+        clearFlag(EFlag_AlphaUpdate);
     }
 
     bool checkZBufferUpdate() const {
-        return testFlag(FLAG_ZBUFFER_UPDATE);
+        return testFlag(EFlag_ZBufferUpdate);
     }
     void enableZBufferUpdate() {
-        setFlag(FLAG_ZBUFFER_UPDATE);
+        setFlag(EFlag_ZBufferUpdate);
     }
     void disableZBufferUpdate() {
-        clearFlag(FLAG_ZBUFFER_UPDATE);
+        clearFlag(EFlag_ZBufferUpdate);
     }
 
     bool checkVFilterEnable() const {
-        return testFlag(FLAG_VFILTER_ENABLE);
+        return testFlag(EFlag_VFilterEnable);
     }
     void enableVFilter() {
-        setFlag(FLAG_VFILTER_ENABLE);
+        setFlag(EFlag_VFilterEnable);
     }
     void disableVFilter() {
-        clearFlag(FLAG_VFILTER_ENABLE);
+        clearFlag(EFlag_VFilterEnable);
     }
 
     bool checkPixModeSync() const {
-        return testFlag(FLAG_PIXMODE_SYNC);
+        return testFlag(EFlag_PixModeSync);
     }
     void enablePixModeSync() {
-        setFlag(FLAG_PIXMODE_SYNC);
+        setFlag(EFlag_PixModeSync);
     }
     void disablePixModeSync() {
-        clearFlag(FLAG_PIXMODE_SYNC);
+        clearFlag(EFlag_PixModeSync);
     }
 
 private:
     enum {
-        FLAG_COLOR_UPDATE = 1 << 3,
-        FLAG_ALPHA_UPDATE = 1 << 4,
-        FLAG_ZBUFFER_UPDATE = 1 << 5,
-        FLAG_VFILTER_ENABLE = 1 << 6,
-        FLAG_PIXMODE_SYNC = 1 << 7,
+        EFlag_ColorUpdate = 1 << 3,
+        EFlag_AlphaUpdate = 1 << 4,
+        EFlag_ZBufferUpdate = 1 << 5,
+        EFlag_VFilterEnable = 1 << 6,
+        EFlag_PixModeSync = 1 << 7,
     };
 
 private:

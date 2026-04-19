@@ -1,11 +1,13 @@
 #ifndef EGG_GFXE_TEXTURE_BUFFER_H
 #define EGG_GFXE_TEXTURE_BUFFER_H
-#include "eggCapTexture.h"
-#include "types_egg.h"
+#include <egg/types_egg.h>
+
+#include <egg/gfxe/eggCapTexture.h>
 
 #include <revolution/GX.h>
 
 namespace EGG {
+
 class TextureBuffer : public CapTexture {
 public:
     enum EBufferState { STATE_FREE, STATE_ALLOCED };
@@ -62,6 +64,7 @@ private:
     static u32 sBufferAllSize;
     static TextureBuffer spBufferTable[NUM_BUFFERS];
 };
+
 } // namespace EGG
 
 #endif

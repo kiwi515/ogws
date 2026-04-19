@@ -3,14 +3,22 @@
 #include <types.h>
 
 #include <revolution/GX/GXTypes.h>
-
 #include <revolution/MTX.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #define GX_PROJECTION_SZ 7
 #define GX_VIEWPORT_SZ 6
+
+// Viewport field indices
+#define GX_VIEWPORT_X 0
+#define GX_VIEWPORT_Y 1
+#define GX_VIEWPORT_W 2
+#define GX_VIEWPORT_H 3
+#define GX_VIEWPORT_N 4
+#define GX_VIEWPORT_F 5
 
 typedef enum {
     GX_FIELD_EVEN,

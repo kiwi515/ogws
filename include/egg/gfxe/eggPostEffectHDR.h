@@ -1,17 +1,29 @@
 #ifndef EGG_GFXE_POST_EFFECT_HDR_H
 #define EGG_GFXE_POST_EFFECT_HDR_H
-#include "eggPostEffectBase.h"
-#include "types_egg.h"
+#include <egg/types_egg.h>
+
+#include <egg/gfxe/eggPostEffectBase.h>
+
+#include <revolution/GX.h>
 
 namespace EGG {
+
 class PostEffectHDR : public PostEffectBase {
 public:
     PostEffectHDR();
-    virtual ~PostEffectHDR() {}         // at 0x8
     virtual void reset();               // at 0x14
     virtual void setMaterialInternal(); // at 0x18
 
     void setupRange();
+
+private:
+    enum TevStage {
+        TevStage_0,
+        TevStage_1,
+        TevStage_2,
+
+        TevStage_Max
+    };
 
 private:
     GXColor COLOR_0x20;
@@ -21,11 +33,12 @@ private:
     GXColor COLOR_0x30;
     GXColor COLOR_0x34;
     GXColor COLOR_0x38;
-    u32 WORD_0x3C;
-    u32 WORD_0x40;
-    u8 BYTE_0x44;
+    GXTevScale mTevScale;  // at 0x3C
+    GXTevScale mTevScale2; // at 0x40
+    bool BOOL_0x44;
     u8 BYTE_0x45;
 };
+
 } // namespace EGG
 
 #endif
