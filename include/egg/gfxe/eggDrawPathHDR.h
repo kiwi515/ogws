@@ -6,6 +6,9 @@
 
 namespace EGG {
 
+// Forward declarations
+class PostEffectHDR;
+
 class DrawPathHDR : public DrawPathBase {
 public:
     DrawPathHDR();
@@ -16,14 +19,14 @@ public:
 
 private:
     enum EStep {
-        EStep_0,
-        EStep_1,
+        EStep_Capture,
+        EStep_Draw,
 
         EStep_Max
     };
 
 private:
-    PostEffectHDR* mPostEffect; // at 0x7C
+    PostEffectHDR* mpPostEffect; // at 0x7C
 };
 
 } // namespace EGG

@@ -24,7 +24,7 @@ void ScreenEffectBase::setScreen(const Screen& rScreen) {
 }
 
 void ScreenEffectBase::Clean() {
-    sFlag &= ~(EFlag_Enable | EFlag_2);
+    sFlag &= ~(EGlobalFlag_0 | EGlobalFlag_1);
     sWorkBuffer = cWorkBuffer_None;
     D_804BEC58 = 0;
     sPushCount = 0;

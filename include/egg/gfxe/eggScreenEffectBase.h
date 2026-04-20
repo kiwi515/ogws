@@ -72,18 +72,7 @@ public:
 
     const f32* shiftWorkSpaceViewportGX() const;
 
-private:
-    enum {
-        EFlag_Enable = 1 << 0,
-        EFlag_2 = 1 << 1,
-        EFlag_DirtyBufferMode = 1 << 2,
-        EFlag_RGB565 = 1 << 3,
-    };
-
-    static const int EFFECT_WIDTH = 640;
-    static const int EFFECT_HEIGHT = 528;
-
-private:
+protected:
     static void setBuffer(BufferType type, TextureBuffer* pBuffer) {
 #line 163
         EGG_ASSERT(type < cBufferType_Max);
@@ -99,6 +88,42 @@ private:
     static TextureBuffer* getBuffer(BufferType type) {
         return spBufferSet[type].mpTexBuffer;
     }
+
+    static void setGlbFlag0(bool enable) {
+        if (enable) {
+            sFlag |= EGlobalFlag_0;
+
+        } else {
+            sFlag &= ~EGlobalFlag_0;
+        }
+    }
+    static bool isGlbFlag0() {
+        return sFlag & EGlobalFlag_0;
+    }
+    static void setGlbFlag1(bool enable) {
+        if (enable) {
+            sFlag |= EGlobalFlag_1;
+
+        } else {
+            sFlag &= ~EGlobalFlag_1;
+        }
+    }
+    static bool isGlbFlag1() {
+        return sFlag & EGlobalFlag_1;
+    }
+
+private:
+    enum {
+        EFlag_Enable = 1 << 0,
+    };
+
+    enum {
+        EGlobalFlag_0 = 1 << 0,
+        EGlobalFlag_1 = 1 << 1,
+    };
+
+    static const int EFFECT_WIDTH = 640;
+    static const int EFFECT_HEIGHT = 528;
 
 private:
     static EffectBuffer spBufferSet[cBufferType_Max];

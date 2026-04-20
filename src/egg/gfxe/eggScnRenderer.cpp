@@ -254,7 +254,7 @@ void ScnRenderer::draw_before_CalcView() {
     }
 
 clean:
-    ScreenEffectBase::clean();
+    ScreenEffectBase::Clean();
     for (u16 i = 0; i < getNumDrawPath(); i++) {
         if (mppPathSet[i] != NULL)
             mppPathSet[i]->calc();
