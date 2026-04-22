@@ -421,7 +421,6 @@ u16 ModelEx::replaceTexture(const char* pName, const GXTexObj& rTexObj,
                             bool saveFilterWrap,
                             TextureReplaceResult* pResultSet, u16 resultNum,
                             bool copyMatAccess) {
-
     u16 totalFound = 0;
 
     switch (mType) {

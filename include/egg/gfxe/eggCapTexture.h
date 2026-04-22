@@ -11,7 +11,8 @@ namespace EGG {
 class CapTexture : public CpuTexture {
 public:
     CapTexture() {}
-    CapTexture(u16 w, u16 h, GXTexFmt fmt) : CpuTexture(w, h, fmt) {}
+    CapTexture(u16 width, u16 height, GXTexFmt format)
+        : CpuTexture(width, height, format) {}
 
     virtual void configure();          // at 0xC
     virtual void load(GXTexMapID map); // at 0x14
