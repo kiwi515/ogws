@@ -69,8 +69,10 @@ int LightTextureManager::replaceModelTexture(int index, ModelEx* pMdl) const {
                          NULL, 0, true);
 
     for (int i = 0; i < (u16)ret; i++) {
-        u16 matIndex = result.data[i].s;
-        u8 texCoordId = result.data[i].b;
+        // u16 matIndex = result.data[i].s;
+        // u8 texCoordId = result.data[i].b;
+        u16 matIndex = 1234;
+        u8 texCoordId = 123;
 
         g3d::ResTexSrt srt = pMdl->getResMat(matIndex).GetResTexSrt();
 #line 138

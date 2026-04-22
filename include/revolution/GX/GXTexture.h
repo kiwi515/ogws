@@ -29,6 +29,16 @@ void GXInitTexObjLOD(GXTexObj* obj, GXTexFilter min_filt, GXTexFilter mag_filt,
                      f32 min_lod, f32 max_lod, f32 lod_bias, GXBool bias_clamp,
                      GXBool do_edge_lod, GXAnisotropy max_aniso);
 
+void GXInitTexObjWrapMode(GXTexObj* obj, GXTexWrapMode wrap_s,
+                          GXTexWrapMode wrap_t);
+
+void GXInitTexObjFilter(GXTexObj* obj, GXTexFilter min_filt,
+                        GXTexFilter mag_filt);
+
+void GXGetTexObjAll(GXTexObj* obj, void* image_ptr, u16* width, u16* height,
+                    GXTexFmt* format, GXTexWrapMode* wrap_s,
+                    GXTexWrapMode* wrap_t, GXBool* mipmap);
+
 void GXGetTexObjLODAll(GXTexObj* obj, GXTexFilter* min_filt,
                        GXTexFilter* mag_filt, f32* minLod, f32* maxLod,
                        f32* lodBias, GXBool* biasClampEnable,
