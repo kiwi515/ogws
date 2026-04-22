@@ -18,13 +18,13 @@ void DrawPathHDR::internalDraw(u16 step) {
     const Screen::DataEfb& rEfb = GetScreen().GetDataEfb();
 
     switch (step) {
-    case EStep_Capture: {
+    case cStep_Capture: {
         captureEfb(cBufferType_2, false);
         setGlbFlag1(true);
         break;
     }
 
-    case EStep_Draw: {
+    case cStep_Draw: {
         StateGX::ScopedAlphaUpdate alphaLock(false);
 
         TextureBuffer* p_buff = getBuffer(cBufferType_2);
@@ -43,7 +43,7 @@ void DrawPathHDR::internalDraw(u16 step) {
 }
 
 int DrawPathHDR::getNumStep() const {
-    return EStep_Max;
+    return cStep_Max;
 }
 
 } // namespace EGG

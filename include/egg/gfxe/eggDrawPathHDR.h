@@ -18,11 +18,11 @@ public:
     virtual void internalDraw(u16 step); // at 0x28
 
 private:
-    enum EStep {
-        EStep_Capture,
-        EStep_Draw,
+    enum Step {
+        cStep_Capture,
+        cStep_Draw,
 
-        EStep_Max
+        cStep_Max
     };
 
 private:

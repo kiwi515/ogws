@@ -1,17 +1,11 @@
-#include "eggScnRootEx.h"
+#include <egg/gfxe.h>
+#include <egg/prim.h>
 
-#include "eggAssert.h"
-#include "eggDrawGX.h"
-#include "eggFogManager.h"
-#include "eggIDrawGX.h"
-#include "eggLightManager.h"
-#include "eggLightTextureManager.h"
-#include "eggScreen.h"
-#include "eggShadowTextureManager.h"
-#include "eggStateGX.h"
 #include <nw4r/g3d.h>
 
+
 namespace EGG {
+
 using namespace nw4r;
 
 ScnRootEx::ScnRootEx(g3d::ScnRoot* pScnRoot)
@@ -215,21 +209,22 @@ void ScnRootEx::setDrawSettingGX(bool opa) const {
 
     if (opa) {
         if (mDrawSettings & DRAW_COLOR_UPDATE_OPA)
-            flags |= EFlag_ColorUpdate;
+            flags |= cFlag_ColorUpdate;
         if (mDrawSettings & DRAW_ALPHA_UPDATE_OPA)
-            flags |= EFlag_AlphaUpdate;
+            flags |= cFlag_AlphaUpdate;
         if (mDrawSettings & DRAW_DITHER_OPA)
-            flags |= EFlag_Dither;
+            flags |= cFlag_Dither;
     } else {
         if (mDrawSettings & DRAW_COLOR_UPDATE_XLU)
-            flags |= EFlag_ColorUpdate;
+            flags |= cFlag_ColorUpdate;
         if (mDrawSettings & DRAW_ALPHA_UPDATE_XLU)
-            flags |= EFlag_AlphaUpdate;
+            flags |= cFlag_AlphaUpdate;
         if (mDrawSettings & DRAW_DITHER_XLU)
-            flags |= EFlag_Dither;
+            flags |= cFlag_Dither;
     }
 
     setDrawFlag(flags);
     IDrawGX::setDrawSettingGX(opa);
 }
+
 } // namespace EGG

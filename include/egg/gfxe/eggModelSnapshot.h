@@ -55,7 +55,7 @@ private:
 
 private:
     enum {
-        EFlag_1 = 1 << 1,
+        cFlag_1 = 1 << 1,
     };
 };
 

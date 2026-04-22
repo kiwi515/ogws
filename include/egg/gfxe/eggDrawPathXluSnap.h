@@ -15,13 +15,13 @@ public:
     virtual void internalDraw(u16); // at 0x28
 
 private:
-    enum EStep {
-        EStep_0,
-        EStep_1,
-        EStep_2,
-        EStep_3,
+    enum Step {
+        cStep_0,
+        cStep_1,
+        cStep_2,
+        cStep_3,
 
-        EStep_Max
+        cStep_Max
     };
 
 private:

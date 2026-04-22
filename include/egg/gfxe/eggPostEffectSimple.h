@@ -15,11 +15,11 @@ public:
 private:
     enum EBlendMode {
         //! Color blends with framebuffer
-        EBlendMode_Opa,
+        cBlendMode_Opa,
         //! Color blends with framebuffer where texture is visible
-        EBlendMode_Xlu,
+        cBlendMode_Xlu,
         //! Color blends with framebuffer, texture alpha controls intensity
-        EBlendMode_Intensity,
+        cBlendMode_Intensity,
     };
 
 private:

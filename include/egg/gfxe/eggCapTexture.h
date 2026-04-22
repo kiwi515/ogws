@@ -43,62 +43,62 @@ public:
     }
 
     bool checkColorUpdate() const {
-        return testFlag(EFlag_ColorUpdate);
+        return testFlag(cFlag_ColorUpdate);
     }
     void enableColorUpdate() {
-        setFlag(EFlag_ColorUpdate);
+        setFlag(cFlag_ColorUpdate);
     }
     void disableColorUpdate() {
-        clearFlag(EFlag_ColorUpdate);
+        clearFlag(cFlag_ColorUpdate);
     }
 
     bool checkAlphaUpdate() const {
-        return testFlag(EFlag_AlphaUpdate);
+        return testFlag(cFlag_AlphaUpdate);
     }
     void enableAlphaUpdate() {
-        setFlag(EFlag_AlphaUpdate);
+        setFlag(cFlag_AlphaUpdate);
     }
     void disableAlphaUpdate() {
-        clearFlag(EFlag_AlphaUpdate);
+        clearFlag(cFlag_AlphaUpdate);
     }
 
     bool checkZBufferUpdate() const {
-        return testFlag(EFlag_ZBufferUpdate);
+        return testFlag(cFlag_ZBufferUpdate);
     }
     void enableZBufferUpdate() {
-        setFlag(EFlag_ZBufferUpdate);
+        setFlag(cFlag_ZBufferUpdate);
     }
     void disableZBufferUpdate() {
-        clearFlag(EFlag_ZBufferUpdate);
+        clearFlag(cFlag_ZBufferUpdate);
     }
 
     bool checkVFilterEnable() const {
-        return testFlag(EFlag_VFilterEnable);
+        return testFlag(cFlag_VFilterEnable);
     }
     void enableVFilter() {
-        setFlag(EFlag_VFilterEnable);
+        setFlag(cFlag_VFilterEnable);
     }
     void disableVFilter() {
-        clearFlag(EFlag_VFilterEnable);
+        clearFlag(cFlag_VFilterEnable);
     }
 
     bool checkPixModeSync() const {
-        return testFlag(EFlag_PixModeSync);
+        return testFlag(cFlag_PixModeSync);
     }
     void enablePixModeSync() {
-        setFlag(EFlag_PixModeSync);
+        setFlag(cFlag_PixModeSync);
     }
     void disablePixModeSync() {
-        clearFlag(EFlag_PixModeSync);
+        clearFlag(cFlag_PixModeSync);
     }
 
 private:
     enum {
-        EFlag_ColorUpdate = 1 << 3,
-        EFlag_AlphaUpdate = 1 << 4,
-        EFlag_ZBufferUpdate = 1 << 5,
-        EFlag_VFilterEnable = 1 << 6,
-        EFlag_PixModeSync = 1 << 7,
+        cFlag_ColorUpdate = 1 << 3,
+        cFlag_AlphaUpdate = 1 << 4,
+        cFlag_ZBufferUpdate = 1 << 5,
+        cFlag_VFilterEnable = 1 << 6,
+        cFlag_PixModeSync = 1 << 7,
     };
 
 private:

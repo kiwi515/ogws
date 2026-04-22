@@ -52,13 +52,13 @@ public:
     }
 
     bool isEnable() const {
-        return mFlags & EFlag_Enable;
+        return mFlags & cFlag_Enable;
     }
     void setEnable(bool enable) {
         if (enable) {
-            mFlags |= EFlag_Enable;
+            mFlags |= cFlag_Enable;
         } else {
-            mFlags &= ~EFlag_Enable;
+            mFlags &= ~cFlag_Enable;
         }
     }
 
@@ -91,35 +91,36 @@ protected:
 
     static void setGlbFlag0(bool enable) {
         if (enable) {
-            sFlag |= EGlobalFlag_0;
+            sFlag |= cGlobalFlag_0;
 
         } else {
-            sFlag &= ~EGlobalFlag_0;
+            sFlag &= ~cGlobalFlag_0;
         }
     }
     static bool isGlbFlag0() {
-        return sFlag & EGlobalFlag_0;
+        return sFlag & cGlobalFlag_0;
     }
+
     static void setGlbFlag1(bool enable) {
         if (enable) {
-            sFlag |= EGlobalFlag_1;
+            sFlag |= cGlobalFlag_1;
 
         } else {
-            sFlag &= ~EGlobalFlag_1;
+            sFlag &= ~cGlobalFlag_1;
         }
     }
     static bool isGlbFlag1() {
-        return sFlag & EGlobalFlag_1;
+        return sFlag & cGlobalFlag_1;
     }
 
 private:
     enum {
-        EFlag_Enable = 1 << 0,
+        cFlag_Enable = 1 << 0,
     };
 
     enum {
-        EGlobalFlag_0 = 1 << 0,
-        EGlobalFlag_1 = 1 << 1,
+        cGlobalFlag_0 = 1 << 0,
+        cGlobalFlag_1 = 1 << 1,
     };
 
     static const int EFFECT_WIDTH = 640;

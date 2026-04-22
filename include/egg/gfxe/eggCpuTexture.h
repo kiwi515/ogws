@@ -60,10 +60,10 @@ public:
     void flush() const;
 
     bool checkIsConfigure() const {
-        return testFlag(EFlag_Configured);
+        return testFlag(cFlag_Configured);
     }
     bool checkHasHeader() const {
-        return testFlag(EFlag_HasHeader);
+        return testFlag(cFlag_HasHeader);
     }
 
     void setFlag(u8 flag) {
@@ -135,13 +135,13 @@ public:
         EGG_ASSERT(( u32 )pBuffer % 32 == 0);
 
         mpBuffer = pBuffer;
-        clearFlag(EFlag_HasHeader);
+        clearFlag(cFlag_HasHeader);
     }
 
 private:
     enum {
-        EFlag_Configured = 1 << 0,
-        EFlag_HasHeader = 1 << 1,
+        cFlag_Configured = 1 << 0,
+        cFlag_HasHeader = 1 << 1,
     };
 
 private:

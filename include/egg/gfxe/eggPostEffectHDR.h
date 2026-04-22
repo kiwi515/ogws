@@ -18,16 +18,16 @@ public:
     void calcScale();
 
 private:
-    enum ETevStage {
-        ETevStage_Extract,
-        ETevStage_Amplify,
-        ETevStage_Stabilize,
+    enum TevStage {
+        cTevStage_Extract,
+        cTevStage_Amplify,
+        cTevStage_Stabilize,
 
-        ETevStage_Max
+        cTevStage_Max
     };
 
     enum {
-        EFlag_0 = 1 << 0,
+        cFlag_0 = 1 << 0,
     };
 
 private:

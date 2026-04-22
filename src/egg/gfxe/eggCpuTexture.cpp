@@ -125,7 +125,7 @@ CpuTexture::CpuTexture(u16 width, u16 height, GXTexFmt format)
       mpBuffer(NULL) {}
 
 void CpuTexture::configure() {
-    mFlags = EFlag_Configured;
+    mFlags = cFlag_Configured;
 }
 
 void CpuTexture::getTexObj(GXTexObj* pObj) const {
@@ -324,7 +324,7 @@ void CpuTexture::allocWithHeaderDebug() {
     EGG_ASSERT(pBuffer);
 
     setBuffer(pBuffer + sizeof(ResTIMG));
-    setFlag(EFlag_HasHeader);
+    setFlag(cFlag_HasHeader);
     initResTIMG();
 }
 

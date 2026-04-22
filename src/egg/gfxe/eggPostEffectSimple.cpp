@@ -9,7 +9,7 @@ PostEffectSimple::PostEffectSimple() {}
 void PostEffectSimple::reset() {
     mColor = DrawGX::WHITE;
     mIntensity = 1.0f;
-    mBlendMode = EBlendMode_Xlu;
+    mBlendMode = cBlendMode_Xlu;
 }
 
 void PostEffectSimple::setMaterialInternal() {
@@ -48,19 +48,19 @@ void PostEffectSimple::setMaterialInternal() {
                     GX_TRUE, GX_TEVPREV);
 
     switch (mBlendMode) {
-    case EBlendMode_Opa:
+    case cBlendMode_Opa:
         // Alpha = color.A
         GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO,
                         GX_CA_KONST);
         break;
 
-    case EBlendMode_Xlu:
+    case cBlendMode_Xlu:
         // Alpha = color.A * Tex0.A
         GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_TEXA, GX_CA_KONST,
                         GX_CA_ZERO);
         break;
 
-    case EBlendMode_Intensity:
+    case cBlendMode_Intensity:
         // Color = color.RGB * Tex0.A
         GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_TEXA, GX_CC_KONST,
                         GX_CC_ZERO);

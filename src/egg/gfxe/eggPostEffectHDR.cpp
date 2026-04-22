@@ -70,7 +70,7 @@ void PostEffectHDR::setMaterialInternal() {
     calcScale();
     loadTextureInternal();
 
-    bool useStage2 = mFlags & EFlag_0;
+    bool useStage2 = mFlags & cFlag_0;
     int tevStageNum = useStage2 + 2;
 
     setMatColorChannel();
@@ -95,7 +95,7 @@ void PostEffectHDR::setMaterialInternal() {
                          GX_TEV_SWAP0);
 
         switch (i) {
-        case ETevStage_Extract: {
+        case cTevStage_Extract: {
             GXSetTevKColorSel(static_cast<GXTevStageID>(i), GX_TEV_KCSEL_K0);
 
             GXSetTevOrder(static_cast<GXTevStageID>(i), GX_TEXCOORD0,
@@ -111,7 +111,7 @@ void PostEffectHDR::setMaterialInternal() {
             break;
         }
 
-        case ETevStage_Amplify: {
+        case cTevStage_Amplify: {
             GXSetTevKColorSel(static_cast<GXTevStageID>(i), GX_TEV_KCSEL_K1);
 
             GXSetTevOrder(static_cast<GXTevStageID>(i), GX_TEXCOORD_NULL,
@@ -137,7 +137,7 @@ void PostEffectHDR::setMaterialInternal() {
             break;
         }
 
-        case ETevStage_Stabilize: {
+        case cTevStage_Stabilize: {
             GXSetTevOrder(static_cast<GXTevStageID>(i), GX_TEXCOORD_NULL,
                           GX_TEXMAP_NULL, GX_COLOR_NULL);
 

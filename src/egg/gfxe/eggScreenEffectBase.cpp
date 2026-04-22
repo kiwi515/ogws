@@ -17,14 +17,14 @@ u32 ScreenEffectBase::sPushCount = 0;
 
 ScreenEffectBase::WorkBuffer ScreenEffectBase::sWorkBuffer = cWorkBuffer_None;
 
-ScreenEffectBase::ScreenEffectBase() : mFlags(EFlag_Enable) {}
+ScreenEffectBase::ScreenEffectBase() : mFlags(cFlag_Enable) {}
 
 void ScreenEffectBase::setScreen(const Screen& rScreen) {
     mScreen.CopyFromAnother(rScreen);
 }
 
 void ScreenEffectBase::Clean() {
-    sFlag &= ~(EGlobalFlag_0 | EGlobalFlag_1);
+    sFlag &= ~(cGlobalFlag_0 | cGlobalFlag_1);
     sWorkBuffer = cWorkBuffer_None;
     D_804BEC58 = 0;
     sPushCount = 0;
@@ -215,7 +215,7 @@ void ScreenEffectBase::popWorkBuffer(bool hide) const {
                 PostEffectSimple eff;
                 eff.configure();
                 eff.setCapTexture(getBuffer(type));
-                eff.setBlendMode(PostEffectBase::EBlendMode_None);
+                eff.setBlendMode(PostEffectBase::cBlendMode_None);
                 eff.draw(mScreen.GetSize().x, mScreen.GetSize().y);
             }
 

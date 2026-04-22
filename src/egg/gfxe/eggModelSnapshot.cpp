@@ -61,7 +61,7 @@ void ModelSnapshot::AddModelEx(ModelEx* pModel, f32 density) {
 
 void ModelSnapshot::GatherModel(f32 f1) {
     if (m_mdlNum != 0) {
-        if (m_flags & EFlag_1) {
+        if (m_flags & cFlag_1) {
             FLOAT_0x50 = FLOAT_0x5C;
             FLOAT_0x54 = FLOAT_0x60;
             FLOAT_0x58 = FLOAT_0x64;
@@ -97,7 +97,7 @@ void ModelSnapshot::GatherModel(f32 f1) {
 
                     FLOAT_0x68 += f4;
                 }
-            } else if (!(m_flags & EFlag_1)) {
+            } else if (!(m_flags & cFlag_1)) {
                 FLOAT_0x50 = pSphere->m_shape.FLOAT_0x4;
                 FLOAT_0x54 = pSphere->m_shape.FLOAT_0x8;
                 FLOAT_0x58 = pSphere->m_shape.FLOAT_0xC;
