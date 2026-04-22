@@ -17,7 +17,7 @@
 namespace EGG {
 
 class ScnRootEx : public IDrawGX {
-private:
+protected:
     nw4r::g3d::ScnRoot* mpScnRoot;                // at 0x0
     LightManager* mpLightManager;                 // at 0x4
     FogManager* mpFogManager;                     // at 0x8
@@ -84,7 +84,7 @@ public:
         return *mpScreen;
     }
 
-private:
+protected:
     enum SceneSetting {
         cSceneSetting_LightTexture = 1 << 0,
         cSceneSetting_ShadowTexture = 1 << 1,

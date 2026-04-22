@@ -7,10 +7,12 @@
 namespace EGG {
 
 class DrawPathXluSnap : public DrawPathBase {
+    friend class ScnRenderer;
+
 public:
     DrawPathXluSnap();
     virtual ~DrawPathXluSnap();     // at 0x8
-    virtual int getNumStep() const; // at 0x1C
+    virtual u16 getNumStep() const; // at 0x1C
     virtual void internalCalc();    // at 0x24
     virtual void internalDraw(u16); // at 0x28
 

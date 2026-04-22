@@ -10,12 +10,12 @@ void PostEffectHDR::reset() {
     mBrightnessColor = DrawGX::WHITE;
 
     mFracExposureColor = mBrightnessColor;
-    mLDRLimitColor = mBrightnessColor;
+    mThresholdColor = mBrightnessColor;
     mCutoffColor = mBrightnessColor;
     mExposureColor = mBrightnessColor;
 
     mExposureInv = 1.0f;
-    mLDRLimitScale = 0.0f;
+    mThresholdScale = 0.0f;
 
     mFlags = 0;
     mCutoffTevScale = GX_CS_SCALE_1;
@@ -57,7 +57,7 @@ void PostEffectHDR::calcScale() {
     }
 
     GXColor cutoff;
-    scaleRGBA(&cutoff, mLDRLimitColor, mLDRLimitScale, true);
+    scaleRGBA(&cutoff, mThresholdColor, mThresholdScale, true);
 
     GXColor frac;
     scaleRGBA(&frac, mExposureColor, scale, true);
@@ -95,7 +95,7 @@ void PostEffectHDR::setMaterialInternal() {
                          GX_TEV_SWAP0);
 
         switch (i) {
-        case cTevStage_Extract: {
+        case cTevStage_Threshold: {
             GXSetTevKColorSel(static_cast<GXTevStageID>(i), GX_TEV_KCSEL_K0);
 
             GXSetTevOrder(static_cast<GXTevStageID>(i), GX_TEXCOORD0,

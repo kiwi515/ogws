@@ -42,7 +42,7 @@ void DrawPathHDR::internalDraw(u16 step) {
     }
 }
 
-int DrawPathHDR::getNumStep() const {
+u16 DrawPathHDR::getNumStep() const {
     return cStep_Max;
 }
 

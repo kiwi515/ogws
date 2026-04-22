@@ -48,7 +48,7 @@ void GXUtility::getTexObj(GXTexObj* pObj, const ResTIMG& rRes) {
         static_cast<GXTexFmt>(rRes.format),
         static_cast<GXTexWrapMode>(rRes.wrapS),
         static_cast<GXTexWrapMode>(rRes.wrapT),
-        rRes.mipMap ? GX_TRUE : GX_FALSE);
+        rRes.mipMap > 0 ? GX_TRUE : GX_FALSE);
     // clang-format on
 
     // clang-format off

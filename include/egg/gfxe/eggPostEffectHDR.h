@@ -19,7 +19,7 @@ public:
 
 private:
     enum TevStage {
-        cTevStage_Extract,
+        cTevStage_Threshold,
         cTevStage_Amplify,
         cTevStage_Stabilize,
 
@@ -31,10 +31,10 @@ private:
     };
 
 private:
-    GXColor mLDRLimitColor; // at 0x20
-    GXColor mExposureColor; // at 0x24
-    f32 mLDRLimitScale;     // at 0x28
-    f32 mExposureInv;       // at 0x2C
+    GXColor mThresholdColor; // at 0x20
+    GXColor mExposureColor;  // at 0x24
+    f32 mThresholdScale;     // at 0x28
+    f32 mExposureInv;        // at 0x2C
 
     GXColor mFracExposureColor;   // at 0x30
     GXColor mCutoffColor;         // at 0x34
