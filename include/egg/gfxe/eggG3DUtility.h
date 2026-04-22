@@ -18,9 +18,9 @@ struct StringSearchResult {
 };
 
 struct TextureReplaceResult {
-    char unk0[0x2];
-    u8 texMapID;
-    u8 texCoordID;
+    u16 materialID; // at 0x0
+    u8 texMapID;    // at 0x2
+    u8 texCoordID;  // at 0x3
 };
 
 class G3DUtility {

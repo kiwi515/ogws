@@ -65,8 +65,9 @@ public:
     void drawShapeDirectly(u32 drawFlag, bool opa, bool xlu,
                            nw4r::math::MTX34* pViewMtx);
 
-    u16 replaceTexture(const char*, const GXTexObj&, bool,
-                       TextureReplaceResult*, u16, bool);
+    u16 replaceTexture(const char* pName, const GXTexObj& rTexObj,
+                       bool saveFilterWrap, TextureReplaceResult* pResultSet,
+                       u16 resultNum, bool copyMatAccess);
 
     void attachBoundingInfo(ModelBoundingInfo* pBV);
 

@@ -59,20 +59,18 @@ int LightTextureManager::replaceModelTexture(int index, ModelEx* pMdl) const {
     EGG_ASSERT(pMdl);
     EGG_ASSERT(0 <= index && index < mTexNum);
 
-    TextureReplaceResult result;
+    TextureReplaceResult result[256];
     GXTexObj texObj;
 
     mppLightTextures[index]->getTexObj(&texObj);
     int ret = pMdl->replaceTexture(mppLightTextures[index]->getName(), texObj,
-                                   false, &result, 0xFF, false);
+                                   false, result, ARRAY_SIZE(result), false);
     pMdl->replaceTexture(mppLightTextures[index]->getName(), texObj, false,
                          NULL, 0, true);
 
     for (int i = 0; i < (u16)ret; i++) {
-        // u16 matIndex = result.data[i].s;
-        // u8 texCoordId = result.data[i].b;
-        u16 matIndex = 1234;
-        u8 texCoordId = 123;
+        u16 matIndex = result[i].materialID;
+        u8 texCoordId = result[i].texCoordID;
 
         g3d::ResTexSrt srt = pMdl->getResMat(matIndex).GetResTexSrt();
 #line 138

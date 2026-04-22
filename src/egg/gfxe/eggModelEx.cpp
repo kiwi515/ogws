@@ -417,10 +417,71 @@ void ModelEx::drawShapeDirectly(u32 drawFlag, bool opa, bool xlu,
 DECOMP_FORCEACTIVE(eggModelEx_cpp_3,
                   "type < cSearchType_Max");
 
-// https://decomp.me/scratch/0xxAL
-// u16 ModelEx::replaceTexture(const char* name, const int& r5, bool r6,
-//                             TextureReplaceResult* result, u16 r8,
-//                             bool matAccess) {}
+u16 ModelEx::replaceTexture(const char* pName, const GXTexObj& rTexObj,
+                            bool saveFilterWrap,
+                            TextureReplaceResult* pResultSet, u16 resultNum,
+                            bool copyMatAccess) {
+
+    u16 totalFound = 0;
+
+    switch (mType) {
+    case cType_ScnMdlSimple:
+    case cType_ScnMdl:
+    case cType_ScnMdl1Mat1Shp: {
+        for (u16 id = 0; id < getNumMaterial(); id++) {
+            TextureReplaceResult* pResult =
+                pResultSet != NULL ? &pResultSet[totalFound] : NULL;
+
+            u16 nowFound = 0;
+
+            if (mType == cType_ScnMdl && copyMatAccess) {
+                nw4r::g3d::ScnMdl::CopiedMatAccess matAccess(getScnMdl(), id);
+
+                // clang-format off
+                nowFound = G3DUtility::replaceTexture(
+                    getResMat(id),
+                    &matAccess,
+                    pName,
+                    rTexObj,
+                    saveFilterWrap,
+                    pResult,
+                    resultNum - totalFound);
+                // clang-format on
+            } else {
+                // clang-format off
+                nowFound = G3DUtility::replaceTexture(
+                    getResMat(id),
+                    NULL,
+                    pName,
+                    rTexObj,
+                    saveFilterWrap,
+                    pResult,
+                    resultNum - totalFound);
+                // clang-format on
+            }
+
+            if (pResult != NULL) {
+                for (u16 i = 0; i < nowFound; i++) {
+                    pResult[i].materialID = id;
+                }
+            }
+
+            totalFound += nowFound;
+
+            if (totalFound >= resultNum) {
+                totalFound = resultNum - 1;
+            }
+        }
+        break;
+    }
+
+    default: {
+        break;
+    }
+    }
+
+    return totalFound;
+}
 
 void ModelEx::attachBoundingInfo(ModelBoundingInfo* pBV) {
 #line 797
