@@ -169,7 +169,7 @@ void ScnRenderer::createPath(u32 type, MEMAllocator* allocator) {
         }
     }
 
-    mDrawSettings &= ~DRAW_ALPHA_UPDATE_XLU;
+    mDrawSettings &= ~cDrawSetting_AlphaUpdateXlu;
 }
 
 void ScnRenderer::pushBackDrawPath() {

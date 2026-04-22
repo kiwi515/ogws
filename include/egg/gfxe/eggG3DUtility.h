@@ -1,5 +1,7 @@
 #ifndef EGG_GFXE_G3D_UTILITY_H
 #define EGG_GFXE_G3D_UTILITY_H
+#include <egg/types_egg.h>
+
 #include <egg/prim.h>
 
 #include <nw4r/g3d.h>
