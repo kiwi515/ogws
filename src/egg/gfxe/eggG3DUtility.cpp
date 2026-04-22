@@ -103,12 +103,10 @@ bool G3DUtility::setUpLightSet(nw4r::g3d::LightSetting& rSetting,
         return false;
     }
 
-    int endLightSetRef = rSetting.GetNumLightSet();
-    u32 scnMaxLightSet = scn.GetResLightSetMaxRefNumber();
-
-    if (scnMaxLightSet < endLightSetRef) {
-        endLightSetRef = scnMaxLightSet;
-    }
+    int endLightSetRef =
+        scn.GetResLightSetMaxRefNumber() < rSetting.GetNumLightSet()
+            ? scn.GetResLightSetMaxRefNumber()
+            : rSetting.GetNumLightSet();
 
     int i_set = 0;
 

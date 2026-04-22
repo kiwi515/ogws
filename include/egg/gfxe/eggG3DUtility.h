@@ -61,13 +61,12 @@ public:
     }
 
     static void* alloc(u32 size) {
-        int blockEnd = sTempMemIndex + size;
-        void* block = &sTempMem[sTempMemIndex];
-        sTempMemIndex = blockEnd;
+        void* pBlock = sTempMem + sTempMemIndex;
+        sTempMemIndex += size;
 
 #line 170
         EGG_ASSERT_MSG(sTempMemIndex < sTempMemSize, "Size over.");
-        return block;
+        return pBlock;
     }
 
     template <typename T> static T* allocObj() {
