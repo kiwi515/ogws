@@ -63,10 +63,12 @@ void GXLoadTlut(GXTlutObj*, u32);
 
 void GXInvalidateTexAll(void);
 
-void GXInitTexCacheRegion(GXTexRegion* pRegion, GXBool r4, u32 addrTMemEven,
-                          u32 sizeTMemEven, u32 addrTMemOdd, u32 sizeTMemOdd);
+void GXInitTexCacheRegion(GXTexRegion* pRegion, GXBool is_32b_mipmap,
+                          u32 tmem_even, GXTexCacheSize size_even, u32 tmem_odd,
+                          GXTexCacheSize size_odd);
 
-void GXInitTlutRegion(GXTlutRegion* pRegion, u32 addrTMem, u32 sizeTMem);
+void GXInitTlutRegion(GXTlutRegion* pRegion, u32 tmem_addr,
+                      GXTlutSize tlut_size);
 
 GXTexRegionCallback GXSetTexRegionCallback(GXTexRegionCallback callback);
 GXTlutRegionCallback GXSetTlutRegionCallback(GXTlutRegionCallback callback);
