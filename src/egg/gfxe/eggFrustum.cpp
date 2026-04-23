@@ -80,18 +80,18 @@ void Frustum::CalcMtxPerspective_(nw4r::math::MTX44* pMtx) const {
 
     pMtx->_03 = 0.0f;
     pMtx->_01 = 0.0f;
-    pMtx->_00 = proj[1];
-    pMtx->_02 = proj[2];
+    pMtx->_00 = proj[GX_PROJECTION_A];
+    pMtx->_02 = proj[GX_PROJECTION_B];
 
     pMtx->_13 = 0.0f;
     pMtx->_10 = 0.0f;
-    pMtx->_11 = proj[3];
-    pMtx->_12 = proj[4];
+    pMtx->_11 = proj[GX_PROJECTION_C];
+    pMtx->_12 = proj[GX_PROJECTION_D];
 
     pMtx->_21 = 0.0f;
     pMtx->_20 = 0.0f;
-    pMtx->_22 = proj[5];
-    pMtx->_23 = proj[6];
+    pMtx->_22 = proj[GX_PROJECTION_E];
+    pMtx->_23 = proj[GX_PROJECTION_F];
 
     pMtx->_33 = 0.0f;
     pMtx->_31 = 0.0f;
@@ -168,23 +168,24 @@ void Frustum::LoadScnCamera(const nw4r::g3d::ResAnmScn scn, u8 refNumber,
     }
 }
 
-void Frustum::GetPerspectiveParam_(f32* p) const {
+void Frustum::GetPerspectiveParam_(f32 p[GX_PROJECTION_SZ]) const {
 #line 352
     EGG_ASSERT(p != NULL);
 
     f32 cot = 1.0f / mTanFovY;
 
-    p[0] = static_cast<f32>(GX_PERSPECTIVE);
-    p[1] = cot / GetAspect() / mScale.x;
-    p[2] = mOffset.x / (0.5f * mSize.x);
-    p[3] = cot / mScale.y;
-    p[4] = mOffset.y / (0.5f * mSize.y);
+    p[GX_PROJECTION_TP] = static_cast<f32>(GX_PERSPECTIVE);
+
+    p[GX_PROJECTION_A] = cot / GetAspect() / mScale.x;
+    p[GX_PROJECTION_B] = mOffset.x / (0.5f * mSize.x);
+    p[GX_PROJECTION_C] = cot / mScale.y;
+    p[GX_PROJECTION_D] = mOffset.y / (0.5f * mSize.y);
 
     // Multiply by -N early
     f32 invrange = -mNearZ / (mFarZ - mNearZ);
 
-    p[5] = invrange;
-    p[6] = mFarZ * invrange;
+    p[GX_PROJECTION_E] = invrange;
+    p[GX_PROJECTION_F] = mFarZ * invrange;
 
     GXUtility::setScaleOffsetPerspective(p, sGlobalScale.x, sGlobalScale.y,
                                          sGlobalOffset.x / (0.5f * mSize.x),

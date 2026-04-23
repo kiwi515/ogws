@@ -14,7 +14,10 @@ namespace EGG {
 
 class Frustum {
 public:
-    enum ProjectionType { PROJTYPE_ORTHO, PROJTYPE_PERSP };
+    enum ProjectionType {
+        PROJTYPE_ORTHO,
+        PROJTYPE_PERSP,
+    };
 
     enum CanvasMode {
         CANVASMODE_CC, // Center-canvas origin
@@ -224,7 +227,7 @@ private:
     void CalcMtxPerspective_(nw4r::math::MTX44* pMtx) const;
 
     void GetOrthographicParam_(nw4r::math::MTX44* pMtx) const;
-    void GetPerspectiveParam_(f32* p) const;
+    void GetPerspectiveParam_(f32 p[GX_PROJECTION_SZ]) const;
     void GetOrthographicParam_(f32* pT, f32* pB, f32* pL, f32* pR) const;
 
 private:
