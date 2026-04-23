@@ -11,11 +11,9 @@ class StateGX {
 public:
     class AutoColorUpdate {
     public:
-        AutoColorUpdate(bool enable) {
-            mOldState = s_cacheGX.colorUpdate;
+        AutoColorUpdate(bool enable) : mOldState(s_cacheGX.colorUpdate) {
             GXSetColorUpdate_(enable);
         }
-
         ~AutoColorUpdate() {
             GXSetColorUpdate_(mOldState);
         }
@@ -26,11 +24,9 @@ public:
 
     class AutoAlphaUpdate {
     public:
-        AutoAlphaUpdate(bool enable) {
-            mOldState = s_cacheGX.alphaUpdate;
+        AutoAlphaUpdate(bool enable) : mOldState(s_cacheGX.alphaUpdate) {
             GXSetAlphaUpdate_(enable);
         }
-
         ~AutoAlphaUpdate() {
             GXSetAlphaUpdate_(mOldState);
         }
@@ -39,14 +35,12 @@ public:
         bool mOldState; // at 0x0
     };
 
-    class AutoDitherUpdate {
+    class AutoDither {
     public:
-        AutoDitherUpdate(bool enable) {
-            mOldState = s_cacheGX.dither;
+        AutoDither(bool enable) : mOldState(s_cacheGX.dither) {
             GXSetDither_(enable);
         }
-
-        ~AutoDitherUpdate() {
+        ~AutoDither() {
             GXSetDither_(mOldState);
         }
 

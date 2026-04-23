@@ -195,7 +195,7 @@ void ScreenEffectBase::popWorkBuffer(bool hide) const {
             if (!hide) {
                 StateGX::AutoColorUpdate colorLock(true);
                 StateGX::AutoAlphaUpdate alphaLock(true);
-                StateGX::AutoDitherUpdate ditherLock(false);
+                StateGX::AutoDither ditherLock(false);
 
                 PostEffectBase::setProjection(mScreen);
 

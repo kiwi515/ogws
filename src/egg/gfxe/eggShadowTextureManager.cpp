@@ -9,7 +9,6 @@
 
 #include <revolution/GX.h>
 
-
 namespace EGG {
 ShadowTextureManager::ShadowTextureManager()
     : mFlags(SHADOW_MGR_ENABLE), mFreeGroup(GROUP_MAX), mShadowIdx(0) {
@@ -60,7 +59,7 @@ void ShadowTextureManager::Draw(Screen* screen) {
     if (!IsEnable() || mShadowIdx == 0)
         return;
 
-    StateGX::AutoDitherUpdate dither(true);
+    StateGX::AutoDither dither(true);
 
     GXSetChanAmbColor(GX_COLOR0A0, DrawGX::WHITE);
 
