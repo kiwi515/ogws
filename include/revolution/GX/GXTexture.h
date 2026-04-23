@@ -76,9 +76,10 @@ GXTlutRegionCallback GXSetTlutRegionCallback(GXTlutRegionCallback callback);
 u32 GXGetTexBufferSize(u16 width, u16 height, u32 format, GXBool mipmap,
                        u8 max_lod);
 
-// TODO
-UNKTYPE GXSetTexCoordScaleManually(UNKWORD, UNKWORD, UNKWORD, UNKWORD);
-UNKTYPE GXSetTexCoordCylWrap(UNKWORD, UNKWORD, UNKWORD);
+void GXSetTexCoordScaleManually(GXTexCoordID coord, GXBool enable, u16 ss,
+                                u16 ts);
+
+void GXSetTexCoordCylWrap(GXTexCoordID coord, GXBool s_enable, GXBool t_enable);
 
 #ifdef __cplusplus
 }

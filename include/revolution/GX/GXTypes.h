@@ -363,6 +363,8 @@ typedef enum _GXIndTexMtxID {
     GX_ITM_T2,
 } GXIndTexMtxID;
 
+#define GX_ITM_NUM ((GX_ITM_2 - GX_ITM_0) + 1)
+
 typedef enum _GXIndTexScale {
     GX_ITS_1,
     GX_ITS_2,
@@ -825,6 +827,8 @@ typedef enum _GXTexMtx {
     GX_TEXMTX9 = 57,
     GX_IDENTITY = 60,
 } GXTexMtx;
+
+#define GX_TEXMTX_NUM ((GX_TEXMTX9 - GX_TEXMTX0) / 3 + 1)
 
 typedef enum _GXPTTexMtx {
     // 3x4 matrices (in dual-tex / "post-matrix" XF matrix memory)

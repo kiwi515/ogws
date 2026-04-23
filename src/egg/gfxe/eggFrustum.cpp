@@ -174,7 +174,7 @@ void Frustum::GetPerspectiveParam_(f32* p) const {
 
     f32 cot = 1.0f / mTanFovY;
 
-    p[0] = 0.0f;
+    p[0] = static_cast<f32>(GX_PERSPECTIVE);
     p[1] = cot / GetAspect() / mScale.x;
     p[2] = mOffset.x / (0.5f * mSize.x);
     p[3] = cot / mScale.y;

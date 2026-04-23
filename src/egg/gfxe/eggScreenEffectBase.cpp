@@ -61,10 +61,10 @@ TextureBuffer* ScreenEffectBase::captureEfb(BufferType type, bool alpha) const {
 
             if (sCaptureFlag & 0x1) {
                 // clang-format off
-                sWorkSpaceV[GX_VIEWPORT_X]     = EFFECT_WIDTH - sWorkSpaceV[GX_VIEWPORT_W];
-                sWorkSpaceHideV[GX_VIEWPORT_X] = sWorkSpaceV[GX_VIEWPORT_X];
-                sWorkSpaceV[GX_VIEWPORT_Y]     = EFFECT_HEIGHT - sWorkSpaceV[GX_VIEWPORT_H];
-                sWorkSpaceHideV[GX_VIEWPORT_Y] = sWorkSpaceV[GX_VIEWPORT_Y];
+                sWorkSpaceV[GX_VIEWPORT_L]     = EFFECT_WIDTH - sWorkSpaceV[GX_VIEWPORT_W];
+                sWorkSpaceHideV[GX_VIEWPORT_L] = sWorkSpaceV[GX_VIEWPORT_L];
+                sWorkSpaceV[GX_VIEWPORT_T]     = EFFECT_HEIGHT - sWorkSpaceV[GX_VIEWPORT_H];
+                sWorkSpaceHideV[GX_VIEWPORT_T] = sWorkSpaceV[GX_VIEWPORT_T];
                 // clang-format on
 
                 sWorkSpaceHideV[GX_VIEWPORT_W] =
@@ -84,14 +84,14 @@ TextureBuffer* ScreenEffectBase::captureEfb(BufferType type, bool alpha) const {
                 }
 
             } else {
-                sWorkSpaceHideV[GX_VIEWPORT_X] = rEfb.vp.x;
-                sWorkSpaceHideV[GX_VIEWPORT_Y] = rEfb.vp.y;
+                sWorkSpaceHideV[GX_VIEWPORT_L] = rEfb.vp.x;
+                sWorkSpaceHideV[GX_VIEWPORT_T] = rEfb.vp.y;
                 sWorkSpaceHideV[GX_VIEWPORT_W] = sWorkSpaceV[GX_VIEWPORT_W];
                 sWorkSpaceHideV[GX_VIEWPORT_H] = sWorkSpaceV[GX_VIEWPORT_H];
             }
 
-            cap_x = sWorkSpaceV[GX_VIEWPORT_X];
-            cap_y = sWorkSpaceV[GX_VIEWPORT_Y];
+            cap_x = sWorkSpaceV[GX_VIEWPORT_L];
+            cap_y = sWorkSpaceV[GX_VIEWPORT_T];
 
             pTexture = TextureBuffer::alloc(sWorkSpaceHideV[GX_VIEWPORT_W],
                                             sWorkSpaceHideV[GX_VIEWPORT_H],
@@ -193,20 +193,20 @@ void ScreenEffectBase::popWorkBuffer(bool hide) const {
 
         if (this == spBufferSet[type].mpAllocBase) {
             if (!hide) {
-                StateGX::ScopedColorUpdate colorLock(true);
-                StateGX::ScopedAlphaUpdate alphaLock(true);
-                StateGX::ScopedDitherUpdate ditherLock(false);
+                StateGX::AutoColorUpdate colorLock(true);
+                StateGX::AutoAlphaUpdate alphaLock(true);
+                StateGX::AutoDitherUpdate ditherLock(false);
 
                 PostEffectBase::setProjection(mScreen);
 
-                StateGX::GXSetViewport_(sWorkSpaceHideV[GX_VIEWPORT_X],
-                                        sWorkSpaceHideV[GX_VIEWPORT_Y],
+                StateGX::GXSetViewport_(sWorkSpaceHideV[GX_VIEWPORT_L],
+                                        sWorkSpaceHideV[GX_VIEWPORT_T],
                                         sWorkSpaceHideV[GX_VIEWPORT_W],
                                         sWorkSpaceHideV[GX_VIEWPORT_H], //
                                         0.0f, 1.0f);
 
-                StateGX::GXSetScissor_(sWorkSpaceHideV[GX_VIEWPORT_X],
-                                       sWorkSpaceHideV[GX_VIEWPORT_Y],
+                StateGX::GXSetScissor_(sWorkSpaceHideV[GX_VIEWPORT_L],
+                                       sWorkSpaceHideV[GX_VIEWPORT_T],
                                        sWorkSpaceHideV[GX_VIEWPORT_W],
                                        sWorkSpaceHideV[GX_VIEWPORT_H]);
 
@@ -235,11 +235,11 @@ const f32* ScreenEffectBase::shiftWorkSpaceViewportGX() const {
         f32 vp[GX_VIEWPORT_SZ];
     } param;
 
-    param.real_w = rEfb.vp.width + sWorkSpaceV[GX_VIEWPORT_X];
-    param.real_h = rEfb.vp.height + sWorkSpaceV[GX_VIEWPORT_Y];
+    param.real_w = rEfb.vp.width + sWorkSpaceV[GX_VIEWPORT_L];
+    param.real_h = rEfb.vp.height + sWorkSpaceV[GX_VIEWPORT_T];
 
-    param.vp[GX_VIEWPORT_X] = sWorkSpaceV[GX_VIEWPORT_X];
-    param.vp[GX_VIEWPORT_Y] = sWorkSpaceV[GX_VIEWPORT_Y];
+    param.vp[GX_VIEWPORT_L] = sWorkSpaceV[GX_VIEWPORT_L];
+    param.vp[GX_VIEWPORT_T] = sWorkSpaceV[GX_VIEWPORT_T];
 
     f32 over_x =
         param.real_w <= EFFECT_WIDTH ? 0.0f : param.real_w - EFFECT_WIDTH;
@@ -254,11 +254,11 @@ const f32* ScreenEffectBase::shiftWorkSpaceViewportGX() const {
     param.vp[GX_VIEWPORT_N] = rEfb.vp.near;
     param.vp[GX_VIEWPORT_F] = rEfb.vp.far;
 
-    StateGX::GXSetViewport_(param.vp[GX_VIEWPORT_X], param.vp[GX_VIEWPORT_Y],
+    StateGX::GXSetViewport_(param.vp[GX_VIEWPORT_L], param.vp[GX_VIEWPORT_T],
                             param.vp[GX_VIEWPORT_W], param.vp[GX_VIEWPORT_H],
                             param.vp[GX_VIEWPORT_N], param.vp[GX_VIEWPORT_F]);
 
-    StateGX::GXSetScissor_(param.vp[GX_VIEWPORT_X], param.vp[GX_VIEWPORT_Y],
+    StateGX::GXSetScissor_(param.vp[GX_VIEWPORT_L], param.vp[GX_VIEWPORT_T],
                            param.vp[GX_VIEWPORT_W], param.vp[GX_VIEWPORT_H]);
 
     StateGX::GXSetScissorBoxOffset_(0, 0);

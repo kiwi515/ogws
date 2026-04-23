@@ -466,8 +466,8 @@ void DrawGX::BeginDrawShadowVolumeTexture(bool lu, GXColor color,
 void DrawGX::ClearEfb(const nw4r::math::MTX34& rMtx, bool colorUpdate,
                       bool alphaUpdate, bool texture, GXColor color, bool lu) {
 
-    StateGX::ScopedColorUpdate colorLock(colorUpdate);
-    StateGX::ScopedAlphaUpdate alphaLock(alphaUpdate);
+    StateGX::AutoColorUpdate colorLock(colorUpdate);
+    StateGX::AutoAlphaUpdate alphaLock(alphaUpdate);
 
     SetMat_ColorChannel(COLORCHAN_COLOR);
     GXSetCullMode(GX_CULL_NONE);

@@ -160,7 +160,7 @@ void ScnRootEx::SetCurrentCamera(u8 idx, const Screen& rScreen) {
 }
 
 void ScnRootEx::draw_before_CalcView() {
-    StateGX::resetStateCache();
+    StateGX::resetGXCache();
     beginDrawView(mpScnRoot->GetCurrentCameraID(), mCameraMtx, getScreen());
 
     if (mpLightManager != NULL) {

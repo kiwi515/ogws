@@ -149,8 +149,8 @@ void LightTextureManager::draw(LightManager* pManager,
 
     mDrawFlags |= view;
 
-    StateGX::ScopedColorUpdate color(true);
-    StateGX::ScopedAlphaUpdate alpha(false);
+    StateGX::AutoColorUpdate color(true);
+    StateGX::AutoAlphaUpdate alpha(false);
 
     // TODO
 
@@ -169,7 +169,7 @@ void LightTextureManager::draw(LightManager* pManager,
     }
 
     if (setPixelFmt)
-        StateGX::GXSetPixelFmt_(GX_PF_RGB8_Z24, 0);
+        StateGX::setPixelFormatGX(GX_PF_RGB8_Z24, GX_ZC_LINEAR);
 
     for (int i = 0; i < mTexNum; i++) {
         mppLightTextures[i]->draw();
@@ -181,18 +181,18 @@ void LightTextureManager::draw(LightManager* pManager,
     }
 
     if (setPixelFmt) {
-        StateGX::GXSetPixelFmt_(StateGX::getDefaultPixelFormat(),
-                                StateGX::getDefaultPixelFormatArg2());
+        StateGX::setPixelFormatGX(StateGX::getDefaultPixelFormat(),
+                                  StateGX::getDefaultZFmt16());
     }
 
     if (!(mFlags & 0x40)) {
-        StateGX::ScopedColorUpdate color(true);
-        StateGX::ScopedAlphaUpdate alpha(true);
+        StateGX::AutoColorUpdate color(true);
+        StateGX::AutoAlphaUpdate alpha(true);
 
         if ((mFlags & 0x8) || texBuf != NULL) {
             math::MTX34 proj;
             C_MTXOrtho(proj, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f);
-            StateGX::GXSetProjection_(proj, 1);
+            StateGX::GXSetProjection_(proj, GX_ORTHOGRAPHIC);
             StateGX::GXSetViewport_(x, y, w, h, 0.0f, 1.0f);
             StateGX::GXSetScissor_(x, y, w, h);
             StateGX::GXSetScissorBoxOffset_(0, 0);
@@ -216,7 +216,7 @@ void LightTextureManager::draw(LightManager* pManager,
                     DrawGX::BeginDrawScreen(true, false, true);
                     DrawGX::SetBlendMode(DrawGX::BLEND_REPLACE);
                     DrawGX::DrawDL(DrawGX::DL_SCREEN, forDL,
-                                   StateGX::getDefaultTexColor());
+                                   StateGX::getEfbClearColor());
                 }
             }
         }

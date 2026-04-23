@@ -36,8 +36,8 @@ void GfxEngine::initialize(u16 width, u16 height, Heap* pHeap) {
 
 void GfxEngine::beginDraw() {
     StateGX::frameInit();
-    StateGX::doResetStateCache();
-    StateGX::setDefaultTexColor(BaseSystem::getDisplay()->getClearColor());
+    StateGX::initGXCache();
+    StateGX::setEfbClearColor(BaseSystem::getDisplay()->getClearColor());
 
     G3DUtility::reset();
 }

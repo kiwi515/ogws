@@ -17,7 +17,7 @@ TextureBuffer::TextureBuffer()
 
 void TextureBuffer::configure() {
     CapTexture::configure();
-    setClearColor(StateGX::getDefaultTexColor());
+    setClearColor(StateGX::getEfbClearColor());
 }
 
 void TextureBuffer::free() {

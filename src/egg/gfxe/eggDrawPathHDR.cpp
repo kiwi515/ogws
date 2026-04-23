@@ -25,7 +25,7 @@ void DrawPathHDR::internalDraw(u16 step) {
     }
 
     case cStep_Draw: {
-        StateGX::ScopedAlphaUpdate alphaLock(false);
+        StateGX::AutoAlphaUpdate alphaLock(false);
 
         TextureBuffer* p_buff = getBuffer(cBufferType_2);
 #line 74
