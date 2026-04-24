@@ -15,19 +15,19 @@ namespace EGG {
 class Frustum {
 public:
     enum ProjectionType {
-        PROJTYPE_ORTHO,
-        PROJTYPE_PERSP,
+        PROJ_ORTHO,
+        PROJ_PERSP,
     };
 
     enum CanvasMode {
-        CANVASMODE_CC, // Center-canvas origin
-        CANVASMODE_LU, // Left-upper origin
+        CANVAS_CC, // Center-canvas origin
+        CANVAS_LU, // Left-upper origin
     };
 
     enum LoadScnFlag {
-        LOADSCN_KEEP_FOVY = 1 << 0,
-        LOADSCN_KEEP_CANVAS = 1 << 1,
-        LOADSCN_KEEP_Z = 1 << 2,
+        SCN_IGNORE_FOVY = 1 << 0,
+        SCN_IGNORE_CANVAS = 1 << 1,
+        SCN_IGNORE_Z = 1 << 2,
     };
 
 protected:
@@ -43,13 +43,13 @@ protected:
     mutable u16 mFlags;       // at 0x34
 
 public:
-    Frustum(ProjectionType projType, const nw4r::math::VEC2& rSize, f32 nearZ,
-            f32 farZ, CanvasMode canvasMode);
+    Frustum(ProjectionType projType, const nw4r::math::VEC2& rSize, f32 near,
+            f32 far, CanvasMode canvasMode);
     Frustum(const Frustum& rOther);
 
-    virtual ~Frustum() {}                                   // at 0x8
-    virtual void SetProjectionGX() const;                   // at 0xC
-    virtual void CopyToG3D(nw4r::g3d::Camera camera) const; // at 0x10
+    virtual ~Frustum() {}                                // at 0x8
+    virtual void SetProjectionGX() const;                // at 0xC
+    virtual void CopyToG3D(nw4r::g3d::Camera cam) const; // at 0x10
 
     void LoadScnCamera(const nw4r::g3d::ResAnmScn scn, u8 refNumber, f32 frame,
                        u32 flags = 0);
@@ -64,38 +64,38 @@ public:
                          const nw4r::math::VEC2& rPosScreen) const;
 
     void ConvertToCanvasLU(f32 x, f32 y, f32* pX, f32* pY) const {
-        if (mCanvasMode == CANVASMODE_LU) {
+        if (mCanvasMode == CANVAS_LU) {
             *pX = x;
             *pY = y;
-        } else if (mCanvasMode == CANVASMODE_CC) {
+        } else if (mCanvasMode == CANVAS_CC) {
             ConvertFromCanvasCC(x, y, pX, pY);
         }
     }
     void ConvertToCanvasCC(f32 x, f32 y, f32* pX, f32* pY) const {
-        if (mCanvasMode == CANVASMODE_LU) {
+        if (mCanvasMode == CANVAS_LU) {
             ConvertFromCanvasLU(x, y, pX, pY);
-        } else if (mCanvasMode == CANVASMODE_CC) {
+        } else if (mCanvasMode == CANVAS_CC) {
             *pX = x;
             *pY = y;
         }
     }
 
     void ConvertToNormalLU(f32 x, f32 y, f32* pX, f32* pY) const {
-        if (mCanvasMode == CANVASMODE_LU) {
+        if (mCanvasMode == CANVAS_LU) {
             *pX = x / (GetSize().x / 2.0f);
             *pY = y / (GetSize().y / 2.0f);
-        } else if (mCanvasMode == CANVASMODE_CC) {
+        } else if (mCanvasMode == CANVAS_CC) {
             ConvertFromCanvasCC(x, y, pX, pY);
             *pX /= GetSize().x / 2.0f;
             *pY /= GetSize().y / 2.0f;
         }
     }
     void ConvertToNormalCC(f32 x, f32 y, f32* pX, f32* pY) const {
-        if (mCanvasMode == CANVASMODE_LU) {
+        if (mCanvasMode == CANVAS_LU) {
             ConvertFromCanvasLU(x, y, pX, pY);
             *pX /= GetSize().x / 2.0f;
             *pY /= GetSize().y / 2.0f;
-        } else if (mCanvasMode == CANVASMODE_CC) {
+        } else if (mCanvasMode == CANVAS_CC) {
             *pX = x / (GetSize().x / 2.0f);
             *pY = y / (GetSize().y / 2.0f);
         }
@@ -221,8 +221,8 @@ private:
     void SetProjectionPerspectiveGX_() const;
     void SetProjectionOrthographicGX_() const;
 
-    void CopyToG3D_Perspective_(nw4r::g3d::Camera camera) const;
-    void CopyToG3D_Orthographic_(nw4r::g3d::Camera camera) const;
+    void CopyToG3D_Perspective_(nw4r::g3d::Camera cam) const;
+    void CopyToG3D_Orthographic_(nw4r::g3d::Camera cam) const;
 
     void CalcMtxPerspective_(nw4r::math::MTX44* pMtx) const;
 

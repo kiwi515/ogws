@@ -7,14 +7,14 @@ nw4r::math::VEC2 Frustum::sGlobalScale(1.0f, 1.0f);
 nw4r::math::VEC2 Frustum::sGlobalOffset(0.0f, 0.0f);
 
 Frustum::Frustum(ProjectionType projType, const nw4r::math::VEC2& rSize,
-                 f32 nearZ, f32 farZ, CanvasMode canvasMode)
+                 f32 near, f32 far, CanvasMode canvasMode)
     : mProjType(projType),
       mCanvasMode(canvasMode),
       mSize(rSize),
       mFovY(45.0f),
-      mTanFovY(0.41421357f), // sin(fovy/2) / cos(fovy/2)
-      mNearZ(nearZ),
-      mFarZ(farZ),
+      mTanFovY(0.41421357f), // pre-computed -> sin(fovy/2) / cos(fovy/2)
+      mNearZ(near),
+      mFarZ(far),
       mOffset(0.0f, 0.0f),
       mScale(1.0f, 1.0f, 1.0f),
       mFlags(FLAG_DIRTY) {}
@@ -32,18 +32,18 @@ Frustum::Frustum(const Frustum& rOther)
       mFlags(rOther.mFlags) {}
 
 void Frustum::SetProjectionGX() const {
-    if (mProjType == PROJTYPE_ORTHO) {
+    if (mProjType == PROJ_ORTHO) {
         SetProjectionOrthographicGX_();
     } else {
         SetProjectionPerspectiveGX_();
     }
 }
 
-void Frustum::CopyToG3D(nw4r::g3d::Camera camera) const {
-    if (mProjType == PROJTYPE_ORTHO) {
-        CopyToG3D_Orthographic_(camera);
+void Frustum::CopyToG3D(nw4r::g3d::Camera cam) const {
+    if (mProjType == PROJ_ORTHO) {
+        CopyToG3D_Orthographic_(cam);
     } else {
-        CopyToG3D_Perspective_(camera);
+        CopyToG3D_Perspective_(cam);
     }
 }
 
@@ -54,24 +54,24 @@ void Frustum::SetProjectionPerspectiveGX_() const {
 }
 
 void Frustum::SetProjectionOrthographicGX_() const {
-    nw4r::math::MTX44 projMtx;
-    GetOrthographicParam_(&projMtx);
-    StateGX::GXSetProjection_(projMtx, GX_ORTHOGRAPHIC);
+    nw4r::math::MTX44 mtx;
+    GetOrthographicParam_(&mtx);
+    StateGX::GXSetProjection_(mtx, GX_ORTHOGRAPHIC);
 }
 
-void Frustum::CopyToG3D_Perspective_(nw4r::g3d::Camera camera) const {
-    camera.SetPerspective(mFovY, GetAspect(), mNearZ, mFarZ);
+void Frustum::CopyToG3D_Perspective_(nw4r::g3d::Camera cam) const {
+    cam.SetPerspective(mFovY, GetAspect(), mNearZ, mFarZ);
 
-    nw4r::math::MTX44 projMtx;
-    CalcMtxPerspective_(&projMtx);
-    camera.SetProjectionMtxDirectly(&projMtx);
+    nw4r::math::MTX44 mtx;
+    CalcMtxPerspective_(&mtx);
+    cam.SetProjectionMtxDirectly(&mtx);
 }
 
-void Frustum::CopyToG3D_Orthographic_(nw4r::g3d::Camera camera) const {
+void Frustum::CopyToG3D_Orthographic_(nw4r::g3d::Camera cam) const {
     f32 t, b, l, r;
     GetOrthographicParam_(&t, &b, &l, &r);
 
-    camera.SetOrtho(t, b, l, r, mNearZ, mFarZ);
+    cam.SetOrtho(t, b, l, r, mNearZ, mFarZ);
 }
 
 void Frustum::CalcMtxPerspective_(nw4r::math::MTX44* pMtx) const {
@@ -127,13 +127,13 @@ void Frustum::LoadScnCamera(const nw4r::g3d::ResAnmScn scn, u8 refNumber,
 
     switch (result.projType) {
     case GX_PERSPECTIVE: {
-        SetProjectionType(PROJTYPE_PERSP);
+        SetProjectionType(PROJ_PERSP);
 
-        if (!(flags & LOADSCN_KEEP_FOVY)) {
+        if (!(flags & SCN_IGNORE_FOVY)) {
             SetFovy(result.perspFovy);
         }
 
-        if (!(flags & LOADSCN_KEEP_CANVAS)) {
+        if (!(flags & SCN_IGNORE_CANVAS)) {
             SetSizeX(mSize.y * result.aspect);
             SetScale(nw4r::math::VEC3(1.0f, 1.0f, 1.0f));
         }
@@ -141,10 +141,10 @@ void Frustum::LoadScnCamera(const nw4r::g3d::ResAnmScn scn, u8 refNumber,
     }
 
     case GX_ORTHOGRAPHIC: {
-        SetProjectionType(PROJTYPE_ORTHO);
+        SetProjectionType(PROJ_ORTHO);
 
-        if (!(flags & LOADSCN_KEEP_CANVAS)) {
-            SetCanvasMode(CANVASMODE_CC);
+        if (!(flags & SCN_IGNORE_CANVAS)) {
+            SetCanvasMode(CANVAS_CC);
 
             SetSizeY(result.perspFovy);
             SetSizeX(mSize.y * result.aspect);
@@ -162,7 +162,7 @@ void Frustum::LoadScnCamera(const nw4r::g3d::ResAnmScn scn, u8 refNumber,
     }
     }
 
-    if (!(flags & LOADSCN_KEEP_Z)) {
+    if (!(flags & SCN_IGNORE_Z)) {
         SetNearZ(result.near);
         SetFarZ(result.far);
     }
@@ -199,7 +199,7 @@ void Frustum::GetOrthographicParam_(f32* pT, f32* pB, f32* pL, f32* pR) const {
     EGG_ASSERT(pL);
     EGG_ASSERT(pR);
 
-    if (mCanvasMode == CANVASMODE_CC) {
+    if (mCanvasMode == CANVAS_CC) {
         nw4r::math::VEC2 scale(mScale.x * sGlobalScale.x,
                                mScale.y * sGlobalScale.y);
 
@@ -207,7 +207,8 @@ void Frustum::GetOrthographicParam_(f32* pT, f32* pB, f32* pL, f32* pR) const {
         *pB = scale.y * (mOffset.y + sGlobalOffset.y + -0.5f * mSize.y);
         *pL = scale.x * (mOffset.x + sGlobalOffset.x + -0.5f * mSize.x);
         *pR = scale.x * (mOffset.x + sGlobalOffset.x + 0.5f * mSize.x);
-    } else if (mCanvasMode == CANVASMODE_LU) {
+
+    } else if (mCanvasMode == CANVAS_LU) {
         *pT = mOffset.y + sGlobalOffset.y;
 
         // TODO(kiwi) Fakematch
@@ -245,7 +246,14 @@ void Frustum::CopyFromAnother(const Frustum& rOther) {
 }
 
 void Frustum::GetViewToScreen(nw4r::math::VEC3* pScreenPos,
-                              const nw4r::math::VEC3& rViewPos) const {}
+                              const nw4r::math::VEC3& rViewPos) const {
+
+#line 458
+    EGG_ASSERT(pScreenPos);
+
+    // TODO(kiwi) Implement
+    ;
+}
 
 void Frustum::GetScreenToView(nw4r::math::VEC3* pViewPos,
                               const nw4r::math::VEC3& rScreenPos) const {
@@ -253,7 +261,7 @@ void Frustum::GetScreenToView(nw4r::math::VEC3* pViewPos,
     EGG_ASSERT(pViewPos);
 
     switch (mProjType) {
-    case PROJTYPE_PERSP: {
+    case PROJ_PERSP: {
         nw4r::math::VEC2 pos;
         ConvertToNormalCC(rScreenPos.x, rScreenPos.y, &pos.x, &pos.y);
 
@@ -280,7 +288,7 @@ void Frustum::GetScreenToView(nw4r::math::VEC3* pViewPos,
         break;
     }
 
-    case PROJTYPE_ORTHO: {
+    case PROJ_ORTHO: {
         pViewPos->x = rScreenPos.x / mScale.x;
         pViewPos->y = rScreenPos.y / mScale.y;
         pViewPos->z = -(rScreenPos.z * (mFarZ - mNearZ) + mNearZ);
@@ -295,7 +303,7 @@ void Frustum::GetScreenToView(nw4r::math::VEC3* pPosView,
     EGG_ASSERT(pPosView);
 
     switch (mProjType) {
-    case PROJTYPE_PERSP: {
+    case PROJ_PERSP: {
         nw4r::math::VEC2 pos;
         ConvertToCanvasCC(rPosScreen.x, rPosScreen.y, &pos.x, &pos.y);
 
@@ -305,7 +313,7 @@ void Frustum::GetScreenToView(nw4r::math::VEC3* pPosView,
         break;
     }
 
-    case PROJTYPE_ORTHO: {
+    case PROJ_ORTHO: {
         pPosView->x = rPosScreen.x / mScale.x;
         pPosView->y = rPosScreen.y / mScale.y;
         pPosView->z = mNearZ;
@@ -313,5 +321,8 @@ void Frustum::GetScreenToView(nw4r::math::VEC3* pPosView,
     }
     }
 }
+
+DECOMP_FORCEACTIVE(eggFrustum_cpp,
+                  "pVec");
 
 } // namespace EGG

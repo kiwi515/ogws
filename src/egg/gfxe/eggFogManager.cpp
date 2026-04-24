@@ -15,7 +15,7 @@ void FogManager::Reset() {
 }
 
 void FogManager::Calc() {
-    if (mFlags & cFlag_DrawReady) {
+    if (mFlags & cFlag_CalcDone) {
         return;
     }
 
@@ -23,7 +23,7 @@ void FogManager::Calc() {
         mFog[i]->Calc();
     }
 
-    mFlags |= cFlag_DrawReady;
+    mFlags |= cFlag_CalcDone;
 }
 
 void FogManager::LoadScreenClip(const Screen& rScreen) {
@@ -59,7 +59,7 @@ void FogManager::LoadScnFog(const nw4r::g3d::ResAnmScn scn, f32 frame) {
 }
 
 void FogManager::DoneDraw() {
-    mFlags &= ~cFlag_DrawReady;
+    mFlags &= ~cFlag_CalcDone;
 }
 
 } // namespace EGG
