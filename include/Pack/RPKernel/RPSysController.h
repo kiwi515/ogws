@@ -307,9 +307,9 @@ public:
     /**
      * @brief Constructor
      *
-     * @param id Unique ID
+     * @param playerNo Player ID
      */
-    RPSysCoreController(u32 id);
+    RPSysCoreController(u32 playerNo);
 
     /**
      * @brief Destructor
