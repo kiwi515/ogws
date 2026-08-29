@@ -17,12 +17,31 @@ class RPSysSceneMgr : public EGG::SceneManager {
     RP_SINGLETON_DECL(RPSysSceneMgr);
 
 public:
+    /**
+     * @brief 
+     * Gives system status. Indicates if an error has occurred
+     */
+    enum ApplicationStatus {
+        NORMAL_STATUS,
+        RESET_STATUS,
+        UNK2_STATUS,
+        MENU_RETURN_STATUS,
+        SHUTTING_DOWN_STATUS
+    };
     bool isShutDownReserved() const;
     bool isDvdErrorApplicationEnd() const;
+    bool isNormalState();
 
     RPSysScene* getCurrentSceneRP() const;
 
-    void returnToMenu(bool);
+    void shutdownSystem(BOOL pBlack);
+    BOOL returnToMenu(BOOL pBlack);
+    void softReset(BOOL pFade);
+
+private:
+    char mPlaceholder[4];
+    ApplicationStatus mApplicationStatus;
+    EGG::ColorFader* mColorFader;
 };
 
 //! @}
