@@ -3431,15 +3431,92 @@ Pack/RPUtility/RPUtlDohMath.cpp:
 	.sbss       start:0x804BF660 end:0x804BF668
 	.sdata2     start:0x804C19A0 end:0x804C19B0
 
+Pack/RPUtility/RPUtlRigid.cpp:
+	.text       start:0x801B9EC0 end:0x801BAF60
+	.data       start:0x803C1720 end:0x803C1748
+	.sdata2     start:0x804C19B0 end:0x804C19D0
+
+Pack/RPUtility/RPUtlAccAnalyzer.cpp:
+	.text       start:0x801BAF60 end:0x801BB9B8
+	.ctors      start:0x80355140 end:0x80355144
+	.data       start:0x803C1748 end:0x803C17C8
+	.bss        start:0x804A4750 end:0x804A4770
+	.sdata      start:0x804BDC18 end:0x804BDC20
+	.sdata2     start:0x804C19D0 end:0x804C19F0
+
+Pack/RPUtility/RPUtlCollisionModel.cpp:
+	.text       start:0x801BB9B8 end:0x801BC384
+	.sdata2     start:0x804C19F0 end:0x804C19F8
+
+Pack/RPUtility/RP_DEBUG_STUB_2.cpp:
+	.text       start:0x801BC384 end:0x801BC418
+	.data       start:0x803C17C8 end:0x803C17D8
+
+Pack/RPUtility/RPUtlCollisionChecker.cpp:
+	.text       start:0x801BC418 end:0x801BD51C
+	.sdata2     start:0x804C19F8 end:0x804C1A08
+
+Pack/RPUtility/RPUtlSimpleShadow.cpp:
+	.text       start:0x801BD51C end:0x801BD648
+	.sdata2     start:0x804C1A08 end:0x804C1A20
+
+Pack/RPUtility/RPUtlGameResourceMgr.cpp:
+	.text       start:0x801BD648 end:0x801BD7E0
+	.data       start:0x803C17D8 end:0x803C17E8
+	.sbss       start:0x804BF668 end:0x804BF670
+
+Pack/RPUtility/RPUtlDirMath.cpp:
+	.text       start:0x801BD7E0 end:0x801BE340
+	.ctors      start:0x80355144 end:0x80355148
+	.bss        start:0x804A4770 end:0x804A4800
+	.sbss       start:0x804BF670 end:0x804BF678
+	.sdata2     start:0x804C1A20 end:0x804C1A38
+
+Pack/RPUtility/RPUtlRand.cpp:
+	.sbss       start:0x804BF678 end:0x804BF680
+
+Pack/RPUtility/RPUtlModel.cpp:
+	.text       start:0x801BE340 end:0x801BE574
+	.data       start:0x803C17E8 end:0x803C17F8
+	.sbss       start:0x804BF680 end:0x804BF688
+
+Pack/RPUtility/RPUtlViewClipper.cpp:
+	.text       start:0x801BE574 end:0x801BEA28
+	.sdata2     start:0x804C1A38 end:0x804C1A50
+
+Pack/RPUtility/RPUtlRandom.cpp:
+	.text       start:0x801BEA28 end:0x801BEA7C
+	.sbss       start:0x804BF688 end:0x804BF690
+	.sdata2     start:0x804C1A50 end:0x804C1A60
+
+Pack/RPUtility/RPUtlMath.cpp:
+	.text       start:0x801BEA7C end:0x801BF564
+	.sdata2     start:0x804C1A60 end:0x804C1A90
+
+Pack/RPUtility/RPUtlMapData.cpp:
+	.text       start:0x801BF564 end:0x801BF9D0
+
+Pack/RPUtility/RPUtlShadowDrawer.cpp:
+	.text       start:0x801BF9D0 end:0x801BFAE4
+	.ctors      start:0x80355148 end:0x8035514C
+	.bss        start:0x804A4800 end:0x804A4830
+
+Pack/RPUtility/RPUtlObject.cpp:
+	.text       start:0x801BFAE4 end:0x801BFEA8
+	.ctors      start:0x8035514C end:0x80355150
+	.data       start:0x803C17F8 end:0x803C1820
+	.bss        start:0x804A4830 end:0x804A4848
+	.sbss       start:0x804BF690 end:0x804BF698
+
 Pack/RPUtility_unsplit.o:
-	.text       start:0x801B9EC0 end:0x801CCB70
-	.ctors      start:0x80355140 end:0x80355160
+	.text       start:0x801BFEA8 end:0x801CCB70
+	.ctors      start:0x80355150 end:0x80355160
 	.rodata     start:0x803837E8 end:0x80383990
-	.data       start:0x803C1720 end:0x803C1BF0
-	.bss        start:0x804A4750 end:0x804A48A0
-	.sdata      start:0x804BDC18 end:0x804BDC38
-	.sbss       start:0x804BF668 end:0x804BF6F0
-	.sdata2     start:0x804C19B0 end:0x804C1A20
+	.data       start:0x803C1820 end:0x803C1BF0
+	.bss        start:0x804A4848 end:0x804A48A0
+	.sdata      start:0x804BDC20 end:0x804BDC38
+	.sbss       start:0x804BF698 end:0x804BF6F0
+	.sdata2     start:0x804C1A90 end:0x804C1C98
 
 Pack/RPSports/RPSportsCommon/RPSportsCommon_unsplit.o:
 	.text       start:0x801CCB70 end:0x80214480
@@ -3449,7 +3526,7 @@ Pack/RPSports/RPSportsCommon/RPSportsCommon_unsplit.o:
 	.bss        start:0x804A48A0 end:0x804A6000
 	.sdata      start:0x804BDC38 end:0x804BDDD0
 	.sbss       start:0x804BF6F0 end:0x804BF768
-	.sdata2     start:0x804C1A20 end:0x804C2338
+	.sdata2     start:0x804C1C98 end:0x804C2338
 
 Pack/RPSports/RPTnsScene/RPTnsScene_unsplit.o:
 	.text       start:0x80214480 end:0x8024E334
