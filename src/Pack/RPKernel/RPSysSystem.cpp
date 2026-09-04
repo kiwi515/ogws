@@ -31,7 +31,7 @@ RPSysSceneCreator::ESceneID RPSysSystem::getBootScene() {
 }
 
 void RPSysSystem::startLoadCount() {
-    mLoadCount = 0; // wrong register, should be r3 but this compiles to r4
+    mLoadCount = 0;
 }
 
 const char* RPSysSystem::getTimeStampString() {

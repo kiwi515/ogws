@@ -20,6 +20,9 @@ public:
 
 private:
     u32 unk8;
+    u32 unkC;
+    f32 mFloats_0x10[120];
+    void *mLytPause;
 };
 
 //! @}

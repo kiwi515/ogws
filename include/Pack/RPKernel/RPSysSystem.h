@@ -4,6 +4,7 @@
 
 #include <Pack/RPSystem/RPSysRenderMode.h>
 #include <Pack/RPSystem/RPSysSceneCreator.h>
+#include <Pack/RPSystem/RPSysRenderMode.h>
 
 #include <egg/core.h>
 
