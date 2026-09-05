@@ -42,6 +42,7 @@
 #include <Pack/RPKernel/RPSysNWC24Manager.h>
 #include <Pack/RPKernel/RPSysOfficialDB.h>
 #include <Pack/RPKernel/RPSysPairingMgr.h>
+#include <Pack/RPKernel/RPSysPauseMenu.h>
 #include <Pack/RPKernel/RPSysParticleManager.h>
 #include <Pack/RPKernel/RPSysStringUtility.h>
 #include <Pack/RPKernel/RPSysSystem.h>

@@ -1205,7 +1205,7 @@ config.libs = [
             Object(Matching, "Pack/RPKernel/RPSysLytWindow.cpp"),
             Object(Matching, "Pack/RPKernel/RPSysKokeshiCtrlDataMgr.cpp"),
             Object(Matching, "Pack/RPKernel/RPSysKokeshiCtrlMgr.cpp"),
-            Object(NonMatching, "Pack/RPKernel/RPSysAppMiiManager.cpp"),
+            Object(Matching, "Pack/RPKernel/RPSysAppMiiManager.cpp"),
             Object(Matching, "Pack/RPKernel/RPSysPairingMgr.cpp"),
             Object(NonMatching, "Pack/RPKernel/RPSysControllerMgr.cpp"),
             Object(NonMatching, "Pack/RPKernel/RPSysNWC24Manager.cpp"),
