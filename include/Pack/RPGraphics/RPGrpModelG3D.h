@@ -150,6 +150,10 @@ public:
                   nw4r::g3d::FuncObjCalcWorld* pFuncObj) override; // at 0x14
 
 private:
+    void CreateScnMdl(const nw4r::g3d::ResMdl mdl, u8 viewNo, u32 bufferOption,
+                      u32 typeOption);
+
+private:
     static s8 sJointWorldMtxInitialized;
     static nw4r::math::MTX34 sJointWorldMtx;
 };

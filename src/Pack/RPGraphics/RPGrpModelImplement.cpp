@@ -10,18 +10,7 @@ RPGrpModelG3D::RPGrpModelG3D(RPGrpHandle handle, u8 viewNo, u32 typeOption,
         RPGrpModelResManager::GetCurrent()
             ->GetData<RPGrpModelResManager::Type_ResMdl>(handle);
 
-    nw4r::g3d::ScnObj* pScnObj;
-    u32 size;
-
-    if (bufferOption == 0 && !(typeOption & TypeOption_NoSimple)) {
-        pScnObj =
-            nw4r::g3d::ScnMdlSimple::Construct(spAllocator, &size, mdl, viewNo);
-    } else {
-        pScnObj = nw4r::g3d::ScnMdl::Construct(spAllocator, &size, mdl,
-                                               bufferOption, viewNo);
-    }
-
-    mpModelEx = new EGG::ModelEx(pScnObj);
+    CreateScnMdl(mdl, viewNo, bufferOption, typeOption);
 }
 
 RPGrpModelG3D::RPGrpModelG3D(RPGrpHandle handle, int idx, u8 viewNo,
@@ -32,20 +21,7 @@ RPGrpModelG3D::RPGrpModelG3D(RPGrpHandle handle, int idx, u8 viewNo,
         RPGrpModelResManager::GetCurrent()
             ->GetData<RPGrpModelResManager::Type_ResFile>(handle);
 
-    const nw4r::g3d::ResMdl mdl = file.GetResMdl(idx);
-
-    nw4r::g3d::ScnObj* pScnObj;
-    u32 size;
-
-    if (bufferOption == 0 && !(typeOption & TypeOption_NoSimple)) {
-        pScnObj =
-            nw4r::g3d::ScnMdlSimple::Construct(spAllocator, &size, mdl, viewNo);
-    } else {
-        pScnObj = nw4r::g3d::ScnMdl::Construct(spAllocator, &size, mdl,
-                                               bufferOption, viewNo);
-    }
-
-    mpModelEx = new EGG::ModelEx(pScnObj);
+    CreateScnMdl(file.GetResMdl(idx), viewNo, bufferOption, typeOption);
 }
 
 RPGrpModelG3D::RPGrpModelG3D(RPGrpHandle handle, const char* pName, u8 viewNo,
@@ -56,8 +32,11 @@ RPGrpModelG3D::RPGrpModelG3D(RPGrpHandle handle, const char* pName, u8 viewNo,
         RPGrpModelResManager::GetCurrent()
             ->GetData<RPGrpModelResManager::Type_ResFile>(handle);
 
-    const nw4r::g3d::ResMdl mdl = file.GetResMdl(pName);
+    CreateScnMdl(file.GetResMdl(pName), viewNo, bufferOption, typeOption);
+}
 
+void RPGrpModelG3D::CreateScnMdl(const nw4r::g3d::ResMdl mdl, u8 viewNo,
+                                 u32 bufferOption, u32 typeOption) {
     nw4r::g3d::ScnObj* pScnObj;
     u32 size;
 
