@@ -5,7 +5,6 @@
 
 #include <Pack/RPSingleton.h>
 
-
 class RPSysQueuedScene {
     RP_SINGLETON_DECL_EX(RPSysQueuedScene);
 

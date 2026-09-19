@@ -41,6 +41,11 @@ public:
         mClearColor = color;
     }
 
+    //! This is for RPSysSystem specifically.
+    void setFrameRate(u8 rate) {
+        mFrameRate = rate;
+    }
+
 protected:
     enum EfbFlagBit {
         BIT_EFB_COPY_CLEAR,

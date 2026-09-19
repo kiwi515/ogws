@@ -67,6 +67,16 @@ public:
     virtual void SendClosing(); // at 0x8
     virtual void DestroyFunc(); // at 0xC
 
+#if defined(VERSION_RSPE01_00)
+    bool Initialize(EffectSystem* pSystem, EmitterResource* pResource,
+                    u16 calcRemain);
+    Emitter* CreateEmitter(ResEmitter res, u8 drawWeight, u16 calcRemain) {
+        return CreateEmitter(res.ptr(), drawWeight, calcRemain);
+    }
+
+    void Calc(bool onlyBillboard);
+    void Draw(const DrawInfo& rInfo);
+#elif defined(VERSION_RSPE01_01)
     virtual bool Initialize(EffectSystem* pSystem, EmitterResource* pResource,
                             u16 calcRemain); // at 0x10
     virtual Emitter* CreateEmitter(ResEmitter res, u8 drawWeight,
@@ -76,6 +86,7 @@ public:
 
     virtual void Calc(bool onlyBillboard);    // at 0x18
     virtual void Draw(const DrawInfo& rInfo); // at 0x1C
+#endif
 
     bool Closing(Emitter* pEmitter);
 

@@ -4,7 +4,6 @@
 
 #include <Pack/RPSystem/RPSysRenderMode.h>
 #include <Pack/RPSystem/RPSysSceneCreator.h>
-#include <Pack/RPSystem/RPSysRenderMode.h>
 
 #include <egg/core.h>
 
@@ -21,6 +20,8 @@
  */
 
 class RPSysConfigData {
+    friend class RPSysSystem;
+
 public:
     explicit RPSysConfigData(u32 systemHeapSize)
         : mSystemHeapSize(systemHeapSize) {}
@@ -62,7 +63,7 @@ private:
 protected:
     EGG::Heap* mSystemHeap;
     EGG::Thread* mCreatorThread;
-    void* mCodeStart;
+    OSBootInfo* mCodeStart;
     void* mCodeEnd;
     u32 mSystemHeapSize;
     EGG::Video* mVideo;
@@ -77,6 +78,8 @@ protected:
  * @brief Pack Project engine system
  */
 class RPSysSystem {
+    friend class RPSysConfigData;
+
 public:
     /**
      * @brief Gets this class's singleton instance
@@ -355,7 +358,7 @@ private:
     //! Task-end thread message for asynchronous NAND operations
     u32 mNandEndMessage; // at 0x40
     //! Task-end thread message for asynchronous disc operations
-    OSMessage mDvdEndMessage; // at 0x44
+    u32 mDvdEndMessage; // at 0x44
     //! Task-end thread message for asynchronous WiiConnect24 operations
     u32 mWc24EndMessage; // at 0x48
 

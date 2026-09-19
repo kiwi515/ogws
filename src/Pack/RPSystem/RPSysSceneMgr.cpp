@@ -268,13 +268,9 @@ void RPSysSceneMgr::resetFadeFrame() {
     mCurrentFader->setFrame(DEFAULT_FADE_FRAME);
 }
 
-/**
- * @brief Gets the duration of the scene fader
- */
-u16 RPSysSceneMgr::getFadeFrame() {
-    return mpSceneFader->getFrame();
-}
-
+//! Hacky way of properly ordering the functions for Rev 0.
+//! Maybe there's a better method?
+#if defined(VERSION_RSPE01_00)
 /**
  * @brief Sets the duration of all faders
  *
@@ -284,6 +280,26 @@ void RPSysSceneMgr::setFadeFrame(u16 frame) {
     mpSceneFader->setFrame(frame);
     mCurrentFader->setFrame(frame);
 }
+
+#endif
+/**
+ * @brief Gets the duration of the scene fader
+ */
+u16 RPSysSceneMgr::getFadeFrame() {
+    return mpSceneFader->getFrame();
+}
+
+#if defined(VERSION_RSPE01_01)
+/**
+ * @brief Sets the duration of all faders
+ *
+ * @param frame Fade duration, in frames
+ */
+void RPSysSceneMgr::setFadeFrame(u16 frame) {
+    mpSceneFader->setFrame(frame);
+    mCurrentFader->setFrame(frame);
+}
+#endif
 
 /**
  * @brief Resets the color of all faders

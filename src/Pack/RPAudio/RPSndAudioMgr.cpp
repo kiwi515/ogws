@@ -14,6 +14,8 @@
 
 #include <cstring>
 
+static void* MemDeallocCallbackArg = NULL;
+
 RP_SINGLETON_IMPL_EX(RPSndAudioMgr);
 
 /**
@@ -59,7 +61,6 @@ static void MemDeallocCallback(void* /* pBuffer */, u32 /* size */,
 /**
  * @brief MemDeallocCallback user argument
  */
-static void* MemDeallocCallbackArg = NULL;
 
 static u32 DAT_804bf648 = 0;
 
