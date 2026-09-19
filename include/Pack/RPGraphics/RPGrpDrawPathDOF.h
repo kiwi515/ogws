@@ -9,9 +9,17 @@
 //! @addtogroup rp_graphics
 //! @{
 
+/**
+ * @brief Depth-of-field draw path
+ */
 class RPGrpDrawPathDOF : public RPGrpDrawPath {
 public:
-    RPGrpDrawPathDOF(EGG::ScnRenderer* pRenderer)
+    /**
+     * @brief Constructor
+     *
+     * @param pRenderer Scene renderer
+     */
+    explicit RPGrpDrawPathDOF(EGG::ScnRenderer* pRenderer)
         : RPGrpDrawPath(pRenderer, pRenderer->getDrawPathBase(
                                        EGG::ScnRenderer::cDrawPath_DOF)) {
 
@@ -23,6 +31,7 @@ public:
     }
 
 private:
+    //! Depth-of-field implementation
     EGG::DrawPathDOF* mpDOF; // at 0xC
 };
 

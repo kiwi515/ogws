@@ -9,9 +9,17 @@
 //! @addtogroup rp_graphics
 //! @{
 
+/**
+ * @brief Transparency draw path
+ */
 class RPGrpDrawPathXluSnap : public RPGrpDrawPath {
 public:
-    RPGrpDrawPathXluSnap(EGG::ScnRenderer* pRenderer)
+    /**
+     * @brief Constructor
+     *
+     * @param pRenderer Scene renderer
+     */
+    explicit RPGrpDrawPathXluSnap(EGG::ScnRenderer* pRenderer)
         : RPGrpDrawPath(pRenderer, pRenderer->getDrawPathBase(
                                        EGG::ScnRenderer::cDrawPath_XluSnap)) {
 
@@ -20,6 +28,7 @@ public:
     }
 
 private:
+    //! Transparency implementation
     EGG::DrawPathXluSnap* mpXluSnap; // at 0xC
 };
 

@@ -9,9 +9,17 @@
 //! @addtogroup rp_graphics
 //! @{
 
+/**
+ * @brief High dynamic range (HDR) draw path
+ */
 class RPGrpDrawPathHDR : public RPGrpDrawPath {
 public:
-    RPGrpDrawPathHDR(EGG::ScnRenderer* pRenderer)
+    /**
+     * @brief Constructor
+     *
+     * @param pRenderer Scene renderer
+     */
+    explicit RPGrpDrawPathHDR(EGG::ScnRenderer* pRenderer)
         : RPGrpDrawPath(pRenderer, pRenderer->getDrawPathBase(
                                        EGG::ScnRenderer::cDrawPath_HDR)) {}
 };

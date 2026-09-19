@@ -20,7 +20,7 @@
 #include <Pack/RPGraphics/RPGrpModelAnm.h>
 #include <Pack/RPGraphics/RPGrpModelAnmImplement.h>
 #include <Pack/RPGraphics/RPGrpModelBoundingInfo.h>
-#include <Pack/RPGraphics/RPGrpModelG3D.h>
+#include <Pack/RPGraphics/RPGrpModelImplement.h>
 #include <Pack/RPGraphics/RPGrpModelManager.h>
 #include <Pack/RPGraphics/RPGrpModelMaterial.h>
 #include <Pack/RPGraphics/RPGrpModelRecord.h>

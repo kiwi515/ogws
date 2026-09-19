@@ -9,9 +9,17 @@
 //! @addtogroup rp_graphics
 //! @{
 
+/**
+ * @brief Bloom draw path
+ */
 class RPGrpDrawPathBloom : public RPGrpDrawPath {
 public:
-    RPGrpDrawPathBloom(EGG::ScnRenderer* pRenderer)
+    /**
+     * @brief Constructor
+     *
+     * @param pRenderer Scene renderer
+     */
+    explicit RPGrpDrawPathBloom(EGG::ScnRenderer* pRenderer)
         : RPGrpDrawPath(pRenderer, pRenderer->getDrawPathBase(
                                        EGG::ScnRenderer::cDrawPath_Bloom)) {
 
@@ -21,7 +29,11 @@ public:
 
 private:
     char unkC[0x10 - 0xC];
+
+    //! Bloom implementation
     EGG::DrawPathBloom* mpBloom; // at 0x10
+
+    char unk14[0x34 - 0x14];
 };
 
 //! @}

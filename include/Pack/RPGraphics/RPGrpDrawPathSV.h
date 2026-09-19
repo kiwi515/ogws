@@ -9,9 +9,17 @@
 //! @addtogroup rp_graphics
 //! @{
 
+/**
+ * @brief Shadow volume draw path
+ */
 class RPGrpDrawPathSV : public RPGrpDrawPath {
 public:
-    RPGrpDrawPathSV(EGG::ScnRenderer* pRenderer)
+    /**
+     * @brief Constructor
+     *
+     * @param pRenderer Scene renderer
+     */
+    explicit RPGrpDrawPathSV(EGG::ScnRenderer* pRenderer)
         : RPGrpDrawPath(pRenderer, pRenderer->getDrawPathBase(
                                        EGG::ScnRenderer::cDrawPath_SV)) {
 
@@ -20,6 +28,7 @@ public:
     }
 
 private:
+    //! Shadow volume implementation
     EGG::DrawPathShadowVolume* mpSV; // at 0xC
 };
 

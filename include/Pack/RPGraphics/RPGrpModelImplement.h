@@ -1,5 +1,5 @@
-#ifndef RP_GRAPHICS_MODEL_G3D_H
-#define RP_GRAPHICS_MODEL_G3D_H
+#ifndef RP_GRAPHICS_MODEL_IMPLEMENT_H
+#define RP_GRAPHICS_MODEL_IMPLEMENT_H
 #include <Pack/types_pack.h>
 
 #include <Pack/RPGraphics/RPGrpModel.h>

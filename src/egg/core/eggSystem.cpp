@@ -86,7 +86,7 @@ void ConfigurationData::initMemory() {
 }
 
 void ConfigurationData::run() {
-    CoreControllerMgr* pControllerMgr = CoreControllerMgr::instance();
+    CoreControllerMgr* pControllerMgr = EGG_GET_INSTANCE(CoreControllerMgr);
 
     while (true) {
         // Measure frame timing

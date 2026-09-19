@@ -41,7 +41,7 @@ public:
     /**
      * @brief Tests whether this draw path is enabled
      */
-    virtual bool IsEnable() const override { // at 0x10
+    virtual bool IsEnable() const override { // at 0x14
         return mpLightTextureManager->isEnable();
     }
 

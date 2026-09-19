@@ -36,10 +36,14 @@ public:
     };
 
 public:
-    static RPGrpDrawPathManager* Construct(u32 pathFlags,
+    /**
+     * @brief Creates a draw path manager instance
+     *
+     * @param drawPathFlag Draw path enable flags
+     * @param pModelScene Model scene
+     */
+    static RPGrpDrawPathManager* Construct(u32 drawPathFlag,
                                            RPGrpModelScene* pModelScene);
-
-    virtual ~RPGrpDrawPathManager() override {} // at 0x8
 
     virtual void scnProcDraw(u16 idx) override; // at 0xC
 
@@ -48,7 +52,7 @@ public:
     }
 
 private:
-    RPGrpDrawPathManager(u32 pathFlags, RPGrpModelScene* pModelScene);
+    RPGrpDrawPathManager(u32 drawPathFlag, RPGrpModelScene* pModelScene);
 
 private:
     u16 unkA;
