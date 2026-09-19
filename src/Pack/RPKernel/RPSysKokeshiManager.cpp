@@ -101,8 +101,7 @@ void RPSysKokeshiManager::CreateLightTexture(u8 drawScene) {
                                            ->GetDrawPathLightMap();
 
     for (u8 i = 0; i < LightMap_Max; i++) {
-        pLightMap->GetLightTextureManager()->createTexture(
-            LIGHT_TEXTURE_NAMES[i]);
+        pLightMap->CreateTexture(LIGHT_TEXTURE_NAMES[i]);
     }
 }
 

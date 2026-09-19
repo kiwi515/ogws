@@ -73,6 +73,15 @@ public:
         return mpCapTexture;
     }
 
+    /**
+     * @brief Gets the file name of the specified lightmap texture
+     *
+     * @param i Lightmap texture index
+     */
+    static const char* GetLightMapFileName(u8 i) {
+        return LIGHT_TEXTURE_FILE_NAMES[i];
+    }
+
 private:
     /**
      * @brief Configures a model for use with icon rendering

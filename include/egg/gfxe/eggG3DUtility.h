@@ -82,6 +82,9 @@ public:
     static MEMAllocator* getAllocator() {
         return sAllocator;
     }
+    static void setAllocator(MEMAllocator* pAllocator) {
+        sAllocator = pAllocator;
+    }
 
 private:
     static u8 sManualProjectionMapMode;

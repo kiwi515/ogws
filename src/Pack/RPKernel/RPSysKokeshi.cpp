@@ -123,7 +123,7 @@ void RPSysKokeshi::LoadResource(const RPSysKokeshiOverloadInfo* pOverloadInfo) {
 
     // Apply favorite/skin color to the models
     GXColor favColor = GetFavoriteColor();
-    GXColor skinColor = mAdditionalInfo.skinColor;
+    GXColor skinColor = GetSkinColor();
 
     pKokeshiManager->SetMatColor(mpBodyModel, favColor, skinColor);
     pKokeshiManager->SetMatColor(mpLeftHandModel, favColor, skinColor);
@@ -145,26 +145,18 @@ void RPSysKokeshi::ApplyLightTexture(u8 drawScene) {
                                            ->GetDrawPathManager(drawScene)
                                            ->GetDrawPathLightMap();
 
-    for (u32 i = 0; i < RPSysKokeshiManager::LightMap_Max; i++) {
+    for (u8 i = 0; i < RPSysKokeshiManager::LightMap_Max; i++) {
         pLightMap->ReplaceModelTexture(
-            pLightMap->GetLightTextureManager()->getTextureIndex(
-                RPSysKokeshiManager::GetLightTextureName(i)),
-            mpNigaoeModel);
+            RPSysKokeshiManager::GetLightMapTextureName(i), mpNigaoeModel);
 
         pLightMap->ReplaceModelTexture(
-            pLightMap->GetLightTextureManager()->getTextureIndex(
-                RPSysKokeshiManager::GetLightTextureName(i)),
-            mpBodyModel);
+            RPSysKokeshiManager::GetLightMapTextureName(i), mpBodyModel);
 
         pLightMap->ReplaceModelTexture(
-            pLightMap->GetLightTextureManager()->getTextureIndex(
-                RPSysKokeshiManager::GetLightTextureName(i)),
-            mpLeftHandModel);
+            RPSysKokeshiManager::GetLightMapTextureName(i), mpLeftHandModel);
 
         pLightMap->ReplaceModelTexture(
-            pLightMap->GetLightTextureManager()->getTextureIndex(
-                RPSysKokeshiManager::GetLightTextureName(i)),
-            mpRightHandModel);
+            RPSysKokeshiManager::GetLightMapTextureName(i), mpRightHandModel);
     }
 }
 

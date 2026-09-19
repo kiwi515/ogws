@@ -30,7 +30,7 @@ RPGrpView::Clipper RPGrpView::sClipper;
 RPGrpView::RPGrpView(u8 no)
     : mViewNo(no),
       mDrawScene(0),
-      mFlags(EFlag_9 | EFlag_SysDraw | EFlag_SysCalc),
+      mFlags(EFlag_9 | EFlag_EnableDraw | EFlag_EnableCalc),
       mProjType(EProjType_Max),
       mClearColor(DEFAULT_CLEAR_COLOR),
       mpScreen(NULL),
@@ -60,7 +60,7 @@ void RPGrpView::Calc() {
  * @brief Prepares this view for a new frame
  */
 void RPGrpView::PrepareDraw() {
-    if (!IsSysCalc()) {
+    if (!IsEnableCalc()) {
         return;
     }
 

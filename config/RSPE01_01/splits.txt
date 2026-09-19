@@ -3282,12 +3282,9 @@ Pack/RPGraphics/RPGrpModelImplement.cpp:
 	.bss        start:0x804A44C8 end:0x804A44F8
 	.sbss       start:0x804BF5F0 end:0x804BF5F8
 
-Pack/RPGraphics/RPGrpModelMisc.cpp:
-	.text       start:0x801ADE70 end:0x801ADE80
-	.rodata     start:0x803836E0 end:0x803836F0
-
 Pack/RPGraphics/RPGrpModelManager.cpp:
-	.text       start:0x801ADE80 end:0x801AE394
+	.text       start:0x801ADE70 end:0x801AE394
+	.rodata     start:0x803836E0 end:0x803836F0
 	.data       start:0x803BA3E8 end:0x803BA418
 	.sbss       start:0x804BF5F8 end:0x804BF600
 

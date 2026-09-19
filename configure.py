@@ -1256,7 +1256,6 @@ config.libs = [
             Object(Matching, "Pack/RPGraphics/RPGrpModelAnm.cpp"),
             Object(NonMatching, "Pack/RPGraphics/RPGrpModelAnmImplement.cpp"),
             Object(NonMatching, "Pack/RPGraphics/RPGrpModelImplement.cpp"),
-            Object(NonMatching, "Pack/RPGraphics/RPGrpModelMisc.cpp"),
             Object(NonMatching, "Pack/RPGraphics/RPGrpModelManager.cpp"),
             Object(NonMatching, "Pack/RPGraphics/RPGrpModelResManager.cpp"),
             Object(NonMatching, "Pack/RPGraphics/RPGrpRenderer.cpp"),

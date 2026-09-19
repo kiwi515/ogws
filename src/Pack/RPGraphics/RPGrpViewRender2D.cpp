@@ -25,7 +25,7 @@ void RPGrpViewRender2D::PrepareDraw() {
  * @brief Renders the contents of this view
  */
 void RPGrpViewRender2D::Draw() {
-    if (!IsSysCalc()) {
+    if (!IsEnableCalc()) {
         return;
     }
 

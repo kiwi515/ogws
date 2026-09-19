@@ -22,13 +22,13 @@ public:
     };
 #pragma pack(pop)
 
-    virtual void SetBinaryInner(const Bin& rBinary) = 0; // at 0x8
-    virtual void GetBinaryInner(Bin* pBinary) const = 0; // at 0xC
+    virtual void SetBinaryInner(const Bin& rBin) = 0; // at 0x8
+    virtual void GetBinaryInner(Bin* pBin) const = 0; // at 0xC
 
     virtual const char* GetBinaryType() const = 0; // at 0x10
     virtual u32 GetBinarySize() const {
         return sizeof(T::Bin);
-    }; // at 0x14
+    } // at 0x14
 
     virtual u8 GetVersion() const = 0; // at 0x18
 

@@ -18,7 +18,7 @@ private:
     RPGrpScreen mScreen; // at 0x17C
 
 public:
-    RPGrpProjectionObject(u8 viewNo);
+    explicit RPGrpProjectionObject(u8 viewNo);
 
     virtual ~RPGrpProjectionObject() {} // at 0x8
 

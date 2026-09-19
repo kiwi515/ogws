@@ -22,7 +22,7 @@ public:
 
 public:
     /**
-     * @brief Gets the currently active manager instance
+     * @brief Gets the currently active instance
      */
     static RPGrpRenderer* GetCurrent() {
         return spCurrent;
@@ -67,7 +67,6 @@ public:
     void CalculateInPause();
 
 private:
-    //! Allocator used for model-related allocations
     static RPGrpRenderer* spCurrent;
 
     //! View currently being rendered to

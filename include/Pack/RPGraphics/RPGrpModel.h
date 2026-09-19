@@ -25,6 +25,8 @@ class RPGrpTexture;
  * @brief Base class for model implementations
  */
 class RPGrpModel {
+    friend class RPGrpModelManager;
+
 public:
     /**
      * @brief Model class type
@@ -189,6 +191,14 @@ public:
     void UpdateFrame();
     void Calc();
     void Entry();
+
+    u8 GetViewNo() const {
+        return mViewNo;
+    }
+
+    u8 GetDrawScene() const {
+        return mDrawScene;
+    }
 
     EGG::ModelEx* GetModelEx() const {
         return mpModelEx;

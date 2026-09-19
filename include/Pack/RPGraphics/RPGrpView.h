@@ -163,7 +163,7 @@ protected:
      */
     enum {
         //! Update this view
-        EFlag_SysCalc = 1 << 0,
+        EFlag_EnableCalc = 1 << 0,
         //! Update color when clearing the framebuffer
         EFlag_FillBufferColor = 1 << 1,
         //! Update alpha when clearing the framebuffer
@@ -171,7 +171,7 @@ protected:
         //! Update depth when clearing the framebuffer
         EFlag_FillBufferTexture = 1 << 3,
         //! Render this view
-        EFlag_SysDraw = 1 << 4,
+        EFlag_EnableDraw = 1 << 4,
 
         EFlag_9 = 1 << 9,
     };
@@ -342,15 +342,15 @@ public:
     /**
      * @brief Tests whether this view should be updated
      */
-    bool IsSysCalc() const {
-        return mFlags & EFlag_SysCalc;
+    bool IsEnableCalc() const {
+        return mFlags & EFlag_EnableCalc;
     }
 
     /**
      * @brief Tests whether this view should be rendered
      */
-    bool IsSysDraw() const {
-        return mFlags & EFlag_SysDraw;
+    bool IsEnableDraw() const {
+        return mFlags & EFlag_EnableDraw;
     }
 
     /**

@@ -55,14 +55,14 @@ void RPSysKokeshiIcon::SetupModel(RPGrpModel* pModel) {
 
     EGG::Archive* pCommonArchive = pResourceManager->GetStaticCommonArchive();
 
-    for (u8 i = 0; i < ELightMap_Max; i++) {
+    for (u32 i = 0; i < ELightMap_Max; i++) {
         void* pTexFile = RPSysResourceManager::GetFileFromArchive(
-            pCommonArchive, LIGHT_TEXTURE_FILE_NAMES[i]);
+            pCommonArchive, GetLightMapFileName(i));
 
         RPGrpTexture tex(static_cast<EGG::ResTIMG*>(pTexFile));
 
-        pModel->ReplaceTexture(RPSysKokeshiManager::GetLightTextureName(i), tex,
-                               true);
+        pModel->ReplaceTexture(RPSysKokeshiManager::GetLightMapTextureName(i),
+                               tex, true);
     }
 
     if (pModel->GetKind() == RPGrpModel::Kind_RFL) {

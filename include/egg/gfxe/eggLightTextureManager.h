@@ -45,6 +45,12 @@ public:
         return mFlags & cFlag_ClearWorkSpace;
     }
 
+    LightTexture* getLightTexture(u16 index) const {
+#line 112
+        EGG_ASSERT(index < mTexNum);
+        return mppLightTextures[index];
+    }
+
     u32 getMax() const {
         return LIGHT_TEX_MAX;
     }

@@ -17,7 +17,7 @@ RPGrpViewRender3D::RPGrpViewRender3D(u8 no)
 void RPGrpViewRender3D::Calc() {
     RPGrpView::Calc();
 
-    if (!IsSysCalc()) {
+    if (!IsEnableCalc()) {
         return;
     }
 
@@ -34,13 +34,13 @@ void RPGrpViewRender3D::Calc() {
 void RPGrpViewRender3D::PrepareDraw() {
     RPGrpView::PrepareDraw();
 
-    if (!IsSysCalc()) {
+    if (!IsEnableCalc()) {
         return;
     }
 
     ClearBuffer();
 
-    if (!IsSysDraw()) {
+    if (!IsEnableDraw()) {
         return;
     }
 
@@ -60,11 +60,11 @@ void RPGrpViewRender3D::PrepareDraw() {
  * @brief Renders the contents of this view
  */
 void RPGrpViewRender3D::Draw() {
-    if (!IsSysCalc()) {
+    if (!IsEnableCalc()) {
         return;
     }
 
-    if (!IsSysDraw()) {
+    if (!IsEnableDraw()) {
         return;
     }
 
@@ -78,7 +78,7 @@ void RPGrpViewRender3D::Draw() {
  * @brief Prepares this view for a new render pass
  */
 void RPGrpViewRender3D::PrepareDrawGX() {
-    if (IsSysDraw()) {
+    if (IsEnableDraw()) {
         RPGrpModelScene* pModelScene =
             RPGrpModelManager::GetCurrent()->GetModelScene(mDrawScene);
 

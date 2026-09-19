@@ -49,6 +49,13 @@ public:
     GXColor GetFavoriteColor() const;
 
     /**
+     * @brief Gets the skin color of this avatar
+     */
+    GXColor GetSkinColor() const {
+        return mAdditionalInfo.skinColor;
+    }
+
+    /**
      * @brief Accesses the Mii generation parameters
      */
     const RPSysKokeshiGenInfo& GetGenInfo() const {

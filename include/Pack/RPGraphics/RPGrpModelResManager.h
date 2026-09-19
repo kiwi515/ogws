@@ -16,9 +16,6 @@ typedef u16 RPGrpHandle;
  * @brief Model resource manager
  */
 class RPGrpModelResManager {
-    //! Only the model manager can change the current instance
-    friend class RPGrpModelManager;
-
 public:
     /**
      * @brief Resource file type
@@ -58,10 +55,34 @@ private:
 
 public:
     /**
-     * @brief Gets the currently active manager instance
+     * @brief Gets the currently active instance
      */
     static RPGrpModelResManager* GetCurrent() {
         return spCurrent;
+    }
+
+    /**
+     * @brief Constructor
+     */
+    RPGrpModelResManager();
+
+    /**
+     * @brief Destructor
+     */
+    virtual ~RPGrpModelResManager() {} // at 0x8
+
+    /**
+     * @brief Becomes the currently active instance
+     */
+    void BecomeCurrent() {
+        spCurrent = this;
+    }
+
+    /**
+     * @brief Clears the currently active instance
+     */
+    static void SetCurrentNull() {
+        spCurrent = NULL;
     }
 
     /**
@@ -291,16 +312,6 @@ private:
 
 private:
     /**
-     * @brief Constructor
-     */
-    RPGrpModelResManager();
-
-    /**
-     * @brief Destructor
-     */
-    virtual ~RPGrpModelResManager() {} // at 0x8
-
-    /**
      * @brief Creates a new resource from the specified data
      *
      * @param handle Handle for the new resource
@@ -476,7 +487,7 @@ inline void RPGrpModelResManager::GetResultTransform(
     EGG::Vector3f* pScale) {
 
     const nw4r::g3d::ResAnmChr chr =
-        spCurrent->GetData<Type_ResAnmChr>(handle, pName);
+        GetCurrent()->GetData<Type_ResAnmChr>(handle, pName);
 
     return InternalGetResultTransform(chr, idx, frame, pRotTrans, pTrans,
                                       pRotate, pScale);

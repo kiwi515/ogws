@@ -68,6 +68,10 @@ public:
 
     void setDrawSettingGX(bool opa) const;
 
+    nw4r::g3d::ScnRoot* getScnRoot() const {
+        return mpScnRoot;
+    }
+
     LightManager* getLightManager() const {
         return mpLightManager;
     }

@@ -356,7 +356,7 @@ public:
      *
      * @param i Lightmap texture index
      */
-    static const char* GetLightTextureName(u32 i) {
+    static const char* GetLightMapTextureName(u8 i) {
         return LIGHT_TEXTURE_NAMES[i];
     }
 
