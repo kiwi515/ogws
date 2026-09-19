@@ -41,6 +41,18 @@ public:
     void drawAndCaptureTexture(LightManager*, const Screen::DataEfb&, f32, f32,
                                f32, f32);
 
+    void setEnable(bool enable) {
+        if (enable) {
+            mFlags |= cFlag_Enable;
+        } else {
+            mFlags &= ~cFlag_Enable;
+        }
+    }
+
+    bool isEnable() const {
+        return mFlags & cFlag_Enable;
+    }
+
     bool isEnableClearWorkSpace() const {
         return mFlags & cFlag_ClearWorkSpace;
     }
@@ -58,7 +70,7 @@ public:
 private:
     enum {
         cFlag_ClearWorkSpace = 1 << 3,
-        cFlag_4 = 1 << 4,
+        cFlag_Enable = 1 << 4,
         cFlag_5 = 1 << 5,
         cFlag_6 = 1 << 6,
     };

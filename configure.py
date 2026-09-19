@@ -1264,7 +1264,7 @@ config.libs = [
             Object(Matching, "Pack/RPGraphics/RPGrpViewRender2D.cpp"),
             Object(Matching, "Pack/RPGraphics/RPGrpViewRender3D.cpp"),
             Object(NonMatching, "Pack/RPGraphics/RPGrpModelScene.cpp"),
-            Object(NonMatching, "Pack/RPGraphics/RPGrpDrawPathLightMap.cpp"),
+            Object(Matching, "Pack/RPGraphics/RPGrpDrawPathLightMap.cpp"),
             Object(Matching, "Pack/RPGraphics/RPGrpModelBoundingInfo.cpp"),
             Object(Matching, "Pack/RPGraphics/RPGrpDrawPathShadowTexture.cpp"),
             Object(NonMatching, "Pack/RPGraphics/RPGrpShadowTexture.cpp"),

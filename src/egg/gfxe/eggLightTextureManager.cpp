@@ -13,7 +13,7 @@ namespace EGG {
 template <> const char* IBinary<LightTextureManager>::spExtension = "blmap";
 
 LightTextureManager::LightTextureManager(const LightManager* pManager)
-    : mFlags(cFlag_ClearWorkSpace | cFlag_4 | cFlag_5 | cFlag_6),
+    : mFlags(cFlag_ClearWorkSpace | cFlag_Enable | cFlag_5 | cFlag_6),
       mTexNum(0),
       mppLightTextures(NULL),
       mpLightManager(pManager),
