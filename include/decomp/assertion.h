@@ -9,6 +9,61 @@
 #ifndef DECOMP_ASSERTION_H
 #define DECOMP_ASSERTION_H
 
+// clang-format off
+//
+// >> Description <<
+//
+// The DECOMP_ASSERT provides a way for matching builds to force arbitrary line numbers,
+// without needing intrusive changes, such as "_LINE" variations of every assertion macro.
+//
+// If a specific line number is desired, use the LINE(no) macro to force it.
+// This macro must be the first argument of the assertion to be recognized.
+//
+// Additionally, the LINES(...) macro provided in this header allows for a single assertion
+// to take different line numbers based on the build configuration.
+//
+// In nonmatching builds, the LINE family of macros is ignored for accuracy.
+// DECOMP_ASSERT will instead provide the true source location.
+//
+// >> Parameters <<
+//
+// The 'assert_impl' parameter is the name of the assertion implementation.
+// It must be a function-like macro that accepts at least the following parameters: (file, line, str_expr).
+//   - file:     The name of the source file where the macro was expanded.
+//
+//   - line:     The location in the source file where the macro was expanded.
+//               The LINE/LINES macros are provided to override this value.
+//
+//   - str_expr: The first non-LINE argument in stringitized form.
+//               This is required to avoid macro expansion which may break matching code,
+//               such as NULL expanding to "0".
+//
+// The 'lines_impl' parameter is the name of the line tuple evaluator.
+// It must be a function-like macro that accepts multiple line numbers.
+// It is responsible for picking the correct line number, often based on the build configuration.
+//
+// For code where this feature should be disabled, specify LINES_DUMMY.
+// Doing so will cause LINES(...) to produce a syntax error.
+//
+// >> Example <<
+//
+//     // keep DECOMP_ASSERT on the same line to stay accurate in non-matching builds!
+//     #define MY_ASSERT(...) DECOMP_ASSERT(MY_ASSERT_IMPL, MY_LINES, __VA_ARGS__)
+//
+//     #define MY_ASSERT_IMPL(file, line, str_expr, expr) \
+//         if (!expr) { Panic("Assertion failed: %s", str_expr); }
+//
+//     // choose Rev 1 line number for this build
+//     #define MY_LINES(rev0, rev1) rev1
+//
+//     MY_ASSERT(LINE(123), p != NULL) expands to:
+//         MY_ASSERT_IMPL("code.cpp", 123, "p != NULL", p != 0)
+//
+//     MY_ASSERT(LINES(200, 300), p != NULL, "Pointer is NULL") expands to:
+//         MY_ASSERT_IMPL("code.cpp", 300, "p != NULL", p != 0, "Pointer is NULL")
+//
+// clang-format on
+
 /******************************************************************************
  *
  * Public macros
@@ -17,28 +72,11 @@
 
 /**
  * @brief Performs a runtime assertion
- *
- * The 'assert_macro' parameter must be the name of the assertion
- * implementation.
-
- * Arguments are passed to 'assert_macro' in the following
- * order: (file, line, ...).
- *
- * The 'lines_macro' parameter must be the name of the line tuple evaluator.
- *
- * Example:
- *     #define MY_ASSERT \
- *         DECOMP_ASSERT(MY_ASSERT_IMPL, MY_LINES, __VA_ARGS__)
- *
- *     #define MY_ASSERT_IMPL(file, line, expr) \
- *         if (!expr) { Panic("Assertion failed: %s", #expr); }
- *
- *     // choose Rev 1 line number
- *     #define MY_LINES(rev0, rev1) rev1
  */
-#define DECOMP_ASSERT(assert_macro, lines_macro, ...)                          \
-    AA_FWD(assert_macro,                                                       \
-           AA_EVAL_ARGS(lines_macro, __LINE__, __VA_ARGS__, AA_DUMMY))
+// clang-format off
+// The formatting looks weird, but we need to get the correct source location!
+#define DECOMP_ASSERT(assert_impl, lines_impl, ...) AA_FWD(assert_impl, AA_EVAL_ARGS(__LINE__, lines_impl, __VA_ARGS__, AA_DUMMY))
+// clang-format on
 
 /**
  * @brief Forces a specific source line number in an assertion
@@ -65,6 +103,13 @@
  ******************************************************************************/
 
 /**
+ * @brief Stringitizes a token
+ * @details Macro expansion is often required, so the argument is forwarded.
+ */
+#define AA_STR(x) AA_STR_IMPL(x)
+#define AA_STR_IMPL(x) #x
+
+/**
  * @brief Concatenates two tokens
  * @details Macro expansion is often required, so the arguments are forwarded.
  */
@@ -77,8 +122,8 @@
 #define AA_FWD(macro, tuple) macro tuple
 
 /**
- * @brief Grabs the specified tuple element
- * @note Dummy arguments make sure the tuple is always large enough.
+ * @brief Grabs the specified variadic argument
+ * @note Dummy arguments make sure the argument list is always large enough.
  */
 #define AA_1ST_IMPL(first, ...) first
 #define AA_1ST(...) AA_1ST_IMPL(__VA_ARGS__, ~)
@@ -168,7 +213,7 @@
  * Otherwise, this macro uses the hardcoded line number.
  */
 // clang-format off
-#define AA_EVAL_ARGS(lines_macro, real_line, first, ...)                                   \
+#define AA_EVAL_ARGS(real_line, lines_impl, first, ...)                           \
     AA_IF(                                                                                 \
         /* Test for a valid LINE tag. */                                                   \
         AA_IS_TAG(first),                                                                  \
@@ -206,11 +251,11 @@
  */
 // clang-format off
 #if defined(NONMATCHING)
-#define AA_EVAL_TAG(lines_macro, real_line, tuple) real_line
+#define AA_EVAL_TAG(lines_impl, real_line, tuple) real_line
 #else
-#define AA_EVAL_TAG(lines_macro, real_line, tuple) AA_CAT(AA_EVAL_TAG_, AA_1ST tuple)(lines_macro, tuple)
-#define AA_EVAL_TAG_AA_LINE(lines_macro, tuple)    AA_2ND tuple
-#define AA_EVAL_TAG_AA_LINES(lines_macro, tuple)   AA_FWD(lines_macro, AA_2ND tuple)
+#define AA_EVAL_TAG(lines_impl, real_line, tuple) AA_CAT(AA_EVAL_TAG_, AA_1ST tuple)(lines_impl, tuple)
+#define AA_EVAL_TAG_AA_LINE(lines_impl, tuple)    AA_2ND tuple
+#define AA_EVAL_TAG_AA_LINES(lines_impl, tuple)   AA_FWD(lines_impl, AA_2ND tuple)
 #endif
 // clang-format on
 
