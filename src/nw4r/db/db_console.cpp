@@ -25,6 +25,7 @@ static u8* NextLine_(ConsoleHandle console) {
 
     console->printXPos = 0;
     console->printTop++;
+    console->printTopUsed = 0;
 
     if (console->printTop == console->height &&
         !(console->attr & CONSOLE_ATTR_1)) {
@@ -32,11 +33,11 @@ static u8* NextLine_(ConsoleHandle console) {
         console->printTop = 0;
     }
 
-    if (console->printTop == console->printTopUsed) {
+    if (console->printTop == console->ringTop) {
         console->ringTopLineCnt++;
 
-        if (++console->printTopUsed == console->height) {
-            console->printTopUsed = 0;
+        if (++console->ringTop == console->height) {
+            console->ringTop = 0;
         }
     }
 
@@ -110,7 +111,7 @@ static bool sInitialized = false;
 static u16 GetRingUsedLines_(ConsoleHandle console) {
     NW4R_NULL_ASSERT(console);
 
-    s32 lines = console->printTop - console->printTopUsed;
+    s32 lines = console->printTop - console->ringTop;
     if (lines < 0) {
         lines += console->height;
     }
@@ -121,7 +122,7 @@ static u16 GetRingUsedLines_(ConsoleHandle console) {
 static u16 GetActiveLines_(ConsoleHandle console) {
     u16 lines = GetRingUsedLines_(console);
 
-    if (console->printXPos > 0) {
+    if (console->printTopUsed > 0) {
         lines++;
     }
 
@@ -183,8 +184,7 @@ static void RemoveConsoleFromList(ConsoleHandle console) DECOMP_DONT_INLINE {
         }
     }
 
-    OS_ERROR("illegal console handle");
-    // OS_ERROR(LINE(386), "illegal console handle");
+    OS_PANIC(LINE(332), "illegal console handle");
 
 _cleanup:
     OSUnlockMutex(&sMutex);
@@ -271,16 +271,16 @@ static void DoDrawConsole_(ConsoleHandle console, ut::TextWriter* pWriter) {
         return;
     }
 
-    line = console->printTopUsed + viewOffset;
+    line = console->ringTop + viewOffset;
     if (line >= console->height) {
         line -= console->height;
     }
 
-    // if (line == console->printTop && console->printTopUsed == 0) {
-    //     return;
-    // }
+    do {
+        if (line == console->printTop && console->printTopUsed == 0) {
+            break;
+        }
 
-    while (printLines < console->viewLines) {
         DoDrawString_(console, printLines, GetTextPtr_(console, line, 0),
                       pWriter);
 
@@ -299,7 +299,7 @@ static void DoDrawConsole_(ConsoleHandle console, ut::TextWriter* pWriter) {
 
             line = 0;
         }
-    }
+    } while (printLines < console->viewLines);
 }
 
 void Console_DrawDirect(ConsoleHandle console) {
@@ -354,18 +354,20 @@ static void PrintToBuffer_(ConsoleHandle console, const u8* str) {
             } else if (*str == '\t') {
                 str++;
                 pDst = PutTab_(console, pDst);
+                console->printTopUsed = 1;
             } else {
                 bytes = PutChar_(console, str, pDst);
 
                 if (bytes > 0) {
                     str += bytes;
                     pDst += bytes;
+                    console->printTopUsed = 1;
                 } else {
                     newline = true;
                 }
             }
 
-            if (console->printTop >= console->width) {
+            if (console->printXPos >= console->width) {
                 newline = true;
             }
 

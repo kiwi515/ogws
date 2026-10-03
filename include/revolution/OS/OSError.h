@@ -1,6 +1,9 @@
 #ifndef RVL_SDK_OS_ERROR_H
 #define RVL_SDK_OS_ERROR_H
 #include <types.h>
+
+#include <decomp/assertion.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -8,7 +11,11 @@ extern "C" {
 // Forward declarations
 typedef struct OSContext OSContext;
 
+// TODO(kiwi) Switch over OS_ERROR uses to OS_PANIC
 #define OS_ERROR(...) OSPanic(__FILE__, __LINE__, __VA_ARGS__)
+
+#define OS_PANIC(...) DECOMP_ASSERT(OS_PANIC_IMPL, LINES_DUMMY, __VA_ARGS__)
+#define OS_PANIC_IMPL(file, line, ...) OSPanic(file, line, __VA_ARGS__)
 
 #define OS_ASSERT(exp, ...)                                                    \
     if (!(exp))                                                                \

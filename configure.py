@@ -739,7 +739,7 @@ config.libs = [
         "progress_category": "nw4r",
         "objects": [
             Object(NonMatching, "nw4r/db/db_directPrint.cpp"),
-            Object(NonMatching, "nw4r/db/db_console.cpp"),
+            Object(Matching, "nw4r/db/db_console.cpp"),
             Object(NonMatching, "nw4r/db/db_exception.cpp"),
         ]
     },

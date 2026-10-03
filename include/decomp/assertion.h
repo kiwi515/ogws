@@ -53,6 +53,11 @@
  */
 #define LINES(no1, ...) (AA_LINES, (no1, __VA_ARGS__))
 
+/**
+ * @brief Dummy macro available for when line number tuples are not supported
+ */
+#define LINES_DUMMY(...) ~
+
 /******************************************************************************
  *
  * Utility macros
