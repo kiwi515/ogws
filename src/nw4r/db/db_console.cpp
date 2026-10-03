@@ -28,7 +28,7 @@ static u8* NextLine_(ConsoleHandle console) {
     console->printTopUsed = 0;
 
     if (console->printTop == console->height &&
-        !(console->attr & CONSOLE_ATTR_1)) {
+        !(console->attr & CONSOLE_ATTR_NO_OVERFLOW)) {
 
         console->printTop = 0;
     }
@@ -57,7 +57,9 @@ static const u8* SearchEndOfLine_(const u8* pStr) {
 }
 
 static u32 GetTabSize_(ConsoleHandle console) {
-    s32 tab = (console->attr & (CONSOLE_ATTR_2 | CONSOLE_ATTR_3)) >> 2;
+    s32 tab =
+        (console->attr & (CONSOLE_ATTR_INDENT4 | CONSOLE_ATTR_INDENT8)) >> 2;
+
     return 2 << tab;
 }
 
@@ -192,9 +194,6 @@ _cleanup:
 
 ConsoleHandle Console_Create(void* pConsoleWork, u16 width, u16 height,
                              u16 viewLines, u16 priority, u16 attr) {
-    NW4R_ASSERT(width > 0);
-    NW4R_ASSERT(height > 0);
-
     if (!sInitialized) {
         OSInitMutex(&sMutex);
         sInitialized = true;
@@ -293,7 +292,7 @@ static void DoDrawConsole_(ConsoleHandle console, ut::TextWriter* pWriter) {
         line++;
 
         if (line == console->height) {
-            if (console->attr & CONSOLE_ATTR_1) {
+            if (console->attr & CONSOLE_ATTR_NO_OVERFLOW) {
                 break;
             }
 
@@ -338,7 +337,7 @@ static void PrintToBuffer_(ConsoleHandle console, const u8* str) {
     pDst = GetTextPtr_(console, console->printTop, console->printXPos);
 
     while (*str != '\0') {
-        if (console->attr & CONSOLE_ATTR_1 &&
+        if (console->attr & CONSOLE_ATTR_NO_OVERFLOW &&
             console->printTop == console->height) {
 
             break;
@@ -372,7 +371,7 @@ static void PrintToBuffer_(ConsoleHandle console, const u8* str) {
             }
 
             if (newline) {
-                if (console->attr & CONSOLE_ATTR_0) {
+                if (console->attr & CONSOLE_ATTR_NO_WRAP) {
                     str = SearchEndOfLine_(str);
                 } else {
                     if (*str == '\n') {

@@ -17,11 +17,10 @@ enum ConsoleOutputType {
 };
 
 enum ConsoleAttr {
-    CONSOLE_ATTR_0 = 1 << 0,
-    CONSOLE_ATTR_1 = 1 << 1,
-    CONSOLE_ATTR_2 = 1 << 2,
-    CONSOLE_ATTR_3 = 1 << 3,
-    CONSOLE_ATTR_4 = 1 << 4,
+    CONSOLE_ATTR_NO_WRAP = 1 << 0,
+    CONSOLE_ATTR_NO_OVERFLOW = 1 << 1,
+    CONSOLE_ATTR_INDENT4 = 1 << 2,
+    CONSOLE_ATTR_INDENT8 = 1 << 3,
 };
 
 namespace detail {
