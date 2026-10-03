@@ -10,10 +10,10 @@ namespace nw4r {
 namespace db {
 
 enum ConsoleOutputType {
-    CONSOLE_OUTPUT_NONE,
-    CONSOLE_OUTPUT_DISPLAY,
-    CONSOLE_OUTPUT_TERMINAL,
-    CONSOLE_OUTPUT_ALL,
+    CONSOLE_OUTPUT_NONE = 0,
+    CONSOLE_OUTPUT_DISPLAY = 1 << 0,
+    CONSOLE_OUTPUT_TERMINAL = 1 << 1,
+    CONSOLE_OUTPUT_ALL = CONSOLE_OUTPUT_DISPLAY | CONSOLE_OUTPUT_TERMINAL,
 };
 
 enum ConsoleAttr {
@@ -42,7 +42,7 @@ struct ConsoleHead {
     s16 viewPosY;                 // at 0x1E
     u16 viewLines;                // at 0x20
     u8 isVisible;                 // at 0x22
-    u8 padding_[1];               // at 0x23
+    u8 PADDING[0x24 - 0x23];      // at 0x23
     nw4r::ut::TextWriter* writer; // at 0x24
     ConsoleHead* next;            // at 0x28
 };
@@ -52,10 +52,23 @@ struct ConsoleHead {
 // Public namespace alias
 typedef nw4r::db::detail::ConsoleHead* ConsoleHandle;
 
-s32 Console_GetTotalLines(ConsoleHandle console);
+ConsoleHandle Console_Create(void* pConsoleWork, u16 width, u16 height,
+                             u16 viewLines, u16 priority, u16 attr);
+ConsoleHandle Console_Destroy(ConsoleHandle console);
+void Console_Clear(ConsoleHandle console);
+void Console_DrawDirect(ConsoleHandle console);
 
-void Console_VFPrintf(ConsoleOutputType type, ConsoleHandle console,
+void Console_VFPrintf(ConsoleOutputType output, ConsoleHandle console,
                       const char* pFmt, std::va_list argv);
+void Console_FPrintf(ConsoleOutputType output, ConsoleHandle console,
+                     const char* pFmt, ...);
+void Console_Printf(ConsoleHandle console, const char* pFmt, ...);
+void Console_PrintfD(ConsoleHandle console, const char* pFmt, ...);
+void Console_PrintfT(ConsoleHandle console, const char* pFmt, ...);
+
+void Console_ChangePriority(ConsoleHandle console, u16 priority);
+
+s32 Console_GetTotalLines(ConsoleHandle console);
 
 static inline void Console_VPrintf(ConsoleHandle console, const char* pFmt,
                                    std::va_list argv) {

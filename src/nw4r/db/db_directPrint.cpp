@@ -10,10 +10,6 @@
 #define DEFAULT_WIDTH 640
 #define DEFAULT_HEIGHT 480
 
-#define FONT_CHAR_WIDTH 6
-#define FONT_CHAR_HEIGHT 7
-#define FONT_LEADING 10
-
 #define TAB_SIZE 4
 
 namespace nw4r {
@@ -90,11 +86,11 @@ static const u32 sFontData2[] = {
     0xF8000000, 0x10000000, 0x20000000, 0x40000000, 0xF8000000,
 };
 
-static inline int GetDotHeight_() {
+static int GetDotHeight_() {
     return sFrameBufferInfo.frameHeight < 300 ? 1 : 2;
 }
 
-static inline int GetDotWidth_() {
+static int GetDotWidth_() {
     return sFrameBufferInfo.frameWidth < 400 ? 1 : 2;
 }
 
@@ -285,8 +281,8 @@ static void DrawCharToXfb_(int x, int y, int code) {
     // Convert to font-relative code
     int ncode = code >= 100 ? code - 100 : code;
 
-    int fontW = ncode % 5 * FONT_CHAR_WIDTH;
-    int fontH = ncode / 5 * FONT_CHAR_HEIGHT;
+    int fontW = ncode % 5 * NW4R_DB_FONT_CHAR_WIDTH;
+    int fontH = ncode / 5 * NW4R_DB_FONT_CHAR_HEIGHT;
     const u32* pFontLine = code < 100 ? &sFontData[fontH] : &sFontData2[fontH];
 
     int dotW = GetDotWidth_();
@@ -300,12 +296,12 @@ static void DrawCharToXfb_(int x, int y, int code) {
         return;
     }
 
-    if (sFrameBufferInfo.frameWidth <= dotW * (x + FONT_CHAR_WIDTH) ||
-        sFrameBufferInfo.frameHeight <= dotH * (y + FONT_CHAR_HEIGHT)) {
+    if (sFrameBufferInfo.frameWidth <= dotW * (x + NW4R_DB_FONT_CHAR_WIDTH) ||
+        sFrameBufferInfo.frameHeight <= dotH * (y + NW4R_DB_FONT_CHAR_HEIGHT)) {
         return;
     }
 
-    for (int countY = 0; countY < FONT_CHAR_HEIGHT; countY++) {
+    for (int countY = 0; countY < NW4R_DB_FONT_CHAR_HEIGHT; countY++) {
         u32 fontBits = *pFontLine++ << fontW;
 
         if (dotW == 1) {
@@ -317,7 +313,8 @@ static void DrawCharToXfb_(int x, int y, int code) {
                        << 19;
         }
 
-        for (int countX = 0; countX < dotW * FONT_CHAR_WIDTH; countX += 2) {
+        for (int countX = 0; countX < dotW * NW4R_DB_FONT_CHAR_WIDTH;
+             countX += 2) {
             u16 color;
 
             // clang-format off
@@ -350,7 +347,8 @@ static void DrawCharToXfb_(int x, int y, int code) {
             fontBits <<= 2;
         }
 
-        pPixel += (sFrameBufferInfo.frameRow * dotH) - (dotW * FONT_CHAR_WIDTH);
+        pPixel += (sFrameBufferInfo.frameRow * dotH) -
+                  (dotW * NW4R_DB_FONT_CHAR_WIDTH);
     }
 }
 
@@ -375,7 +373,7 @@ static const char* DrawStringLineToXfb_(int x, int y, const char* str,
         // Tab character
         if (code == 0xFD) {
             int tabSize = TAB_SIZE - (count & (TAB_SIZE - 1));
-            x += tabSize * FONT_CHAR_WIDTH;
+            x += tabSize * NW4R_DB_FONT_CHAR_WIDTH;
             count += tabSize;
         } else {
             // Non-tab character
@@ -384,7 +382,7 @@ static const char* DrawStringLineToXfb_(int x, int y, const char* str,
             }
 
             // 0xFF is treated as whitespace
-            x += FONT_CHAR_WIDTH;
+            x += NW4R_DB_FONT_CHAR_WIDTH;
             count++;
         }
 
@@ -416,12 +414,13 @@ static void DrawStringToXfb_(int x, int y, const char* pStr, bool turnOver,
     while (*pStr != '\0') {
         if (backErase) {
             int len = StrLineWidth_(pStr);
-            DirectPrint_EraseXfb(x - 6, y - 3, (len + 2) * 6, 13);
+            DirectPrint_EraseXfb(x - 6, y - 3,
+                                 (len + 2) * NW4R_DB_FONT_CHAR_WIDTH, 13);
         }
 
-        width = (fbWidth - x) / FONT_CHAR_WIDTH;
+        width = (fbWidth - x) / NW4R_DB_FONT_CHAR_WIDTH;
         pStr = DrawStringLineToXfb_(x, y, pStr, width);
-        y += FONT_LEADING;
+        y += NW4R_DB_FONT_LEADING;
 
         if (*pStr == '\n') {
             pStr++;

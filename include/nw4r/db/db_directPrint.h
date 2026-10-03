@@ -5,6 +5,10 @@
 
 #include <revolution/GX.h>
 
+#define NW4R_DB_FONT_CHAR_WIDTH 6
+#define NW4R_DB_FONT_CHAR_HEIGHT 7
+#define NW4R_DB_FONT_LEADING 10
+
 namespace nw4r {
 namespace db {
 
