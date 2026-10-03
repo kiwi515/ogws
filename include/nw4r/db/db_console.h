@@ -65,8 +65,6 @@ void Console_Printf(ConsoleHandle console, const char* pFmt, ...);
 void Console_PrintfD(ConsoleHandle console, const char* pFmt, ...);
 void Console_PrintfT(ConsoleHandle console, const char* pFmt, ...);
 
-void Console_ChangePriority(ConsoleHandle console, u16 priority);
-
 s32 Console_GetTotalLines(ConsoleHandle console);
 
 static inline void Console_VPrintf(ConsoleHandle console, const char* pFmt,
