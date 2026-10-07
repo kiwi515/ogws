@@ -58,7 +58,7 @@ static const u8* SearchEndOfLine_(const u8* pStr) {
 
 static u32 GetTabSize_(ConsoleHandle console) {
     s32 tab =
-        (console->attr & (CONSOLE_ATTR_INDENT4 | CONSOLE_ATTR_INDENT8)) >> 2;
+        (console->attr & (CONSOLE_ATTR_INDENT_4 | CONSOLE_ATTR_INDENT_8)) >> 2;
 
     return 2 << tab;
 }
