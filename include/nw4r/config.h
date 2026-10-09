@@ -21,9 +21,17 @@
 #define NW4R_FEATURE_ASSERT
 #define NW4R_FEATURE_EXCEPTION
 
+#if !defined(NW4R_DISABLE_MAPFILE)
+#define NW4R_FEATURE_MAPFILE
+#endif
+
 // Release configuration enables exception handler
 #elif defined(NW4R_RELEASE)
 #define NW4R_FEATURE_EXCEPTION
+
+#if !defined(NW4R_DISABLE_MAPFILE)
+#define NW4R_FEATURE_MAPFILE
+#endif
 
 // Product configuration disables everything
 #elif defined(NW4R_PRODUCT)

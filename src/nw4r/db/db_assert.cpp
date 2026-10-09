@@ -24,6 +24,8 @@ static void Assertion_Printf_(const char* pFmt, ...) {
     va_end(argv);
 }
 
+#if defined(NW4R_FEATURE_MAPFILE)
+
 static bool ShowMapInfoSubroutine_(u32 address, bool preNewline) {
     if (!MapFile_Exists()) {
         return false;
@@ -49,6 +51,8 @@ static bool ShowMapInfoSubroutine_(u32 address, bool preNewline) {
     return false;
 }
 
+#endif
+
 static void ShowStack_(u32 sp) {
     Assertion_Printf_("-------------------------------- TRACE\n");
     Assertion_Printf_("Address:   BackChain   LR save\n");
@@ -67,9 +71,13 @@ static void ShowStack_(u32 sp) {
 
         Assertion_Printf_("%08X:  %08X    %08X ", it, it[0], it[1]);
 
+#if defined(NW4R_FEATURE_MAPFILE)
         if (!ShowMapInfoSubroutine_(it[1], false)) {
             Assertion_Printf_("\n");
         }
+#else
+        Assertion_Printf_("\n");
+#endif
 
         it = reinterpret_cast<u32*>(*it);
     }
